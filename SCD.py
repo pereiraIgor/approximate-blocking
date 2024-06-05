@@ -8,14 +8,8 @@ import mmh3
 def str_to_MinHash(str1, q, seed=0):
     return min([mmh3.hash(str1[i:i + q], seed) for i in range(len(str1) - q + 1)])
 
-
-
 def frequent2(temp, L, t):
     return {k: v for (k, v) in temp.items() if v/L >= t}
-
-
-
-
 
 def matching():
     global tp, fp, pairsNo, L1, q
@@ -104,12 +98,6 @@ def topK():
 
        return False
 
-
-
-
-
-
-
 if __name__ == '__main__':
     df1 = pd.read_csv("DBLP.csv", sep=",", encoding="utf-8", keep_default_na=False)
     df2 = pd.read_csv("Scholar.csv", sep=",", encoding="utf-8", keep_default_na=False)
@@ -135,6 +123,8 @@ if __name__ == '__main__':
     L = math.ceil(math.log(1 / delta) / (2 * (eps ** 2)))
     eps = 0.01
     L1 = int(1 / (2 * eps))
+    #L = 150
+    #L1 = 100
     print("L=", L, "L1=", L1)
     q = 2
     dictB = [dict() for l in range(L)]
@@ -158,6 +148,7 @@ if __name__ == '__main__':
           title = rr["title"]
           srec = title + " " + rr["authors"]
           key = ""
+          
           for l in range(L):
               key = str(str_to_MinHash(srec.lower(), 2, l))
               d = dictB[l]
