@@ -16,7 +16,7 @@ class DataProcessor:
         self.env = env
 
     def process_data(self, input_path1, output_path):
-        self.env.set_parallelism(1)# Configuração do ambiente de execução
+        self.env.set_parallelism(7)# Configuração do ambiente de execução
 
         data_stream1 = self.env.read_text_file(input_path1)# Leitura dos dados de entrada
         processed_stream = data_stream1.process(BlockingFunction())
