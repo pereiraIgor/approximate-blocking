@@ -1,3 +1,4 @@
+
 from pyflink.common.typeinfo import Types
 from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.datastream.connectors import StreamingFileSink
@@ -11,23 +12,40 @@ import time
 import csv
 from pyflink.datastream.connectors.file_system import (FileSource, StreamFormat, FileSink,
                                                        OutputFileConfig, RollingPolicy)
+from pyflink.table import TableConfig, StreamTableEnvironment
+import pandas as pd
+from pyflink.table import TableConfig
+from datetime import timedelta
+
 class DataProcessor:
-    def __init__(self, env):
-        self.env = env
 
-    def process_data(self, input_path1, output_path):
-        self.env.set_parallelism(7)# Configuração do ambiente de execução
-
-        data_stream1 = self.env.read_text_file(input_path1)# Leitura dos dados de entrada
-        processed_stream = data_stream1.process(BlockingFunction())
-        #processed_stream.add_sink(StreamingFileSink.for_row_format(output_path,Encoder.simple_string_encoder()).build()) 
+    def __init__(self):
+        self.env = StreamExecutionEnvironment.get_execution_environment()
+        self.table_env = StreamTableEnvironment.create(self.env)
         
-        processed_stream.sink_to(
-            sink=FileSink.for_row_format(base_path=output_path, encoder=Encoder.simple_string_encoder())
-            .with_output_file_config(OutputFileConfig.builder().with_part_prefix("prefix").with_part_suffix(".ext").build())
-            .with_rolling_policy(RollingPolicy.default_rolling_policy()).build()
-        )
-        print("terminou")
+    def process_data(self, input_path1, output_path):
+        # Configuração do tempo de retenção do estado ocioso
+        config = self.table_env.get_config()
+        config.set_idle_state_retention_time(timedelta(seconds=0),timedelta(seconds=3600))
+
+        self.env.set_parallelism(7)  # Configuração do ambiente de execução
+
+        data_stream1 = self.env.read_text_file(input_path1)
+        processed_stream = data_stream1.process(BlockingFunction())
+            
+        file_sink = FileSink.for_row_format(
+            base_path=output_path,
+            encoder=Encoder.simple_string_encoder()
+        ).with_output_file_config(
+            OutputFileConfig.builder()
+            .with_part_prefix("prefix")
+            .with_part_suffix(".ext")
+            .build()
+        ).with_rolling_policy(
+            RollingPolicy.default_rolling_policy()
+        ).build()
+        processed_stream.sink_to(sink=file_sink)
+
         self.env.execute("Data Processing Job")
 
 class BlockingFunction(ProcessFunction):
@@ -123,9 +141,7 @@ class BlockingFunction(ProcessFunction):
         yield self.dictB
         self.matching(value)
  
-# Exemplo de uso da classe DataProcessor
 if __name__ == '__main__':
-    env = StreamExecutionEnvironment.get_execution_environment()
-    processor = DataProcessor(env)
+    processor = DataProcessor()
     processor.process_data("df__full_merged.csv", "output.txt")
     #processor.process_data("copia/DBLP_copy.csv", "copia/Scholar_copy.csv", "output.txt")

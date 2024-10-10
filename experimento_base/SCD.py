@@ -17,10 +17,17 @@ def matching():
         if index2 > len(df2) - 1:
             return True
 
-        rr = df2.iloc[index2, 0:3]
+        rr = df2.iloc[index2, 0:5]
         idScholar = rr["id"]
         title = rr["title"]
-        srec = title + " " + rr["authors"]
+        authors = rr["authors"]
+        venue = rr["venue"]
+        year = rr["year"]
+        srec = title + " " + authors
+        #srec = authors + " " + str(year)
+        
+        if len(authors) == 0:
+              print(idScholar)
 
         temp = dict()
         indices = [random.randrange(0, L) for i in range(L1)]
@@ -123,8 +130,6 @@ if __name__ == '__main__':
     L = math.ceil(math.log(1 / delta) / (2 * (eps ** 2)))
     eps = 0.01
     L1 = int(1 / (2 * eps))
-    #L = 150
-    #L1 = 100
     print("L=", L, "L1=", L1)
     q = 2
     dictB = [dict() for l in range(L)]
@@ -133,8 +138,8 @@ if __name__ == '__main__':
     pairsNo = 0
     nbS = 1
     naS = 1
-    offsetA = 1
-    offsetB = 1
+    offsetA = 50
+    offsetB = 50
     indices = [random.randint(0, L) for i in range(L1)]
     blockingTime = 0
     matchingTime = 0
@@ -143,10 +148,16 @@ if __name__ == '__main__':
       for index1 in range(naS, naS + offsetA):  # Scholar
           if index1 >= len(df1):
               break
-          rr = df1.iloc[index1, 0:3]
+          rr = df1.iloc[index1, 0:5]
           idDBLP = rr["id"]
           title = rr["title"]
-          srec = title + " " + rr["authors"]
+          authors = rr["authors"]
+          venue = rr["venue"]
+          year = rr["year"]
+          if len(authors) == 0:
+              print(idDBLP)
+          srec = title + " " + authors
+          #srec = authors + " " + str(year)
           key = ""
           
           for l in range(L):
