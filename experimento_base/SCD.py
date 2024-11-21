@@ -3,7 +3,14 @@ import time
 import random
 import math
 import mmh3
+import statistics
 
+def retorna_contagem_blocos(dictB):
+    resultado_de_tudo = []
+    for e in dictB:
+        for valor in e.values():
+            resultado_de_tudo.append(len(valor))
+    return resultado_de_tudo
 
 def str_to_MinHash(str1, q, seed=0):
     return min([mmh3.hash(str1[i:i + q], seed) for i in range(len(str1) - q + 1)])
@@ -57,7 +64,6 @@ def matching():
                 fp += 1
 
     return False
-
 
 def topK():
        global tp, fp, pairsNo, dictB, L, q
@@ -144,53 +150,53 @@ if __name__ == '__main__':
     blockingTime = 0
     matchingTime = 0
     while True:
-      st = time.time()
-      for index1 in range(naS, naS + offsetA):  # Scholar
-          if index1 >= len(df1):
-              break
-          rr = df1.iloc[index1, 0:5]
-          idDBLP = rr["id"]
-          title = rr["title"]
-          authors = rr["authors"]
-          venue = rr["venue"]
-          year = rr["year"]
-          if len(authors) == 0:
-              print(idDBLP)
-          srec = title + " " + authors
-          #srec = authors + " " + str(year)
-          key = ""
-          
-          for l in range(L):
-              key = str(str_to_MinHash(srec.lower(), 2, l))
-              d = dictB[l]
-              if key in d:
-                  ids = d[key]
-                  if len(ids) < w:
-                      ids.append(df1.iloc[index1, 0])
-                  else:
-                      ids.pop(0)
-                      ids.append(df1.iloc[index1, 0])
-              else:
-                  d[key] = [df1.iloc[index1, 0]]
-      end = time.time()
+        st = time.time()
+        for index1 in range(naS, naS + offsetA):  # Scholar
+            if index1 >= len(df1):
+                break
+            rr = df1.iloc[index1, 0:5]
+            idDBLP = rr["id"]
+            title = rr["title"]
+            authors = rr["authors"]
+            venue = rr["venue"]
+            year = rr["year"]
+            if len(authors) == 0:
+                print(idDBLP)
+            srec = title + " " + authors
+            #srec = authors + " " + str(year)
+            key = ""
+            
+            for l in range(L):
+                key = str(str_to_MinHash(srec.lower(), 2, l))
+                d = dictB[l]
+                if key in d:
+                    ids = d[key]
+                    if len(ids) < w:
+                        ids.append(df1.iloc[index1, 0])
+                    else:
+                        ids.pop(0)
+                        ids.append(df1.iloc[index1, 0])
+                else:
+                    d[key] = [df1.iloc[index1, 0]]
+        end = time.time()
+        blockingTime += (end - st)
+        st = time.time()
+        #You can use either method matching() or topK()  
+        termination = matching()  
+        #termination = topK()
+        end = time.time()
+        matchingTime += (end - st)
+        if termination:
+                break
 
-      blockingTime += (end - st)
-      st = time.time()
-      #You can use either method matching() or topK()  
-      termination = matching()  
-      #termination = topK()
-      end = time.time()
-      matchingTime += (end - st)
-      if termination:
-             break
-
-      nbS += offsetB
-      naS += offsetA
+        nbS += offsetB
+        naS += offsetA
 
     print("blocking time (in mins)", blockingTime / 60)
     print("matching time (in mins)", matchingTime / 60)
     if tp + fp > 0:
-       print("TP=", tp, "Recall=", tp / TP, "Precision=", tp / (tp + fp), "pairsNo=", pairsNo)
+        print("TP=", tp, "Recall=", tp / TP, "Precision=", tp / (tp + fp), "pairsNo=", pairsNo)
+    
+    print(retorna_contagem_blocos(dictB))
 
-
-
+    

@@ -20,7 +20,8 @@ from datetime import timedelta
 class DataProcessor:
 
     def __init__(self):
-        self.env = StreamExecutionEnvironment.get_execution_environment()
+        self.env = StreamExecutionEnvironment.createLocalEnvironment()
+        # self.env = StreamExecutionEnvironment.get_execution_environment()
         self.table_env = StreamTableEnvironment.create(self.env)
         
     def process_data(self, input_path1, output_path):
@@ -28,7 +29,7 @@ class DataProcessor:
         config = self.table_env.get_config()
         config.set_idle_state_retention_time(timedelta(seconds=0),timedelta(seconds=3600))
 
-        self.env.set_parallelism(7)  # Configuração do ambiente de execução
+        self.env.set_parallelism(1)  # Configuração do ambiente de execução
 
         data_stream1 = self.env.read_text_file(input_path1)
         processed_stream = data_stream1.process(BlockingFunction())

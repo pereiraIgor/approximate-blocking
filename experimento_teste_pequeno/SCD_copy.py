@@ -144,8 +144,8 @@ if __name__ == '__main__':
     tp = 0
     fp = 0
     pairsNo = 0
-    nbS = 0 #MUDEI AQUI
-    naS = 0 #MUDEI AQUI
+    nbS = 0 #MUDEI AQUI, ANTES ERA 1(ERRADO)
+    naS = 0 #MUDEI AQUI, ANTES ERA 1(ERRADO)
     offsetA = 1
     offsetB = 1
     indices = [random.randint(0, L) for i in range(L1)]
@@ -162,7 +162,7 @@ if __name__ == '__main__':
           title = rr["title"]
           srec = title + " " + rr["authors"]
           key = ""
-          print("\n\n\n correspondente df1", idDBLP)
+          #   print("\n\n\n correspondente df1", idDBLP)
           for l in range(L):
               key = str(str_to_MinHash(srec.lower(), 2, l))# roda usando o str com varias seeds diferentes, no caso o l
               #print("--- Chave gerada é:", key," ---")
@@ -206,6 +206,6 @@ if __name__ == '__main__':
     print("matching time (in mins)", matchingTime / 60)
     if tp + fp > 0:
        print("TP=", tp, "Recall=", tp / TP, "Precision=", tp / (tp + fp), "pairsNo=", pairsNo)
-
+    print(dictB)
 
 
