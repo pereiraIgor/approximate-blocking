@@ -1,0 +1,67 @@
+county_id                                               42
+county_desc                                        HALIFAX
+voter_reg_num                                       100702
+ncid                                               BZ61829
+last_name                                            AARON
+first_name                                          RHANDA
+middle_name                                    FAITH THORA
+name_suffix_lbl                                        NaN
+status_cd                                                A
+voter_status_desc                                   ACTIVE
+reason_cd                                               AV
+voter_status_reason_desc                          VERIFIED
+res_street_address                  1327  WASHINGTON ST   
+res_city_desc                               ROANOKE RAPIDS
+state_cd                                                NC
+zip_code                                           27870.0
+mail_addr1                              1327 WASHINGTON ST
+mail_addr2                                             NaN
+mail_addr3                                             NaN
+mail_addr4                                             NaN
+mail_city                                   ROANOKE RAPIDS
+mail_state                                              NC
+mail_zipcode                                         27870
+full_phone_number                             2526733107.0
+confidential_ind                                         N
+registr_dt                                      11/25/2019
+race_code                                                B
+ethnic_code                                             NL
+party_cd                                               UNA
+gender_code                                              F
+birth_year                                            1992
+age_at_year_end                                         32
+birth_state                                             OC
+drivers_lic                                              Y
+precinct_abbrv                                        RRCE
+precinct_desc                       ROANOKE RAPIDS CENTRAL
+municipality_abbrv                                      RR
+municipality_desc                   CITY OF ROANOKE RAPIDS
+ward_abbrv                                            RRW2
+ward_desc                                            RRW02
+cong_dist_abbrv                                        1.0
+super_court_abbrv                                      07A
+judic_dist_abbrv                                       7.0
+nc_senate_abbrv                                        2.0
+nc_house_abbrv                                        27.0
+county_commiss_abbrv                                  CCD3
+county_commiss_desc         COUNTY COMMISSIONER DISTRICT 3
+township_abbrv                                         9.0
+township_desc                               ROANOKE RAPIDS
+school_dist_abbrv                                     RRSC
+school_dist_desc                     ROANOKE RAPIDS SCHOOL
+fire_dist_abbrv                                        NaN
+fire_dist_desc                                         NaN
+water_dist_abbrv                                       NaN
+water_dist_desc                                        NaN
+sewer_dist_abbrv                                       NaN
+sewer_dist_desc                                        NaN
+sanit_dist_abbrv                                       SAN
+sanit_dist_desc                       RR SANITARY DISTRICT
+rescue_dist_abbrv                                      NaN
+rescue_dist_desc                                       NaN
+munic_dist_abbrv                                        RR
+munic_dist_desc                     CITY OF ROANOKE RAPIDS
+dist_1_abbrv                                           7.0
+dist_1_desc                       PROSECUTORIAL DISTRICT 7
+vtd_abbrv                                             RR-8
+vtd_desc                                              RR 8

@@ -15,7 +15,8 @@ def matching():
     global tp, fp, pairsNo, L1, q
     print("ETAPA DE MATCHING")
     for index2 in range(nbS, nbS + offsetB):  # Scholar_copy
-        if index2 > len(df2) - 1:
+        #     VERIFICAR ISSO, POIS EU TENHO QUE LIDAR COM O DATASET MENOR ACABAR PRIMEIRO, 65000 E 2500 , MAS VAI DAR UM ERRO DE TER QUE FAZER UM MATCHING COM TODOS OS DADOS NOVAMENTE!!!!! TEM QUE VER ISSO
+        if index2 > len(df2) - 1: 
             return True
 
         rr = df2.iloc[index2, 0:3]
@@ -24,7 +25,8 @@ def matching():
         srec = title + " " + rr["authors"]
         print("\n\nsrec do matching é esse: ", srec)
         temp = dict()
-        indices = [random.randrange(0, L) for i in range(L1)] # gera valores random , porem pode ser igual, o que pode acontecer de fazer varias vezes a mesma comparação, se melhorar isso pode melhorar o precision
+        indices = [random.randrange(0, L) for i in range(L1)] 
+        # gera valores random , porem pode ser igual, o que pode acontecer de fazer varias vezes a mesma comparação, se melhorar isso pode melhorar o precision
         print("os indices gerados: \n", indices)
         matchingPairs = {}
         for l in indices:
@@ -33,7 +35,8 @@ def matching():
             d = dictB[l]
             print("--- o d é: ", d)
             print("dict b é ", dictB)
-            if key in d: #ACHO QUE AQUI PODE SER UMA MELHORIA, TALVEZ UM MATCHING REVERSO, ELE PARA AQUI
+            if key in d:
+                
                 print("------ chave esta em d")
                 ids = d[key]
                 print("------ o array de ids é ", ids)
@@ -113,9 +116,9 @@ def topK():
        return False
 
 if __name__ == '__main__':
-    df1 = pd.read_csv("DBLP_copy.csv", sep=",", encoding="utf-8", keep_default_na=False) #2617
-    df2 = pd.read_csv("Scholar_copy.csv", sep=",", encoding="utf-8", keep_default_na=False) #64000
-    truth = pd.read_csv("truth_copy.csv", sep=",", encoding="utf-8", keep_default_na=False)
+    df2 = pd.read_csv("DBLP_copy.csv", sep=",", encoding="utf-8", keep_default_na=False) #2617
+    df1 = pd.read_csv("Scholar_copy.csv", sep=",", encoding="utf-8", keep_default_na=False) #64000
+    truth = pd.read_csv("truth_copy_copy.csv", sep=",", encoding="utf-8", keep_default_na=False)
     truthD = dict()
     for i, r in truth.iterrows():
         idDBLP = r["idDBLP"]
@@ -127,80 +130,84 @@ if __name__ == '__main__':
             truthD[idDBLP] = [idScholar]
 
     t = 0.5
-    p1 = (t) ** 8
-    L = math.ceil(math.log(0.1) / math.log(1 - p1))
-    TP = 5347
-    eps = 0.1
+    #p1 = (t) ** 8 só é usado abaixo, para calcular o L
+    #L = math.ceil(math.log(0.1) / math.log(1 - p1)) produz um valor de 589, sendo que o L padrao, definido abaixo, fica em 120
+    #TP = 5347
+    TP = 9
     w = 1000
+    eps = 0.1
     delta = 0.1
     L = math.ceil(math.log(1 / delta) / (2 * (eps ** 2)))
+    #delta é a probabilidade de erro(a chance de o algoritmo falhar em algum ponto) 
+    # / 
+    # margem de erro que você está disposto a aceitar nas estimativas
     eps = 0.01
-    L1 = int(1 / (2 * eps))
+    L1 = int(1 / (2 * eps)) #sempre vai gerar 50
     L=5
-    L1=2
+    L1 = 3
     print("L=", L, "L1=", L1)
-    q = 2
+    q = 2  # quantidade de q-gramas dado a string "relampago" gera ['re', 'el', 'la', 'am', 'mp', 'pa', 'ag', 'go']
     dictB = [dict() for l in range(L)]
     tp = 0
     fp = 0
     pairsNo = 0
     nbS = 0 #MUDEI AQUI, ANTES ERA 1(ERRADO)
     naS = 0 #MUDEI AQUI, ANTES ERA 1(ERRADO)
-    offsetA = 1
+    offsetA = 5
     offsetB = 1
-    indices = [random.randint(0, L) for i in range(L1)]
+    # indices = [random.randint(0, L) for i in range(L1)]
     blockingTime = 0
     matchingTime = 0
 
     while True:
-      st = time.time()
-      for index1 in range(naS, naS + offsetA): #DBLP 
-          if index1 >= len(df1):
-              break
-          rr = df1.iloc[index1, 0:3]
-          idDBLP = rr["id"]
-          title = rr["title"]
-          srec = title + " " + rr["authors"]
-          key = ""
-          #   print("\n\n\n correspondente df1", idDBLP)
-          for l in range(L):
-              key = str(str_to_MinHash(srec.lower(), 2, l))# roda usando o str com varias seeds diferentes, no caso o l
-              #print("--- Chave gerada é:", key," ---")
-              #print(dictB)
-              d = dictB[l]
-              #print(d)
-              #print("--- O DictB está assim:", dictB)
-              if key in d:
-                  #print("--- chave esta no d")
-                  ids = d[key]
-                  #print("antes",ids)
-                  if len(ids) < w:
-                      ids.append(df1.iloc[index1, 0])
-                  else:
-                      ids.pop(0)
-                      ids.append(df1.iloc[index1, 0])
-                  #print("depois", ids)
-                  #print("--- O DictB AGORAAAAA está assim:", dictB)
+        st = time.time()
+        for index1 in range(naS, naS + offsetA): #DBLP 
+            if index1 >= len(df1):
+                break
+            rr = df1.iloc[index1, 0:3]
+            idDBLP = rr["id"]
+            title = rr["title"]
+            srec = title + " " + rr["authors"]
+            key = ""
+            #   print("\n\n\n correspondente df1", idDBLP)
+            for l in range(L):
+                key = str(str_to_MinHash(srec.lower(), 2, l))# roda usando o str com varias seeds diferentes, no caso o l
+                #print("--- Chave gerada é:", key," ---")
+                #print(dictB)
+                d = dictB[l]
+                #print(d)
+                #print("--- O DictB está assim:", dictB)
+                if key in d:
+                    #print("--- chave esta no d")
+                    ids = d[key]
+                    #print("antes",ids)
+                    if len(ids) < w:
+                        ids.append(df1.iloc[index1, 0])
+                    else:
+                        ids.pop(0)
+                        ids.append(df1.iloc[index1, 0])
+                    #print("depois", ids)
+                    #print("--- O DictB AGORAAAAA está assim:", dictB)
 
-              else:
-                  #print("--- chave não esta no d")
-                  d[key] = [df1.iloc[index1, 0]]
-                  #print("--- O DictB AGORAAAAA está assim:", dictB)
-          #print(ids)
-      end = time.time()
+                else:
+                    #print("--- chave não esta no d")
+                    d[key] = [df1.iloc[index1, 0]]
+                    #print("--- O DictB AGORAAAAA está assim:", dictB)
+            #print(ids)
+        end = time.time()
 
-      blockingTime += (end - st)
-      st = time.time()
-      #You can use either method matching() or topK()  
-      termination = matching()  
-      #termination = topK()
-      end = time.time()
-      matchingTime += (end - st)
-      if termination:
-             break
+        blockingTime += (end - st)
+        st = time.time()
+        #You can use either method matching() or topK()  
+        termination = matching()  
+        #termination = topK()
+        end = time.time()
+        matchingTime += (end - st)
+        if termination:
+            break
 
-      nbS += offsetB
-      naS += offsetA
+        nbS += offsetB
+        naS += offsetA
 
     print("blocking time (in mins)", blockingTime / 60)
     print("matching time (in mins)", matchingTime / 60)

@@ -28,8 +28,6 @@ def matching():
         idScholar = rr["id"]
         title = rr["title"]
         authors = rr["authors"]
-        venue = rr["venue"]
-        year = rr["year"]
         srec = title + " " + authors
         #srec = authors + " " + str(year)
         
@@ -179,6 +177,7 @@ if __name__ == '__main__':
                 else:
                     d[key] = [df1.iloc[index1, 0]]
         end = time.time()
+        print(" - -- - - - - - - -- - - passou FORAAAAAAA do for")
         blockingTime += (end - st)
         st = time.time()
         #You can use either method matching() or topK()  
