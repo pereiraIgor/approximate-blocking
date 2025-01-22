@@ -1,5 +1,0 @@
-"id","title","authors","venue","year"
-"conf/vldb/RusinkiewiczKTWM95","Towards a Cooperative Transaction Model - The Cooperative Activity Model","M Rusinkiewicz, W Klas, T Tesch, J Wδsch, P Muth","VLDB",1995
-"journals/sigmod/EisenbergM02","SQL/XML is Making Good Progress","A Eisenberg, J Melton","SIGMOD Record",2002
-"conf/vldb/AmmannJR95","Using Formal Methods to Reason about Semantics-Based Decompositions of Transactions","P Ammann, S Jajodia, I Ray","VLDB",1995
-"conf/sigmod/AbadiCCCCEGHMRSSTXYZ03","Aurora: A Data Stream Management System","D Abadi, D Carney, U Ηetintemel, M Cherniack, C Convey, C Erwin, E Galvez, M Hatoun, A Maskey, A Rasin, A Singer, M Stonebraker, N Tatbul, Y Xing, R Yan, S Zdonik","SIGMOD Conference",2003
