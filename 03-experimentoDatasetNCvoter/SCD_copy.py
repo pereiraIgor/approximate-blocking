@@ -118,17 +118,6 @@ if __name__ == '__main__':
     df1 = pd.read_csv("./ncvoter42.csv", sep=",", encoding="utf-8", keep_default_na=False)
     df2 = pd.read_csv("./ncvoter42_perturbed.csv", sep=",", encoding="utf-8", keep_default_na=False)
     
-    truth = pd.read_csv("truth.csv", sep=",", encoding="utf-8", keep_default_na=False)
-    truthD = dict()
-    for i, r in truth.iterrows():
-        idDBLP = r["idDBLP"]
-        idScholar = r["idScholar"]
-        if idDBLP in truthD:
-            ids = truthD[idDBLP]
-            ids.append(idScholar)
-        else:
-            truthD[idDBLP] = [idScholar]
-
     t = 0.5
     p1 = (t) ** 8
     L = math.ceil(math.log(0.1) / math.log(1 - p1))
