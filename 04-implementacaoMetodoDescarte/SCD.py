@@ -5,13 +5,6 @@ import math
 import mmh3
 import statistics
 
-def retorna_contagem_blocos(dictB):
-    resultado_de_tudo = []
-    for e in dictB:
-        for valor in e.values():
-            resultado_de_tudo.append(len(valor))
-    return resultado_de_tudo
-
 def str_to_MinHash(str1, q, seed=0):
     return min([mmh3.hash(str1[i:i + q], seed) for i in range(len(str1) - q + 1)])
 
@@ -20,7 +13,7 @@ def frequent2(temp, L, t):
 
 def matching():
     global tp, fp, pairsNo, L1, q
-    for index2 in range(nbS, nbS + offsetB):  # DBLP
+    for index2 in range(nbS, nbS + offsetB): 
         if index2 > len(df2) - 1:
             return True
 
@@ -29,10 +22,6 @@ def matching():
         title = rr["title"]
         authors = rr["authors"]
         srec = title + " " + authors
-        #srec = authors + " " + str(year)
-        
-        if len(authors) == 0:
-              print(idScholar)
 
         temp = dict()
         indices = [random.randrange(0, L) for i in range(L1)]
@@ -42,7 +31,7 @@ def matching():
             d = dictB[l]
             if key in d:
                 ids = d[key]
-                for id in ids:
+                for id, _ in ids:
                     if id in temp:
                         temp[id] += 1
                         if temp[id] / L1 >= t:
@@ -62,6 +51,18 @@ def matching():
                 fp += 1
 
     return False
+
+
+def elimina_elementos_dentro_dictB(array_para_descarte, elementos_para_descarte):
+    # print(f"indice {elementos_para_descarte} para descarte e o array é {array_para_descarte}")
+    indice = 0
+    for (_, tempo_inserido) in array_para_descarte:
+        if tempo_inserido < elementos_para_descarte:
+            indice += 1
+        else:
+            del array_para_descarte[:indice]
+            break
+
 
 if __name__ == '__main__':
     df1 = pd.read_csv("./DBLP.csv", sep=",", encoding="utf-8", keep_default_na=False)
@@ -95,9 +96,14 @@ if __name__ == '__main__':
     naS = 1
     offsetA = 50
     offsetB = 50
-    indices = [random.randint(0, L) for i in range(L1)]
     blockingTime = 0
     matchingTime = 0
+
+
+    tempoQueFoiInseridoNaEstrutura = 0 # esse é o valor que sera colocado junto com o id, seria a posiçaõ do elemento no array
+    elementos_para_descarte = 50 # esse é a quantidade de elementos que serão descartados
+    nova_estrutura = {}
+
     while True:
         st = time.time()
         for index1 in range(naS, naS + offsetA):
@@ -107,10 +113,7 @@ if __name__ == '__main__':
             idDBLP = rr["id"]
             title = rr["title"]
             authors = rr["authors"]
-            venue = rr["venue"]
-            year = rr["year"]
-            if len(authors) == 0:
-                print(idDBLP)
+
             srec = title + " " + authors
             key = ""
             
@@ -120,12 +123,17 @@ if __name__ == '__main__':
                 if key in d:
                     ids = d[key]
                     if len(ids) < w:
-                        ids.append(df1.iloc[index1, 0])
+                        ids.append((idDBLP, tempoQueFoiInseridoNaEstrutura))
                     else:
-                        ids.pop(0)
-                        ids.append(df1.iloc[index1, 0])
+                        qtd_descarte, elementoAtualParaDescarte = nova_estrutura[(key, l)]
+                        elimina_elementos_dentro_dictB(ids, elementoAtualParaDescarte)
+                        nova_estrutura[(key, l)] = [qtd_descarte + 1, elementoAtualParaDescarte + 50]
+                        ids.append((idDBLP, tempoQueFoiInseridoNaEstrutura))
                 else:
-                    d[key] = [df1.iloc[index1, 0]]
+                    d[key] = [(idDBLP, tempoQueFoiInseridoNaEstrutura)]
+                    nova_estrutura[(key, l)] = [0, 50]
+            tempoQueFoiInseridoNaEstrutura += 1
+        
         end = time.time()
 
         blockingTime += (end - st)
@@ -143,5 +151,3 @@ if __name__ == '__main__':
     print("matching time (in mins)", matchingTime / 60)
     if tp + fp > 0:
         print("TP=", tp, "Recall=", tp / TP, "Precision=", tp / (tp + fp), "pairsNo=", pairsNo)
-    
-    
