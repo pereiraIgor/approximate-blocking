@@ -31,13 +31,14 @@ def matching():
             d = dictB[l]
             if key in d:
                 ids = d[key]
-                for id, _ in ids:
-                    if id in temp:
-                        temp[id] += 1
-                        if temp[id] / L1 >= t:
-                            matchingPairs[id] = 1
+                for id in ids:
+                    novo_id = id[0]
+                    if novo_id in temp:
+                        temp[novo_id] += 1
+                        if temp[novo_id] / L1 >= t:
+                            matchingPairs[novo_id] = 1
                     else:
-                        temp[id] = 1
+                        temp[novo_id] = 1
         for id in matchingPairs.keys():
             idDBLP = id
             pairsNo += 1
