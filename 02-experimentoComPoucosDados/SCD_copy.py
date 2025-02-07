@@ -116,9 +116,9 @@ def topK():
        return False
 
 if __name__ == '__main__':
-    df2 = pd.read_csv("DBLP_copy.csv", sep=",", encoding="utf-8", keep_default_na=False) #2617
-    df1 = pd.read_csv("Scholar_copy.csv", sep=",", encoding="utf-8", keep_default_na=False) #64000
-    truth = pd.read_csv("truth_copy_copy.csv", sep=",", encoding="utf-8", keep_default_na=False)
+    df2 = pd.read_csv("../00-datasets/DBLP_copy.csv", sep=",", encoding="utf-8", keep_default_na=False) #2617
+    df1 = pd.read_csv("../00-datasets/Scholar_copy.csv", sep=",", encoding="utf-8", keep_default_na=False) #64000
+    truth = pd.read_csv("../00-datasets/truth_copy.csv", sep=",", encoding="utf-8", keep_default_na=False)
     truthD = dict()
     for i, r in truth.iterrows():
         idDBLP = r["idDBLP"]

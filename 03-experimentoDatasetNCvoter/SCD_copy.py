@@ -54,17 +54,17 @@ def matching():
                             matchingPairs[id] = 1
                     else:
                         temp[id] = 1
-        for id in matchingPairs.keys():
-            idDBLP = id
-            pairsNo += 1
-            if idDBLP in truthD:
-                ids = truthD[idDBLP]
-                for id in ids:
-                    if id == ncid:
-                        tp += 1
-                        break
-            else:
-                fp += 1
+        # for id in matchingPairs.keys():
+        #     idDBLP = id
+        #     pairsNo += 1
+        #     if idDBLP in truthD:
+        #         ids = truthD[idDBLP]
+        #         for id in ids:
+        #             if id == ncid:
+        #                 tp += 1
+        #                 break
+        #     else:
+        #         fp += 1
 
     return False
 
@@ -115,8 +115,8 @@ def topK():
        return False
 # esse codigo é para rodar com o ncvoter42
 if __name__ == '__main__':
-    df1 = pd.read_csv("./ncvoter42.csv", sep=",", encoding="utf-8", keep_default_na=False)
-    df2 = pd.read_csv("./ncvoter42_perturbed.csv", sep=",", encoding="utf-8", keep_default_na=False)
+    df1 = pd.read_csv("../00-datasets/ncvoter42.csv", sep=",", encoding="utf-8", keep_default_na=False)
+    df2 = pd.read_csv("../00-datasets/ncvoter42_perturbed.csv", sep=",", encoding="utf-8", keep_default_na=False)
     
     t = 0.5
     p1 = (t) ** 8

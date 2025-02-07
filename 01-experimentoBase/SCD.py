@@ -29,7 +29,6 @@ def matching():
         title = rr["title"]
         authors = rr["authors"]
         srec = title + " " + authors
-        #srec = authors + " " + str(year)
         
         if len(authors) == 0:
               print(idScholar)
@@ -110,9 +109,9 @@ def topK():
        return False
 
 if __name__ == '__main__':
-    df1 = pd.read_csv("DBLP.csv", sep=",", encoding="utf-8", keep_default_na=False)
-    df2 = pd.read_csv("Scholar.csv", sep=",", encoding="utf-8", keep_default_na=False)
-    truth = pd.read_csv("truth.csv", sep=",", encoding="utf-8", keep_default_na=False)
+    df1 = pd.read_csv("../00-datasets/DBLP.csv", sep=",", encoding="utf-8", keep_default_na=False)
+    df2 = pd.read_csv("../00-datasets/Scholar.csv", sep=",", encoding="utf-8", keep_default_na=False)
+    truth = pd.read_csv("../00-datasets/truth.csv", sep=",", encoding="utf-8", keep_default_na=False)
     truthD = dict()
     for i, r in truth.iterrows():
         idDBLP = r["idDBLP"]
@@ -177,7 +176,7 @@ if __name__ == '__main__':
                 else:
                     d[key] = [df1.iloc[index1, 0]]
         end = time.time()
-        print(" - -- - - - - - - -- - - passou FORAAAAAAA do for")
+        # print(" - -- - - - - - - -- - - passou FORAAAAAAA do for")
         blockingTime += (end - st)
         st = time.time()
         #You can use either method matching() or topK()  
@@ -195,7 +194,7 @@ if __name__ == '__main__':
     print("matching time (in mins)", matchingTime / 60)
     if tp + fp > 0:
         print("TP=", tp, "Recall=", tp / TP, "Precision=", tp / (tp + fp), "pairsNo=", pairsNo)
-    
-    print(retorna_contagem_blocos(dictB))
+
+
 
     

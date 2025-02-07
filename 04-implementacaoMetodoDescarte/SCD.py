@@ -66,9 +66,9 @@ def elimina_elementos_dentro_dictB(array_para_descarte, elementos_para_descarte)
 
 
 if __name__ == '__main__':
-    df1 = pd.read_csv("./DBLP.csv", sep=",", encoding="utf-8", keep_default_na=False)
-    df2 = pd.read_csv("./Scholar.csv", sep=",", encoding="utf-8", keep_default_na=False)
-    truth = pd.read_csv("truth.csv", sep=",", encoding="utf-8", keep_default_na=False)
+    df1 = pd.read_csv("../00-datasets/DBLP.csv", sep=",", encoding="utf-8", keep_default_na=False)
+    df2 = pd.read_csv("../00-datasets/Scholar.csv", sep=",", encoding="utf-8", keep_default_na=False)
+    truth = pd.read_csv("../00-datasets/truth.csv", sep=",", encoding="utf-8", keep_default_na=False)
     truthD = dict()
     for i, r in truth.iterrows():
         idDBLP = r["idDBLP"]
