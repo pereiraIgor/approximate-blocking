@@ -1,10 +1,8 @@
-# implementando a estrutura como um array de arrays
 import pandas as pd
 import time
 import random
 import math
 import mmh3
-import statistics
 
 def str_to_MinHash(str1, q, seed=0):
     return min([mmh3.hash(str1[i:i + q], seed) for i in range(len(str1) - q + 1)])
@@ -31,15 +29,14 @@ def matching():
             key = str(str_to_MinHash(srec.lower(), q, l))
             d = dictB[l]
             if key in d:
-                ids = d[key]                
+                ids = d[key]
                 for id in ids:
-                    valor = id[0]                  
-                    if valor in temp:
-                        temp[valor] += 1
-                        if temp[valor] / L1 >= t:
-                            matchingPairs[valor] = 1
+                    if id in temp:
+                        temp[id] += 1
+                        if temp[id] / L1 >= t:
+                            matchingPairs[id] = 1
                     else:
-                        temp[valor] = 1
+                        temp[id] = 1
         for id in matchingPairs.keys():
             idDBLP = id
             pairsNo += 1
@@ -55,13 +52,14 @@ def matching():
     return False
 
 
-def elimina_elementos_dentro_dictB(array_para_descarte, elementos_para_descarte):
+def elimina_elementos_dentro_dictB(array_para_descarte, array_para_descarte_igual, elementos_para_descarte):
     indice = 0
-    for (_, tempo_inserido) in array_para_descarte:
+    for (tempo_inserido) in array_para_descarte_igual:
         if tempo_inserido < elementos_para_descarte:
             indice += 1
         else:
             del array_para_descarte[:indice]
+            del array_para_descarte_igual[:indice]
             break
 
 
@@ -90,6 +88,7 @@ if __name__ == '__main__':
     print("L=", L, "L1=", L1)
     q = 2
     dictB = [dict() for l in range(L)]
+    dictB_igual = [dict() for l in range(L)]
     tp = 0
     fp = 0
     pairsNo = 0
@@ -103,7 +102,7 @@ if __name__ == '__main__':
 
     tempoQueFoiInseridoNaEstrutura = 0 # esse é o valor que sera colocado junto com o id, seria a posiçaõ do elemento no array
     elementos_para_descarte = 50 # esse é a quantidade de elementos que serão descartados
-    nova_estrutura = {}
+    acompanhamentoIndicePorBloco = {} #essa estrutura é um indice que vai ser usada para saber qual a posição do elemento que será descartado
 
     while True:
         st = time.time()
@@ -117,22 +116,27 @@ if __name__ == '__main__':
 
             srec = title + " " + authors
             key = ""
-            formatted_time = f"{tempoQueFoiInseridoNaEstrutura:05d}"
+            
             for l in range(L):
                 key = str(str_to_MinHash(srec.lower(), 2, l))
                 d = dictB[l]
+                d_igual = dictB_igual[l]
                 if key in d:
                     ids = d[key]
+                    ids_igual = d_igual[key]
                     if len(ids) < w:
-                        ids.append([idDBLP, tempoQueFoiInseridoNaEstrutura])
+                        ids.append(idDBLP)
+                        ids_igual.append(tempoQueFoiInseridoNaEstrutura)
                     else:
-                        qtd_descarte, elementoAtualParaDescarte = nova_estrutura[(key, l)]
-                        elimina_elementos_dentro_dictB(ids, elementoAtualParaDescarte)
-                        nova_estrutura[(key, l)] = [qtd_descarte + 1, elementoAtualParaDescarte + 50]
-                        ids.append([idDBLP, tempoQueFoiInseridoNaEstrutura])
+                        qtd_descarte, elementoAtualParaDescarte = acompanhamentoIndicePorBloco[(key, l)]
+                        elimina_elementos_dentro_dictB(ids, ids_igual, elementoAtualParaDescarte)
+                        acompanhamentoIndicePorBloco[(key, l)] = [qtd_descarte + 1, elementoAtualParaDescarte + elementos_para_descarte]
+                        ids.append(idDBLP)
+                        ids_igual.append(tempoQueFoiInseridoNaEstrutura)
                 else:
-                    d[key] = [[idDBLP, tempoQueFoiInseridoNaEstrutura]]
-                    nova_estrutura[(key, l)] = [0, 50]
+                    d[key] = [idDBLP]
+                    d_igual[key] = [tempoQueFoiInseridoNaEstrutura]
+                    acompanhamentoIndicePorBloco[(key, l)] = [0, elementos_para_descarte]
 
             tempoQueFoiInseridoNaEstrutura += 1
         

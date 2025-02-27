@@ -131,13 +131,13 @@ if __name__ == '__main__':
                     else:
                         qtd_descarte, elementoAtualParaDescarte = acompanhamentoIndicePorBloco[(key, l)]
                         elimina_elementos_dentro_dictB(ids, ids_igual, elementoAtualParaDescarte)
-                        acompanhamentoIndicePorBloco[(key, l)] = [qtd_descarte + 1, elementoAtualParaDescarte + 50]
+                        acompanhamentoIndicePorBloco[(key, l)] = [qtd_descarte + 1, elementoAtualParaDescarte + elementos_para_descarte]
                         ids.append(idDBLP)
                         ids_igual.append(tempoQueFoiInseridoNaEstrutura)
                 else:
                     d[key] = [idDBLP]
                     d_igual[key] = [tempoQueFoiInseridoNaEstrutura]
-                    acompanhamentoIndicePorBloco[(key, l)] = [0, 50]
+                    acompanhamentoIndicePorBloco[(key, l)] = [0, elementos_para_descarte]
 
             tempoQueFoiInseridoNaEstrutura += 1
         
