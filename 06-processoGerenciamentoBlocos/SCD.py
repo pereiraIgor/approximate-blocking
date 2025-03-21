@@ -63,6 +63,13 @@ def elimina_elementos_dentro_dictB(array_para_descarte, array_para_descarte_igua
             break
 
 
+def exclui_blocos(dictB, dictB_igual, tempoQueFoiInseridoNaEstrutura,tamanhoDosBlocos):
+    for l, blocos_da_pos in enumerate(dictB_igual):
+        for key, bloco_unico in blocos_da_pos.items():
+            if bloco_unico[-1] < tempoQueFoiInseridoNaEstrutura - 300 and tamanhoDosBlocos[(key, l)] > 100:
+                tamanhoDosBlocos[(key, l)] -= 100
+            break
+
 if __name__ == '__main__':
     df1 = pd.read_csv("../00-datasets/DBLP.csv", sep=",", encoding="utf-8", keep_default_na=False)
     df2 = pd.read_csv("../00-datasets/Scholar.csv", sep=",", encoding="utf-8", keep_default_na=False)
@@ -103,6 +110,7 @@ if __name__ == '__main__':
     tempoQueFoiInseridoNaEstrutura = 0 # esse é o valor que sera colocado junto com o id, seria a posiçaõ do elemento no array
     elementos_para_descarte = 50 # esse é a quantidade de elementos que serão descartados
     acompanhamentoIndicePorBloco = {} #essa estrutura é um indice que vai ser usada para saber qual a posição do elemento que será descartado
+    tamanhoDosBlocos = {}
 
     while True:
         st = time.time()
@@ -124,19 +132,25 @@ if __name__ == '__main__':
                 if key in d:
                     ids = d[key]
                     ids_igual = d_igual[key]
-                    if len(ids) < w:
+                    tamanho_atual = tamanhoDosBlocos[(key, l)]
+                    if len(ids) < tamanho_atual:
                         ids.append(idDBLP)
                         ids_igual.append(tempoQueFoiInseridoNaEstrutura)
                     else:
                         qtd_descarte, elementoAtualParaDescarte = acompanhamentoIndicePorBloco[(key, l)]
                         elimina_elementos_dentro_dictB(ids, ids_igual, elementoAtualParaDescarte)
-                        acompanhamentoIndicePorBloco[(key, l)] = [qtd_descarte + 1, elementoAtualParaDescarte + elementos_para_descarte]
+                        acompanhamentoIndicePorBloco[(key, l)] = [qtd_descarte + 1, elementoAtualParaDescarte + elementos_para_descarte ]
                         ids.append(idDBLP)
                         ids_igual.append(tempoQueFoiInseridoNaEstrutura)
+                        exclui_blocos(dictB, dictB_igual, tempoQueFoiInseridoNaEstrutura, tamanhoDosBlocos)
+                        tamanhoDosBlocos[(key, l)] += 100
+                        
                 else:
                     d[key] = [idDBLP]
                     d_igual[key] = [tempoQueFoiInseridoNaEstrutura]
-                    acompanhamentoIndicePorBloco[(key, l)] = [0, elementos_para_descarte]
+                    acompanhamentoIndicePorBloco[(key, l)] = [0, elementos_para_descarte,]
+                    tamanhoDosBlocos[(key, l)] = w
+                
 
             tempoQueFoiInseridoNaEstrutura += 1
         

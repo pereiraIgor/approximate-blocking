@@ -3,7 +3,6 @@ import time
 import random
 import math
 import mmh3
-import statistics
 
 def str_to_MinHash(str1, q, seed=0):
     return min([mmh3.hash(str1[i:i + q], seed) for i in range(len(str1) - q + 1)])
