@@ -10,23 +10,14 @@ def str_to_MinHash(str1, q, seed=0):
 def frequent2(temp, L, t):
     return {k: v for (k, v) in temp.items() if v/L >= t}
 
-
 def matching():
     global tp, fp, pairsNo, L1, q
     for index2 in range(nbS, nbS + offsetB): 
         if index2 > len(df2) - 1:
             return True
 
-        # rr = df2.iloc[index2, 0:5]
-        # idScholar = rr["id"]
-        # title = rr["title"]
-        # authors = rr["authors"]
-        # srec = title + " " + authors
-
         rr = df2.iloc[index1]
-        # print("entrou")
         ncid = rr["id"]
-        # print(ncid)
         first_name = rr["first_name"]
         last_name = rr["last_name"]
         registr_dt = rr["registr_dt"]
@@ -48,13 +39,9 @@ def matching():
                             matchingPairs[id] = 1
                     else:
                         temp[id] = 1
-                        
         for id in matchingPairs.keys():
             idDBLP = id
             pairsNo += 1
-            # print(idDBLP)
-            # print(ncid)
-            # print('\n')
             if idDBLP in truthD:
                 ids = truthD[idDBLP]
                 for id in ids:
@@ -77,13 +64,6 @@ def elimina_elementos_dentro_dictB(array_para_descarte, array_para_descarte_igua
             del array_para_descarte_igual[:indice]
             break
 
-
-def exclui_blocos(dictB, dictB_igual, tempoQueFoiInseridoNaEstrutura,tamanhoDosBlocos):
-    for l, blocos_da_pos in enumerate(dictB_igual):
-        for key, bloco_unico in blocos_da_pos.items():
-            if bloco_unico[-1] < tempoQueFoiInseridoNaEstrutura - 300 and tamanhoDosBlocos[(key, l)] > 100:
-                tamanhoDosBlocos[(key, l)] -= 100
-            break
 
 if __name__ == '__main__':
     df1 = pd.read_csv("../00-datasets/ncvoter42.csv", sep=",", encoding="utf-8", keep_default_na=False)
@@ -125,18 +105,12 @@ if __name__ == '__main__':
     tempoQueFoiInseridoNaEstrutura = 0 # esse é o valor que sera colocado junto com o id, seria a posiçaõ do elemento no array
     elementos_para_descarte = 50 # esse é a quantidade de elementos que serão descartados
     acompanhamentoIndicePorBloco = {} #essa estrutura é um indice que vai ser usada para saber qual a posição do elemento que será descartado
-    tamanhoDosBlocos = {}
 
     while True:
         st = time.time()
         for index1 in range(naS, naS + offsetA):
             if index1 >= len(df1):
                 break
-            # rr = df1.iloc[index1, 0:5]
-            # idDBLP = rr["id"]
-            # title = rr["title"]
-            # authors = rr["authors"]
-
             rr = df1.iloc[index1, 0:69]
             
             ncid = rr["ncid"]
@@ -146,8 +120,6 @@ if __name__ == '__main__':
             age_at_year_end = rr["age_at_year_end"]
             srec = first_name + " " + last_name + " " + str(registr_dt) + " " + str(age_at_year_end)
             key = ""
-            # srec = title + " " + authors
-            key = ""
             
             for l in range(L):
                 key = str(str_to_MinHash(srec.lower(), 2, l))
@@ -156,25 +128,19 @@ if __name__ == '__main__':
                 if key in d:
                     ids = d[key]
                     ids_igual = d_igual[key]
-                    tamanho_atual = tamanhoDosBlocos[(key, l)]
-                    if len(ids) < tamanho_atual:
+                    if len(ids) < w:
                         ids.append(ncid)
                         ids_igual.append(tempoQueFoiInseridoNaEstrutura)
                     else:
                         qtd_descarte, elementoAtualParaDescarte = acompanhamentoIndicePorBloco[(key, l)]
                         elimina_elementos_dentro_dictB(ids, ids_igual, elementoAtualParaDescarte)
-                        acompanhamentoIndicePorBloco[(key, l)] = [qtd_descarte + 1, elementoAtualParaDescarte + elementos_para_descarte ]
+                        acompanhamentoIndicePorBloco[(key, l)] = [qtd_descarte + 1, elementoAtualParaDescarte + elementos_para_descarte]
                         ids.append(ncid)
                         ids_igual.append(tempoQueFoiInseridoNaEstrutura)
-                        exclui_blocos(dictB, dictB_igual, tempoQueFoiInseridoNaEstrutura, tamanhoDosBlocos)
-                        tamanhoDosBlocos[(key, l)] += 100
-                        
                 else:
                     d[key] = [ncid]
                     d_igual[key] = [tempoQueFoiInseridoNaEstrutura]
-                    acompanhamentoIndicePorBloco[(key, l)] = [0, elementos_para_descarte,]
-                    tamanhoDosBlocos[(key, l)] = w
-                
+                    acompanhamentoIndicePorBloco[(key, l)] = [0, elementos_para_descarte]
 
             tempoQueFoiInseridoNaEstrutura += 1
         
