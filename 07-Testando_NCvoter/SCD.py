@@ -61,8 +61,11 @@ def elimina_elementos_dentro_dictB(array_para_descarte, array_para_descarte_igua
         if tempo_inserido < elementos_para_descarte:
             indice += 1
         else:
+            # print("antes na função", len(array_para_descarte), len(array_para_descarte_igual))
             del array_para_descarte[:indice]
             del array_para_descarte_igual[:indice]
+            # print("depois na função", len(array_para_descarte), len(array_para_descarte_igual))
+            # print("\n")
             break
 
 
@@ -102,8 +105,8 @@ if __name__ == '__main__':
     tp = 0
     fp = 0
     pairsNo = 0
-    nbS = 1
-    naS = 1
+    nbS = 50
+    naS = 50
     offsetA = 50
     offsetB = 50
     blockingTime = 0
@@ -111,9 +114,11 @@ if __name__ == '__main__':
 
 
     tempoQueFoiInseridoNaEstrutura = 0 # esse é o valor que sera colocado junto com o id, seria a posiçaõ do elemento no array
-    elementos_para_descarte = 50 # esse é a quantidade de elementos que serão descartados
+    elementos_para_descarte = 1000 # esse é a quantidade de elementos que serão descartados
     acompanhamentoIndicePorBloco = {} #essa estrutura é um indice que vai ser usada para saber qual a posição do elemento que será descartado
     tamanhoDosBlocos = {}
+    min_descarte = int(elementos_para_descarte * 0.5)
+    max_descarte = int(elementos_para_descarte * 1.5)
 
     while True:
         st = time.time()
@@ -143,17 +148,19 @@ if __name__ == '__main__':
                         ids_igual.append(tempoQueFoiInseridoNaEstrutura)
                     else:
                         qtd_descarte, elementoAtualParaDescarte = acompanhamentoIndicePorBloco[(key, l)]
+                        # print("antes na blocagem", len(ids), len(ids_igual))
                         elimina_elementos_dentro_dictB(ids, ids_igual, elementoAtualParaDescarte)
-                        acompanhamentoIndicePorBloco[(key, l)] = [qtd_descarte + 1, elementoAtualParaDescarte + elementos_para_descarte ]
+                        # print("depois na blocagem", len(ids), len(ids_igual))
+                        elementos_para_descarte_aleatorio = random.randint(min_descarte, max_descarte)
+                        acompanhamentoIndicePorBloco[(key, l)] = [qtd_descarte + 1, elementoAtualParaDescarte + elementos_para_descarte_aleatorio]
+                        
                         ids.append(ncid)
                         ids_igual.append(tempoQueFoiInseridoNaEstrutura)
-                        exclui_blocos(dictB, dictB_igual, tempoQueFoiInseridoNaEstrutura, tamanhoDosBlocos)
-                        tamanhoDosBlocos[(key, l)] += 100
-                        
+
                 else:
                     d[key] = [ncid]
                     d_igual[key] = [tempoQueFoiInseridoNaEstrutura]
-                    acompanhamentoIndicePorBloco[(key, l)] = [0, elementos_para_descarte,]
+                    acompanhamentoIndicePorBloco[(key, l)] = [0, elementos_para_descarte]
                     tamanhoDosBlocos[(key, l)] = w
                 
 

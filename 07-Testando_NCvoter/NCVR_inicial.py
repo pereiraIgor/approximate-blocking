@@ -132,8 +132,8 @@ if __name__ == '__main__':
     pairsNo = 0
     nbS = 1
     naS = 1
-    offsetA = 1
-    offsetB = 1
+    offsetA = 50
+    offsetB = 50
     blockingTime = 0
     matchingTime = 0
 
@@ -152,7 +152,6 @@ if __name__ == '__main__':
             age_at_year_end = rr["age_at_year_end"]
             srec = first_name + " " + last_name + " " + str(registr_dt) + " " + str(age_at_year_end)
             key = ""
-            
             for l in range(L):
                 key = str(str_to_MinHash(srec.lower(), 2, l))
                 d = dictB[l]
