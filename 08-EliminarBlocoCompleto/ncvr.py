@@ -17,11 +17,13 @@ def matching():
         if index2 > len(df2) - 1:
             return True
 
-        rr = df2.iloc[index2, 0:5]
-        idScholar = rr["id"]
-        title = rr["title"]
-        authors = rr["authors"]
-        srec = title + " " + authors
+        rr = df2.iloc[index1]
+        ncid = rr["id"]
+        first_name = rr["first_name"]
+        last_name = rr["last_name"]
+        registr_dt = rr["registr_dt"]
+        age_at_year_end = rr["age_at_year_end"]
+        srec = first_name + " " + last_name + " " + str(registr_dt) + " " + str(age_at_year_end)
 
         temp = dict()
         indices = [random.randrange(0, L) for i in range(L1)]
@@ -44,7 +46,7 @@ def matching():
             if idDBLP in truthD:
                 ids = truthD[idDBLP]
                 for id in ids:
-                    if id == idScholar:
+                    if id == ncid:
                         tp += 1
                         break
             else:
@@ -53,27 +55,26 @@ def matching():
     return False
 
 
-
 def elimina_elementos_dentro_dictB(array_para_descarte, array_para_descarte_igual):
     array_para_descarte.clear()
     array_para_descarte_igual.clear()
 
 if __name__ == '__main__':
-    df1 = pd.read_csv("../00-datasets/DBLP.csv", sep=",", encoding="utf-8", keep_default_na=False)
-    df2 = pd.read_csv("../00-datasets/Scholar.csv", sep=",", encoding="utf-8", keep_default_na=False)
-    truth = pd.read_csv("../00-datasets/truth.csv", sep=",", encoding="utf-8", keep_default_na=False)
+    df1 = pd.read_csv("../00-datasets/ncvoter42.csv", sep=",", encoding="utf-8", keep_default_na=False)
+    df2 = pd.read_csv("../00-datasets/perturbed_recordsNC_voter.csv", sep=",", encoding="utf-8", keep_default_na=False)
+    truth = pd.read_csv("../00-datasets/ground_truthNC_voter.csv", sep=",", encoding="utf-8", keep_default_na=False)
     truthD = dict()
     for i, r in truth.iterrows():
-        idDBLP = r["idDBLP"]
-        idScholar = r["idScholar"]
-        if idDBLP in truthD:
-            ids = truthD[idDBLP]
-            ids.append(idScholar)
+        novoId = r["novoId"]
+        antigoId = r["antigoId"]
+        if antigoId in truthD:
+            ids = truthD[antigoId]
+            ids.append(novoId)
         else:
-            truthD[idDBLP] = [idScholar]
+            truthD[antigoId] = [novoId]
 
     t = 0.5
-    TP = 5347
+    TP = 40893
     eps = 0.1
     w = 1000
     delta = 0.1
@@ -99,21 +100,18 @@ if __name__ == '__main__':
 
     tamanhoDosBlocos = {}
 
-    total_tempermanencia = 0
-    total_entidades = 0
-
-
     while True:
         st = time.time()
         for index1 in range(naS, naS + offsetA):
             if index1 >= len(df1):
                 break
-            rr = df1.iloc[index1, 0:5]
-            idDBLP = rr["id"]
-            title = rr["title"]
-            authors = rr["authors"]
-
-            srec = title + " " + authors
+            rr = df1.iloc[index1, 0:69]
+            ncid = rr["ncid"]
+            first_name = rr["first_name"]
+            last_name = rr["last_name"]
+            registr_dt = rr["registr_dt"]
+            age_at_year_end = rr["age_at_year_end"]
+            srec = first_name + " " + last_name + " " + str(registr_dt) + " " + str(age_at_year_end)
             key = ""
             
             for l in range(L):
@@ -125,25 +123,20 @@ if __name__ == '__main__':
                     ids_igual = d_igual[key]
                     tamanho_atual = tamanhoDosBlocos[(key, l)]
                     if len(ids) < tamanho_atual:
-                        ids.append(idDBLP)
+                        ids.append(ncid)
                         ids_igual.append(tempoQueFoiInseridoNaEstrutura)
                     else:
                         elimina_elementos_dentro_dictB(ids, ids_igual)
 
-                        ids.append(idDBLP)
+                        ids.append(ncid)
                         ids_igual.append(tempoQueFoiInseridoNaEstrutura)
                 else:
-                    d[key] = [idDBLP]
+                    d[key] = [ncid]
                     d_igual[key] = [tempoQueFoiInseridoNaEstrutura]
 
                     tamanhoDosBlocos[(key, l)] = w
                 
             tempoQueFoiInseridoNaEstrutura += 1
-
-            for idx, id_entidade in enumerate(ids):
-                tempo_permanencia = tempoQueFoiInseridoNaEstrutura - ids_igual[idx]  # Subtraindo o tempo de inserção do tempo atual
-                total_tempermanencia += tempo_permanencia
-                total_entidades += 1
         
         end = time.time()
 

@@ -64,26 +64,6 @@ def elimina_elementos_dentro_dictB(array_para_descarte, array_para_descarte_igua
             del array_para_descarte_igual[:indice]
             break
 
-
-def elimina_elementos_dentro_dictB(array_para_descarte, array_para_descarte_igual):
-    indice = 0
-    for (tempo_inserido) in array_para_descarte_igual:
-        if tempo_inserido < elementos_para_descarte:
-            indice += 1
-        else:
-            del array_para_descarte[:indice]
-            del array_para_descarte_igual[:indice]
-            break
-
-
-
-def exclui_blocos(dictB, dictB_igual, tempoQueFoiInseridoNaEstrutura,tamanhoDosBlocos):
-    for l, blocos_da_pos in enumerate(dictB_igual):
-        for key, bloco_unico in blocos_da_pos.items():
-            if bloco_unico[-1] < tempoQueFoiInseridoNaEstrutura - 300 and tamanhoDosBlocos[(key, l)] > 100:
-                tamanhoDosBlocos[(key, l)] -= 100
-            break
-
 if __name__ == '__main__':
     df1 = pd.read_csv("../00-datasets/DBLP.csv", sep=",", encoding="utf-8", keep_default_na=False)
     df2 = pd.read_csv("../00-datasets/Scholar.csv", sep=",", encoding="utf-8", keep_default_na=False)
@@ -122,11 +102,10 @@ if __name__ == '__main__':
 
 
     tempoQueFoiInseridoNaEstrutura = 0 # esse é o valor que sera colocado junto com o id, seria a posiçaõ do elemento no array
-    elementos_para_descarte = 1000 # esse é a quantidade de elementos que serão descartados
+    elementos_para_descarte = 600 # esse é a quantidade de elementos que serão descartados
     acompanhamentoIndicePorBloco = {} #essa estrutura é um indice que vai ser usada para saber qual a posição do elemento que será descartado
     tamanhoDosBlocos = {}
-    min_descarte = int(elementos_para_descarte * 0.5)
-    max_descarte = int(elementos_para_descarte * 1.5)
+
     while True:
         st = time.time()
         for index1 in range(naS, naS + offsetA):
@@ -156,14 +135,10 @@ if __name__ == '__main__':
 
                         elimina_elementos_dentro_dictB(ids, ids_igual, elementoAtualParaDescarte)
 
-                        elementos_para_descarte_aleatorio = random.randint(min_descarte, max_descarte)
-                        acompanhamentoIndicePorBloco[(key, l)] = [qtd_descarte + 1, elementoAtualParaDescarte + elementos_para_descarte_aleatorio]
+                        acompanhamentoIndicePorBloco[(key, l)] = [qtd_descarte + 1, elementoAtualParaDescarte]
                         ids.append(idDBLP)
                         ids_igual.append(tempoQueFoiInseridoNaEstrutura)
-                        
-                        # exclui_blocos(dictB, dictB_igual, tempoQueFoiInseridoNaEstrutura, tamanhoDosBlocos)
-                        # tamanhoDosBlocos[(key, l)] += 100
-                        
+
                 else:
                     d[key] = [idDBLP]
                     d_igual[key] = [tempoQueFoiInseridoNaEstrutura]

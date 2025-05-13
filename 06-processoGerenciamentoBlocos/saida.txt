@@ -1,0 +1,30 @@
+Eliminando 100 entidades
+
+blocking time (in mins) 0.08545622030893961
+matching time (in mins) 3.018987846374512
+TP= 5022 Recall= 0.9392182532261081 Precision= 0.629086809470124 pairsNo= 94341
+
+
+eliminando 200 entidades
+
+blocking time (in mins) 0.08592555125554403
+matching time (in mins) 2.9822224895159404
+TP= 5017 Recall= 0.9382831494295867 Precision= 0.6375651289871648 pairsNo= 93587
+
+eliminando 300 entidades
+
+blocking time (in mins) 0.08527535994847615
+matching time (in mins) 2.9471555511156717
+TP= 4992 Recall= 0.9336076304469796 Precision= 0.640410519563823 pairsNo= 90403
+
+eliminando 400 entidades
+
+blocking time (in mins) 0.08590611616770426
+matching time (in mins) 2.918931210041046
+TP= 4977 Recall= 0.9308023190574154 Precision= 0.6490610328638498 pairsNo= 87904
+
+eliminando 500 entidades
+
+blocking time (in mins) 0.08590611616770426
+matching time (in mins) 2.918931210041046
+TP= 4977 Recall= 0.9308023190574154 Precision= 0.6490610328638498 pairsNo= 87904
