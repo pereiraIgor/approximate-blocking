@@ -1,4 +1,3 @@
-
 import pandas as pd
 import time
 import random
@@ -49,14 +48,30 @@ def matching():
                         break
             else:
                 fp += 1
-
     return False
-
-
 
 def elimina_elementos_dentro_dictB(array_para_descarte, array_para_descarte_igual):
     array_para_descarte.clear()
     array_para_descarte_igual.clear()
+
+def elimina_entidades_antigas_global(dictB, dictB_igual, total_entidades, ciclo_atual):
+    entidades_para_remover = max(100, total_entidades // 5)  # Pelo menos 100 ou 20% do total
+    print(f"Removendo {entidades_para_remover} entidades antigas em cada bloco (ciclo {ciclo_atual})")
+    for indice in range(len(dictB_igual)):
+        bloco_unico = dictB_igual[indice]
+        keys_to_process = list(bloco_unico.keys())
+        
+        for key in keys_to_process:
+            if key not in bloco_unico:  # Verificar se a chave ainda existe
+                continue
+                
+            tempos = dictB_igual[indice][key]
+            if len(tempos) > entidades_para_remover:
+                del dictB[indice][key][:entidades_para_remover]
+                del dictB_igual[indice][key][:entidades_para_remover]
+            else:
+                dictB[indice].pop(key, None)
+                dictB_igual[indice].pop(key, None)
 
 if __name__ == '__main__':
     df1 = pd.read_csv("../00-datasets/DBLP.csv", sep=",", encoding="utf-8", keep_default_na=False)
@@ -84,6 +99,7 @@ if __name__ == '__main__':
     q = 2
     dictB = [dict() for l in range(L)]
     dictB_igual = [dict() for l in range(L)]
+
     tp = 0
     fp = 0
     pairsNo = 0
@@ -94,15 +110,12 @@ if __name__ == '__main__':
     blockingTime = 0
     matchingTime = 0
 
-
     tempoQueFoiInseridoNaEstrutura = 0 # esse é o valor que sera colocado junto com o id, seria a posiçaõ do elemento no array
 
     tamanhoDosBlocos = {}
 
-    total_tempermanencia = 0
     total_entidades = 0
-
-
+    ciclo_atual = 0
     while True:
         st = time.time()
         for index1 in range(naS, naS + offsetA):
@@ -121,15 +134,16 @@ if __name__ == '__main__':
                 d = dictB[l]
                 d_igual = dictB_igual[l]
                 if key in d:
+                    
                     ids = d[key]
                     ids_igual = d_igual[key]
                     tamanho_atual = tamanhoDosBlocos[(key, l)]
+
                     if len(ids) < tamanho_atual:
                         ids.append(idDBLP)
                         ids_igual.append(tempoQueFoiInseridoNaEstrutura)
                     else:
                         elimina_elementos_dentro_dictB(ids, ids_igual)
-
                         ids.append(idDBLP)
                         ids_igual.append(tempoQueFoiInseridoNaEstrutura)
                 else:
@@ -137,14 +151,24 @@ if __name__ == '__main__':
                     d_igual[key] = [tempoQueFoiInseridoNaEstrutura]
 
                     tamanhoDosBlocos[(key, l)] = w
-                
+            
             tempoQueFoiInseridoNaEstrutura += 1
+            # A cada 1000 inserções, remove entidades antigas para economizar memória
+            if tempoQueFoiInseridoNaEstrutura >= (ciclo_atual + 1) * 500:
+                ciclo_atual += 1
+                print("Eliminando entidades antigas, ciclo:", ciclo_atual, "Total inserido:", tempoQueFoiInseridoNaEstrutura)
+                elimina_entidades_antigas_global(dictB, dictB_igual, tempoQueFoiInseridoNaEstrutura, ciclo_atual)
 
-            for idx, id_entidade in enumerate(ids):
-                tempo_permanencia = tempoQueFoiInseridoNaEstrutura - ids_igual[idx]  # Subtraindo o tempo de inserção do tempo atual
-                total_tempermanencia += tempo_permanencia
-                total_entidades += 1
-        
+            # if tempoQueFoiInseridoNaEstrutura % 500 == 0:
+            #     indice_atualllll += 1
+            #     # Define um limite de "idade" para entidades antigas (por exemplo, 900 atrás)
+            #     limite_idade = 100 * indice_atualllll  # Aumenta o limite de idade a cada iteração
+            #     print("eliminando todas entidades que entraram na estrutura até:",limite_idade)
+            #     # ver_passado = tempoQueFoiInseridoNaEstrutura - limite_idade
+            #     # tempo_limite = ver_passado if ver_passado > 0 else 0
+            #     elimina_entidades_antigas_global(dictB, dictB_igual, limite_idade, indice_atualllll)
+
+
         end = time.time()
 
         blockingTime += (end - st)

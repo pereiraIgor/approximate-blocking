@@ -1,0 +1,29 @@
+L= 116 L1= 50
+Experiment with offsetA= 1000 offsetB= 1000
+Blocking Time:  0.5434536826610565 
+Matching Time:  1.435403859615326 
+TP:  33892.0 
+Recall:  0.8287971046389357 
+Precision:  0.41224835958717365 
+Pairs No:  118909.3
+Experiment with offsetA= 3000 offsetB= 3000
+Blocking Time:  0.5368502736091614 
+Matching Time:  1.4322606309254966 
+TP:  34892.0 
+Recall:  0.8532511676815103 
+Precision:  0.3669951944061304 
+Pairs No:  145058.2
+Experiment with offsetA= 9000 offsetB= 9000
+Blocking Time:  0.53471653342247 
+Matching Time:  1.4316047632694244 
+TP:  40892.0 
+Recall:  0.9999755459369574 
+Precision:  0.5550030759363213 
+Pairs No:  106548.0
+Experiment with offsetA= 27000 offsetB= 27000
+Blocking Time:  0.5337976662317911 
+Matching Time:  1.4674122925599415 
+TP:  40892.0 
+Recall:  0.9999755459369574 
+Precision:  0.5973463261517709 
+Pairs No:  111622.1
