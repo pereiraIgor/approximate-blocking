@@ -1,4 +1,3 @@
-
 import pandas as pd
 import time
 import random
@@ -52,13 +51,28 @@ def matching():
 
     return False
 
-
+def remoção_global_heap(dictGlobalUnico, dictB, dictB_igual, tempo_minimo):
+    esquerda, direita = 0, len(dictGlobalUnico)  
+    while esquerda < direita:
+        meio = (esquerda + direita) // 2
+        if dictGlobalUnico[meio][1] < tempo_minimo:
+            esquerda = meio + 1
+        else:
+            direita = meio
+    indice_inicio = esquerda
+    for i in range(indice_inicio):
+        id, tempo_atual, lista = dictGlobalUnico[i]
+        for id_2234, posicao_array in lista:
+            if id_2234 in dictB[posicao_array] and dictB[posicao_array][id_2234][0] == id:
+                del dictB[posicao_array][id_2234][0]
+                del dictB_igual[posicao_array][id_2234][0]
+    return dictGlobalUnico[indice_inicio:]
 
 def elimina_elementos_dentro_dictB(array_para_descarte, array_para_descarte_igual):
     array_para_descarte.clear()
     array_para_descarte_igual.clear()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     df1 = pd.read_csv("../00-datasets/DBLP.csv", sep=",", encoding="utf-8", keep_default_na=False)
     df2 = pd.read_csv("../00-datasets/Scholar.csv", sep=",", encoding="utf-8", keep_default_na=False)
     truth = pd.read_csv("../00-datasets/truth.csv", sep=",", encoding="utf-8", keep_default_na=False)
@@ -84,6 +98,11 @@ if __name__ == '__main__':
     q = 2
     dictB = [dict() for l in range(L)]
     dictB_igual = [dict() for l in range(L)]
+
+    dictGlobalUnico = [] 
+    # chave:(key, l, local)  
+    # [("conf/sigmod/HaasNSS95", 2, [("-2053413593",0), ("-1844936030", 1)]), 
+    #  ("conf/sigmod/HoelS95", 3, [("-4231245125",0), ("-5543346345", 1)])]
     tp = 0
     fp = 0
     pairsNo = 0
@@ -101,7 +120,6 @@ if __name__ == '__main__':
     total_tempermanencia = 0
     total_entidades = 0
 
-
     while True:
         st = time.time()
         for index1 in range(naS, naS + offsetA):
@@ -114,9 +132,10 @@ if __name__ == '__main__':
 
             srec = title + " " + authors
             key = ""
-            
+            conjunto_chaves = []
             for l in range(L):
                 key = str(str_to_MinHash(srec.lower(), 2, l))
+                conjunto_chaves.append((key, l))
                 d = dictB[l]
                 d_igual = dictB_igual[l]
                 if key in d:
@@ -136,7 +155,15 @@ if __name__ == '__main__':
                     d_igual[key] = [tempoQueFoiInseridoNaEstrutura]
 
                     tamanhoDosBlocos[(key, l)] = w
-                
+            
+            dictGlobalUnico.append((idDBLP, tempoQueFoiInseridoNaEstrutura, conjunto_chaves))
+            # print(dictGlobalUnico[-1])
+
+            #enviar para o remoção apenas as ultimas 1000 entidades
+            entidades_eliminadas = tempoQueFoiInseridoNaEstrutura - 2500
+            valor = entidades_eliminadas if entidades_eliminadas > 0 else -1
+            dictGlobalUnico = remoção_global_heap(dictGlobalUnico, dictB, dictB_igual, valor)
+
             tempoQueFoiInseridoNaEstrutura += 1
         
         end = time.time()
@@ -155,4 +182,4 @@ if __name__ == '__main__':
     print("blocking time (in mins)", blockingTime / 60)
     print("matching time (in mins)", matchingTime / 60)
     if tp + fp > 0:
-        print("TP=", tp, "Recall=", tp / TP, "Precision=", tp / (tp + fp), "pairsNo=", pairsNo)
+    print("TP=", tp, "Recall=", tp / TP, "Precision=", tp / (tp + fp), "pairsNo=", pairsNo)

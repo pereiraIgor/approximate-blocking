@@ -1,23 +1,34 @@
 import threading
+import queue
 import time
 
-# Função que será executada por cada thread
-def tarefa(nome, tempo):
-    print(f"Thread {nome} iniciada.")
-    time.sleep(tempo)  # simula trabalho demorado
-    print(f"Thread {nome} finalizada após {tempo} segundos.")
+def produtor(fila):
+    for i in range(5):
+        time.sleep(1)  # Simula algum trabalho
+        mensagem = f"Mensagem {i}"
+        fila.put(mensagem)
+        print(f"Produzido: {mensagem}")
+    # Envia um "sinal de fim"
+    fila.put(None)
 
-# Lista de threads
-threads = []
+def consumidor(fila):
+    while True:
+        mensagem = fila.get()
+        if mensagem is None:  # sinal para encerrar
+            print("Consumidor encerrando...")
+            fila.task_done()
+            break
+        print(f"Consumido: {mensagem}")
+        fila.task_done()
 
-# Criando e iniciando 5 threads
-for i in range(5):
-    t = threading.Thread(target=tarefa, args=(f"T{i+1}", i+1))
-    threads.append(t)
-    t.start()
+fila = queue.Queue()
+produtor_thread = threading.Thread(target=produtor, args=(fila,))
+consumidor_thread = threading.Thread(target=consumidor, args=(fila,))
 
-# Aguardando todas terminarem
-for t in threads:
-    t.join()
+produtor_thread.start()
+consumidor_thread.start()
 
-print("Todas as threads finalizaram!")
+produtor_thread.join()
+consumidor_thread.join()
+
+print("Threads finalizadas")
