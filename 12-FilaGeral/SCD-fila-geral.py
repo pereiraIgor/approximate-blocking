@@ -182,4 +182,4 @@ if __name__ == "__main__":
     print("blocking time (in mins)", blockingTime / 60)
     print("matching time (in mins)", matchingTime / 60)
     if tp + fp > 0:
-    print("TP=", tp, "Recall=", tp / TP, "Precision=", tp / (tp + fp), "pairsNo=", pairsNo)
+        print("TP=", tp, "Recall=", tp / TP, "Precision=", tp / (tp + fp), "pairsNo=", pairsNo)
