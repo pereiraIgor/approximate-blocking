@@ -160,8 +160,9 @@ if __name__ == "__main__":
             # print(dictGlobalUnico[-1])
 
             #enviar para o remoção apenas as ultimas 1000 entidades
-            entidades_eliminadas = tempoQueFoiInseridoNaEstrutura - 2500
+            entidades_eliminadas = tempoQueFoiInseridoNaEstrutura - 1000
             valor = entidades_eliminadas if entidades_eliminadas > 0 else -1
+            print("mantendo na estrutura a partir do id: ", valor)
             dictGlobalUnico = remoção_global_heap(dictGlobalUnico, dictB, dictB_igual, valor)
 
             tempoQueFoiInseridoNaEstrutura += 1

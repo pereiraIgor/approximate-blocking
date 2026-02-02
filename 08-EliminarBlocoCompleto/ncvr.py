@@ -17,7 +17,7 @@ def matching():
         if index2 > len(df2) - 1:
             return True
 
-        rr = df2.iloc[index1]
+        rr = df2.iloc[index2]
         ncid = rr["id"]
         first_name = rr["first_name"]
         last_name = rr["last_name"]

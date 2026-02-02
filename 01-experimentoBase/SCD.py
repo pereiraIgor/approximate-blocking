@@ -166,7 +166,7 @@ if __name__ == '__main__':
             for l in range(L):
                 key = str(str_to_MinHash(srec.lower(), 2, l))
                 d = dictB[l]
-                d_igual = dictB_igual[l]
+                # d_igual = dictB_igual[l]
                 if key in d:
                     ids = d[key]
                     if len(ids) < w:
