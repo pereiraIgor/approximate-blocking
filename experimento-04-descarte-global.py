@@ -338,6 +338,62 @@ def executar_repeticoes(dataset_type, num_repeticoes, seed_inicial, valor_nulo):
     return resultados
 
 
+def carregar_baseline_csv(caminho):
+    """Carrega dados do baseline de um arquivo CSV."""
+    baseline = []
+    try:
+        with open(caminho, 'r', encoding='utf-8') as f:
+            leitor = csv.DictReader(f)
+            for linha in leitor:
+                baseline.append({
+                    'blocking_s': float(linha['blocking_s']),
+                    'matching_s': float(linha['matching_s']),
+                    'tp': float(linha['tp']),
+                    'fp': float(linha['fp']),
+                    'pairs_no': float(linha['pairs_no']),
+                    'recall': float(linha['recall']),
+                    'precision': float(linha['precision']),
+                })
+        print(f"✓ Baseline carregado: {len(baseline)} réplicas de {caminho}")
+        return baseline
+    except FileNotFoundError:
+        print(f"✗ Arquivo de baseline não encontrado: {caminho}")
+        return None
+
+
+def comparar_com_baseline(resultados, baseline, dataset_type):
+    """Compara resultados com baseline usando teste t independente."""
+    if not baseline or len(baseline) == 0:
+        print(f"✗ Baseline não disponível")
+        return
+    
+    metricas = ["blocking_s", "matching_s", "tp", "fp", "pairs_no", "recall", "precision"]
+    
+    print(f"\n{'='*90}")
+    print(f"Comparação com Baseline: {dataset_type.upper()}")
+    print(f"{'='*90}")
+    print(f"{'Métrica':<15} {'Baseline':<13} {'Atual':<13} {'Diferença':<13} {'t-Student':<13} {'p-valor':<13}")
+    print("-" * 110)
+    
+    for metrica in metricas:
+        baseline_vals = [b[metrica] for b in baseline]
+        atual_vals = [r[metrica] for r in resultados]
+        
+        media_baseline = statistics.mean(baseline_vals)
+        media_atual = statistics.mean(atual_vals)
+        diferenca = media_atual - media_baseline
+        
+        # Teste t independente (welch's t-test)
+        teste = stats.ttest_ind(atual_vals, baseline_vals, equal_var=False)
+        t_stat = teste.statistic
+        p_val = teste.pvalue
+        
+        sig = "✓" if p_val < 0.05 else "✗"
+        print(f"{metrica:<15} {media_baseline:<13.6f} {media_atual:<13.6f} {diferenca:<13.6f} {t_stat:<13.6f} {p_val:<13.6g} {sig}")
+    
+    print(f"{'='*90}\n")
+
+
 def salvar_csv(resultados, caminho):
     """Salva os resultados em arquivo CSV."""
     if not resultados:
@@ -382,17 +438,28 @@ if __name__ == "__main__":
         "--saida-csv",
         help="Arquivo CSV para salvar resultados das réplicas (opcional)",
     )
+    parser.add_argument(
+        "-b",
+        "--baseline-csv",
+        help="Arquivo CSV do baseline para comparação (opcional)",
+    )
     args = parser.parse_args()
     DATASET_TYPE = args.dataset_type
     NUM_REPETICOES = args.repeticoes
     SEED_INICIAL = args.seed
     VALOR_NULO = 0.0
     SAIDA_CSV = args.saida_csv
+    BASELINE_CSV = args.baseline_csv
 
     if NUM_REPETICOES > 1:
         resultados = executar_repeticoes(DATASET_TYPE, NUM_REPETICOES, SEED_INICIAL, VALOR_NULO)
         if SAIDA_CSV:
             salvar_csv(resultados, SAIDA_CSV)
+        # Comparar com baseline se fornecido
+        if BASELINE_CSV:
+            baseline = carregar_baseline_csv(BASELINE_CSV)
+            if baseline:
+                comparar_com_baseline(resultados, baseline, DATASET_TYPE)
     else:
         resultado = executar_uma_replica(DATASET_TYPE, SEED_INICIAL)
         print(f"\nblocking time (in secs) {resultado['blocking_s']:.4f}")
