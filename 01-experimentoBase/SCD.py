@@ -182,7 +182,6 @@ if __name__ == '__main__':
         st = time.time()
         #You can use either method matching() or topK()  
         termination = matching()  
-        #termination = topK()
         end = time.time()
         matchingTime += (end - st)
         if termination:

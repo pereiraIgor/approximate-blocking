@@ -1,0 +1,246 @@
+
+======================================================================
+Executando 10 réplicas para dblp...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 10/10 (seed=20260916)...Dataset carregado: DBLP + Scholar
+ OK
+
+======================================================================
+Resumo Estatístico: DBLP (n=10, IC=95%)
+======================================================================
+Métrica         Média        Desvio Pad   IC Inferior  IC Superior  t-Student    p-valor     
+-----------------------------------------------------------------------------------------------
+blocking_s      3.229597     0.009929     3.222494     3.236700     1028.578941  3.95109e-24 
+matching_s      96.786725    1.104281     95.996770    97.576680    277.163677   5.27273e-19 
+tp              4715.300000  14.613920    4704.845831  4725.754169  1020.334554  4.24788e-24 
+fp              746.900000   28.807599    726.292285   767.507715   81.988963    3.02479e-14 
+pairs_no        20256.700000 255.963995   20073.594389 20439.805611 250.259064   1.32162e-18 
+recall          0.881859     0.002733     0.879904     0.883814     1020.334554  4.24788e-24 
+precision       0.863277     0.004717     0.859903     0.866652     578.707656   6.99343e-22 
+======================================================================
+
+Resultados salvos em: resultados-exp-03-descarte-bloco-dblp.csv
+
+======================================================================
+Executando 10 réplicas para ncvoter...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 10/10 (seed=20260916).../home/igor.pereira/approximate-blocking/.venv/lib/python3.10/site-packages/scipy/stats/_axis_nan_policy.py:586: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+  res = hypotest_fun_out(*samples, **kwds)
+Dataset carregado: NCVoter1 + NCVoter2
+ OK
+
+======================================================================
+Resumo Estatístico: NCVOTER (n=10, IC=95%)
+======================================================================
+Métrica         Média        Desvio Pad   IC Inferior  IC Superior  t-Student    p-valor     
+-----------------------------------------------------------------------------------------------
+blocking_s      20.780665    0.065898     20.733524    20.827805    997.211448   5.22119e-24 
+matching_s      64.387053    0.844754     63.782753    64.991354    241.028523   1.85344e-18 
+tp              38662.000000 0.000000     38662.000000 38662.000000 inf          0           
+fp              34574.800000 322.058587   34344.413166 34805.186834 339.488286   8.49785e-20 
+pairs_no        107462.300000 586.453190   107042.776660 107881.823340 579.459088   6.91223e-22 
+recall          0.945443     0.000000     0.945443     0.945443     inf          0           
+precision       0.527913     0.002314     0.526258     0.529568     721.491977   9.61073e-23 
+======================================================================
+
+Resultados salvos em: resultados-exp-03-descarte-bloco-ncvoter.csv
+
+======================================================================
+Executando 10 réplicas para musicbrainz...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 10/10 (seed=20260916).../home/igor.pereira/approximate-blocking/.venv/lib/python3.10/site-packages/scipy/stats/_axis_nan_policy.py:586: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+  res = hypotest_fun_out(*samples, **kwds)
+Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+
+======================================================================
+Resumo Estatístico: MUSICBRAINZ (n=10, IC=95%)
+======================================================================
+Métrica         Média        Desvio Pad   IC Inferior  IC Superior  t-Student    p-valor     
+-----------------------------------------------------------------------------------------------
+blocking_s      210.453534   1.176595     209.611849   211.295219   565.625971   8.59126e-22 
+matching_s      486.110728   1.705177     484.890918   487.330538   901.500163   1.29467e-23 
+tp              20578.000000 0.000000     20578.000000 20578.000000 inf          0           
+fp              4273.900000  33.732444    4249.769263  4298.030737  400.660518   1.9133e-20  
+pairs_no        29042.600000 65.691535    28995.607107 29089.592893 1398.060878  2.49533e-25 
+recall          0.106363     0.000000     0.106363     0.106363     inf          0           
+precision       0.828027     0.001122     0.827224     0.828829     2333.930680  2.47786e-27 
+======================================================================
+
+Resultados salvos em: resultados-exp-03-descarte-bloco-musicbrainz.csv
+
+======================================================================
+Executando 10 réplicas para dblp...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 10/10 (seed=20260916)...Dataset carregado: DBLP + Scholar
+ OK
+
+======================================================================
+Resumo Estatístico: DBLP (n=10, IC=95%)
+======================================================================
+Métrica         Média        Desvio Pad   IC Inferior  IC Superior  t-Student    p-valor     
+-----------------------------------------------------------------------------------------------
+blocking_s      3.331605     0.018840     3.318127     3.345083     559.193389   9.52273e-22 
+matching_s      99.695032    1.346497     98.731806    100.658258   234.135906   2.4064e-18  
+tp              5286.500000  6.948221     5281.529542  5291.470458  2405.994337  1.88459e-27 
+fp              839.500000   41.628649    809.720658   869.279342   63.771757    2.8926e-13  
+pairs_no        24625.600000 175.422791   24500.110095 24751.089905 443.916006   7.60471e-21 
+recall          0.988685     0.001299     0.987756     0.989615     2405.994337  1.88459e-27 
+precision       0.862997     0.005870     0.858798     0.867196     464.890222   5.0193e-21  
+======================================================================
+
+Resultados salvos em: resultados-exp-04-descarte-global-dblp.csv
+
+======================================================================
+Executando 10 réplicas para ncvoter...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 10/10 (seed=20260916).../home/igor.pereira/approximate-blocking/.venv/lib/python3.10/site-packages/scipy/stats/_axis_nan_policy.py:586: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+  res = hypotest_fun_out(*samples, **kwds)
+Dataset carregado: NCVoter1 + NCVoter2
+ OK
+
+======================================================================
+Resumo Estatístico: NCVOTER (n=10, IC=95%)
+======================================================================
+Métrica         Média        Desvio Pad   IC Inferior  IC Superior  t-Student    p-valor     
+-----------------------------------------------------------------------------------------------
+blocking_s      23.633457    0.235937     23.464678    23.802236    316.760658   1.58537e-19 
+matching_s      42.821951    0.662020     42.348370    43.295532    204.547963   8.11582e-18 
+tp              40892.000000 0.000000     40892.000000 40892.000000 inf          0           
+fp              43857.300000 450.075068   43535.335692 44179.264308 308.146285   2.03184e-19 
+pairs_no        128081.400000 837.930148   127481.980882 128680.819118 483.368394   3.53426e-21 
+recall          0.999976     0.000000     0.999976     0.999976     27020936976367736.000000 6.63082e-145
+precision       0.482518     0.002574     0.480676     0.484359     592.742779   5.63675e-22 
+======================================================================
+
+Resultados salvos em: resultados-exp-04-descarte-global-ncvoter.csv
+
+======================================================================
+Executando 10 réplicas para musicbrainz...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 10/10 (seed=20260916)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+
+======================================================================
+Resumo Estatístico: MUSICBRAINZ (n=10, IC=95%)
+======================================================================
+Métrica         Média        Desvio Pad   IC Inferior  IC Superior  t-Student    p-valor     
+-----------------------------------------------------------------------------------------------
+blocking_s      228.117299   4.761265     224.711295   231.523303   151.508095   1.20851e-16 
+matching_s      313.434145   4.007673     310.567228   316.301061   247.317059   1.47002e-18 
+tp              193464.200000 1.398412     193463.199636 193465.200364 437487.383022 8.67323e-48 
+fp              4420.600000  36.065373    4394.800387  4446.399613  387.606271   2.57779e-20 
+pairs_no        202118.100000 80.738880    202060.342885 202175.857115 7916.304463  4.17031e-32 
+recall          0.999970     0.000007     0.999965     0.999975     437487.383022 8.67323e-48 
+precision       0.977661     0.000178     0.977533     0.977788     17346.045558 3.58151e-35 
+======================================================================
+
+Resultados salvos em: resultados-exp-04-descarte-global-musicbrainz.csv
