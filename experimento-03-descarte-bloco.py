@@ -218,8 +218,8 @@ def executar_repeticoes(dataset_type, num_repeticoes, seed_inicial, valor_nulo):
     print(f"\n{'='*70}")
     print(f"Resumo Estatístico: {dataset_type.upper()} (n={num_repeticoes}, IC=95%)")
     print(f"{'='*70}")
-    print(f"{'Métrica':<15} {'Média':<12} {'Desvio Pad':<12} {'IC Inferior':<12} {'IC Superior':<12} {'t-Student':<12} {'p-valor':<12}")
-    print("-" * 95)
+    print(f"{'Métrica':<15} {'Média':<13} {'Desvio Pad':<13} {'IC Inferior':<13} {'IC Superior':<13}")
+    print("-" * 75)
     
     for metrica in metricas:
         valores = [r[metrica] for r in resultados]
@@ -228,18 +228,13 @@ def executar_repeticoes(dataset_type, num_repeticoes, seed_inicial, valor_nulo):
         
         if num_repeticoes > 1:
             erro = stats.t.ppf(0.975, num_repeticoes - 1) * desvio / (num_repeticoes ** 0.5)
-            teste = stats.ttest_1samp(valores, valor_nulo)
-            t_stat = teste.statistic
-            p_val = teste.pvalue
         else:
             erro = 0.0
-            t_stat = float("nan")
-            p_val = float("nan")
         
         ic_inf = media - erro
         ic_sup = media + erro
         
-        print(f"{metrica:<15} {media:<12.6f} {desvio:<12.6f} {ic_inf:<12.6f} {ic_sup:<12.6f} {t_stat:<12.6f} {p_val:<12.6g}")
+        print(f"{metrica:<15} {media:<13.6f} {desvio:<13.6f} {ic_inf:<13.6f} {ic_sup:<13.6f}")
     
     print(f"{'='*70}\n")
     
