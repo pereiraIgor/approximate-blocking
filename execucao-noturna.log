@@ -38,3 +38,6 @@ Experimento: 02-descarte-tempo | Dataset: ncvoter
 Resultados salvos: resultados-exp-02-descarte-tempo-ncvoter.csv (11 linhas)
 
 Experimento: 02-descarte-tempo | Dataset: musicbrainz
+Resultados salvos: resultados-exp-02-descarte-tempo-musicbrainz.csv (11 linhas)
+
+Experimento: 03-descarte-bloco | Dataset: dblp

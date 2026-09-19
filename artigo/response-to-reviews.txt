@@ -1,0 +1,134 @@
+Original Manuscript ID: Access-20xx-xxxxx	
+Original Article Title: “Managing In-Memory Entity Blocks in a Streaming Context”
+
+To: IEEE Access Editor
+Re: Response to reviewers
+
+
+
+Dear Editor,
+
+Thank you for allowing a resubmission of our manuscript, with an opportunity to address the reviewers’ comments.
+We are uploading (a) our point-by-point response to the comments (below) (response to reviewers, under “Author’s Response Files”), (b) an updated manuscript with yellow highlighting indicating changes (as “Highlighted PDF”), and (c) a clean updated manuscript without highlights (“Main Manuscript”).
+
+
+Best regards,
+Igor de Sousa Pereira et al.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Reviewer#1, Concern #1:
+The experimental setup needs more detail, including software, hardware, result calculation, numerical problems, and management of experimental bias and error.
+Author response:
+We expanded the experimental protocol to specify stream order, batch processing, fixed seeds, core parameter settings, replica-level outputs, and the summary statistics reported by the scripts. We also clarify the remaining limits of statistical inference.
+Author action:
+We updated the Environment and Configuration subsection by documenting row-order stream processing, the use of consecutive fixed seeds, $q=2$, $R=116$, $R'=50$, $\theta=0.5$, and the block-capacity limit. We also state that the scripts report replica-level values, sample means, standard deviations, and two-sided 95% Student-t confidence intervals. No statistical-significance claim is made before metric validation.
+
+
+Reviewer#1, Concern #2:
+Discuss threats to validity, at least internal and external threats, because the results are dataset-based.
+Author response:
+We added an explicit discussion of internal, construct, and external validity threats.
+Author action:
+We updated the manuscript by adding a highlighted Threats to Validity subsection. It identifies stream ordering, synthetic perturbation, hash-index randomization, ground-truth correctness, metric implementation, dataset selection, parameter settings, and the single-machine environment as limitations.
+
+
+Reviewer#1, Concern #3:
+Compare the proposal with previously reported state-of-the-art techniques and provide statistical tests to establish scientific significance.
+Author response:
+The manuscript compares the proposed policies with the Approximate Blocking baseline. The revised protocol now records replica-level outputs and 95% confidence intervals, which provides the basis for later inferential analysis. We agree that statistical hypothesis tests against other implementations require validated metrics and a defined comparison protocol.
+Author action:
+No claim of statistical significance was added to the manuscript. This concern remains pending until the relevant experiments and validated metric calculations are available.
+
+
+Reviewer#2, Concern #1:
+State the technical claim more narrowly and avoid claiming that the technique preserves matching quality until all metrics are corrected.
+Author response:
+We narrowed the abstract, research question, and contribution statement to the measured quantities: blocking time, matching time, candidate-pair counts, Recall, and Precision. Claims about matching quality are explicitly restricted to validated metric calculations.
+Author action:
+We updated the manuscript by revising the abstract, research question, contribution statement, and Global Eviction description. We also added a highlighted description of the implemented matcher, including its collision-frequency rule and the use of the ground-truth mapping only for counting true positives and false positives.
+
+
+Reviewer#2, Concern #2:
+Elaborate metric definitions and calculations, including precision, recall, and a full confusion matrix by dataset and method.
+Author response:
+We corrected the metric specification. Precision is now defined as $TP/(TP+FP)$, and Recall as $TP/(TP+FN)$. Since the implementation does not enumerate the full Cartesian product of the datasets, a meaningful true-negative count is unavailable; the reported confusion-matrix components are therefore $TP$, $FP$, and $FN$.
+Author action:
+We updated the Experiments section with highlighted formulas for Recall and Precision, the definition $FN=|MP|-TP$, and an explanation that the candidate-pair count is $TP+FP$. New numerical confusion matrices remain pending regenerated and validated outputs.
+
+
+Reviewer#2, Concern #3:
+Elaborate the MusicBrainz anomaly with raw counts and a traceable protocol, and rule out data leakage, data-split changes, or denominator changes.
+Author response:
+We agree that the MusicBrainz result requires a traceable audit of the data split, ground truth, denominator, and raw true-positive and false-positive counts. The current manuscript does not yet provide sufficient validated evidence to attribute the observed values to a specific cause.
+Author action:
+No causal explanation or corrected MusicBrainz result was added to the manuscript. This concern remains pending the requested audit and regenerated metrics.
+
+
+Reviewer#2, Concern #4:
+Reduce generic content and improve reproducibility by releasing code, processed datasets, parameter settings, seeds, and stream-generation scripts through an anonymized repository.
+Author response:
+The manuscript now gives additional execution details, including the stream order, seeds, parameters, and replica-level outputs. We agree that an anonymized artifact release remains necessary for full reproducibility.
+Author action:
+No repository link or additional artifact claim was added in the current revision. The release depends on author-provided hosting and anonymization decisions.
+
+
+Reviewer#2, Concern #5:
+Explain how the table calculations were performed, including the definitions of Recall and Precision.
+Author response:
+We made the calculation pipeline explicit and aligned the metric formulas with the implementation. The reported table values remain subject to validation and regeneration where required.
+Author action:
+We updated the Experiments section with a highlighted explanation of how candidate pairs are produced after blocking, how the ground truth is used to count true positives and false positives, and how Recall and Precision are calculated.
+
+
+Reviewer#2, Concern #6:
+Separate the three policies experimentally. For Global Eviction, remove local block clearing or explicitly define it as a hybrid method and add ablation results.
+Author response:
+The evaluated Global Eviction implementation includes both global time-based removal and local block clearing at the capacity limit. We now identify it explicitly as a hybrid policy rather than presenting it as a purely global method.
+Author action:
+We updated the Global Entity Eviction description, contribution list, and algorithm discussion to define the evaluated implementation as hybrid. We also state that a separate ablation without local clearing is required to quantify the contribution of each component; such ablation results are not claimed in the current revision.
+
+
+Reviewer#2, Concern #7:
+Add a notation table for the symbols and operational terms used in the blocking and matching procedures.
+Author response:
+We added a notation table limited to symbols and terms already used in the manuscript.
+Author action:
+We updated the manuscript by adding the highlighted Table “Notation used in the blocking, matching, and eviction processes,” which defines R, theta, Delta, the timestamp t_i, offsetA, offsetB, candidate pair, and matching pair. Symbols not used in the manuscript were not introduced.
+
+
+Reviewer#3, Concern #1:
+Clarify the rationale for the selected block capacities, eviction windows, and offset values.
+Author response:
+We clarified that the common block capacity was retained across policies for comparability and that geometric offsets were used as a sensitivity study over small and large processing batches, rather than as a claim of universal optimality.
+Author action:
+We updated the parameter-setting discussion in the Experiments section with this rationale and with the fixed hashing and matching parameters.
+
+
+Reviewer#3, Concern #2:
+Discuss limitations of the current experiments and expected behavior in large-scale distributed streaming environments.
+Author response:
+We added the scope limitations of the current experiments and clarify that the study does not evaluate distributed deployment, online concept drift, or production arrival processes.
+Author action:
+We updated the Threats to Validity subsection to state that the reported findings should not be generalized to distributed or production settings without additional experiments.
+
+
+Reviewer#3, Concern #3:
+Improve language and the explanations of figures and tables.
+Author response:
+We appreciate the suggestion. The current revision focused on clarifying the matching procedure and notation, which directly affect the interpretation of the experiments.
+Author action:
+We updated the manuscript by adding the highlighted notation table and a highlighted operational description of the implemented matcher. No broader language or figure/table rewrite was made in the current revision.
+
+Note: References suggested by reviewers should only be added if it is relevant to the article and makes it more complete. Excessive cases of recommending non-relevant articles should be reported to ieeeaccesseic@ieee.org

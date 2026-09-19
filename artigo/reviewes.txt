@@ -1,0 +1,102 @@
+Reviewers' Comments to Author:
+
+Reviewer: 1
+
+Comments:
+The paper describes a blocking strategy to improve data transmission in stream communications. The proposal is technically sound in general terms.
+
+The claims in the introduction are justified and the problem is correctly described. Description are OK. Figures, mathematical expressions and code are provided. I think this is enough to ensure future replicability and readability.
+
+References are timely and the topic matches the scope of the journal.
+
+Results are also coherent with the state of the art and validate the initial hypotheses. However, in my opinion, some improvements need to be done to this section:
+
+1) First, you need to describe your experimental setup with details. Software and hardware you used. How result were calculated. Did you consider numerical problems and errors? How did you manage the experimental biases and errors?
+
+2) As all you results are based on datasets, you need to discuss the validity threats, at least the internal an external.
+
+3) You need to compare your proposal to some other previously reported techniques in the state of the art. Specifically, statistical tests must be provided to ensure the scientific significance of the findings.
+
+Additional Questions:
+Please confirm that you have reviewed all relevant files, including supplementary files and any author response files, which can be found in the "View Author's Response" link above (author responses will only appear for resubmissions): Yes, all files have been reviewed
+
+1) Does the paper contribute to the body of knowledge?: The paper describes a blocking strategy to improve data transmission in stream communications. The proposal is technically sound in general terms.
+
+2) Is the paper technically sound?: The claims in the introduction are justified and the problem is correctly described. Description are OK. Figures, mathematical expressions and code are provided. I think this is enough to ensure future replicability and readability.
+
+3) Is the subject matter presented in a comprehensive manner?: Results are also coherent with the state of the art and validate the initial hypotheses
+
+4) Are the references provided applicable and sufficient?: Yes
+
+5) Are there references that are not appropriate for the topic being discussed?: No
+
+5a) If yes, then please indicate which references should be removed.:
+
+
+Reviewer: 2
+
+Comments:
+Please find below observations -
+1/ Need to succinctly state the technical claim more narrowly. Claims must be proven by evidences - avoid claiming that technique preserves matching quality until all metrics are corrected
+
+2/ Need elaboration on the metric definition and calculations thereafter e.g., precision, recall, and also suggest to share the full confusion matrix accounting for dataset and method
+
+3/ Need more elaboration on MusicBrainz anomaly with raw counts and traceable protocol. Need to know if it was caused by data leak, data split, changed denominator or anything else, please correct it and report accordingly
+
+4/ Suggest to avoid generic content and add focus on ensure system level details from reproducibility perspective. If possible,  release of code, processed datasets, parameter settings, seeds, and stream-generation scripts at review time, preferably through an anonymized repository
+
+5/ Can you elaborate how the table calculations worked on i.e., using what definition of recall and precision?
+
+6/ Suggest to separate the three policies experimentally. Regarding Global eviction, remove the local block clearing behavior or explicitly define it as a hybrid method and add ablation results.
+
+7/  Add notation table for ��, ,Δ, ��, R, ��, offsetA, offsetB, candidate pairs, matching pairs, and timestamp semantics
+
+Additional Questions:
+Please confirm that you have reviewed all relevant files, including supplementary files and any author response files, which can be found in the "View Author's Response" link above (author responses will only appear for resubmissions): Yes, all files have been reviewed
+
+1) Does the paper contribute to the body of knowledge?: To an extent, yes, it contributes to the body of knowledge but the contribution is not yet clearly demonstrated. The idea of temporal and block-level eviction for streaming ER is potentially useful. However, the claimed novelty is currently weakly differentiated from existing stream record linkage/block-maintenance work.
+Most importantly, the results are counterintuitive and not well explained.
+
+2) Is the paper technically sound?: No, need work to address technical concerns, a few of them are fundamental wrong.
+For example, the manuscript states 'Precision metric corresponds to the ratio between the number of correctly identified matching entity pairs and the total number of comparisons performed.'. This is not the precision metric.
+
+Similarly, the table seems to calculate precisions as per this metric.
+There are quite a few other things that I am going to list for author to reflect on.
+
+3) Is the subject matter presented in a comprehensive manner?: The paper is quite broad in current shape. It needs to narrowly focus on the problem and evidently demonstrate, present that comprehensively.
+
+The paper needs to elaborate few areas clearly e.g., MusicBrainz anomaly. similarly, due focus must be given for ensuring reproducibility.
+
+Several passages explain basic ER, hashing, and streaming concepts at textbook level, but the manuscript does not fully describe:
+1/ The actual matcher used after blocking.
+2/ The decision threshold and similarity measures used for matching.
+3/ The exact construction of ground truth.
+4/ Stream ordering and its effect on eviction.
+5/ Why global eviction can plausibly recover more true positives than no eviction of baseline
+
+4) Are the references provided applicable and sufficient?: Yes, but recommend to validate them once again and ensure that the study is rooted in scholarly articles.
+
+5) Are there references that are not appropriate for the topic being discussed?: No
+
+5a) If yes, then please indicate which references should be removed.:
+
+
+Reviewer: 3
+
+Comments:
+The paper presents a useful approach to improving memory management in streaming Entity Resolution through the use of different eviction strategies. The distinction between Entity Eviction, Block Eviction, and Global Entity Eviction is clearly explained, and the algorithms and examples help in understanding how each method operates. The experimental evaluation using SCD, NCVR, and MusicBrainz datasets is appropriate and provides a reasonable basis for comparing processing time, number of comparisons, precision, and recall. The results are encouraging and generally support the conclusions presented. A few areas could still be improved before final publication. In particular, the rationale behind the selected block capacities, eviction windows, and offset values should be explained more clearly. It would also be useful to discuss the limitations of the current experiments and how the proposed methods might perform in large-scale distributed streaming environments. Some minor language editing and improvements to figure and table explanations would further strengthen the overall presentation.
+
+Additional Questions:
+Please confirm that you have reviewed all relevant files, including supplementary files and any author response files, which can be found in the "View Author's Response" link above (author responses will only appear for resubmissions): Yes, all files have been reviewed
+
+1) Does the paper contribute to the body of knowledge?: Yes, the paper makes a meaningful contribution to the existing body of knowledge, particularly in the area of Entity Resolution for streaming data. Its main strength is the focus on managing in-memory entity blocks through three different eviction strategies: Entity Eviction, Block Eviction, and Global Entity Eviction. These approaches address an important practical problem in streaming environments, where continuously arriving data can quickly increase memory usage and computational cost. I found the experimental comparison across the SCD, NCVR, and MusicBrainz datasets useful because it shows how the proposed methods behave under datasets with different characteristics. The results, especially the improvements in precision and reductions in matching time and unnecessary comparisons, provide useful evidence of their practical value. The Global Eviction approach is particularly interesting because it introduces temporal control beyond individual block capacity. Overall, the work extends approximate blocking research and offers practical directions for scalable streaming Entity Resolution systems.
+
+2) Is the paper technically sound?: The paper is technically sound overall, and the proposed methods are presented with sufficient detail to understand how the different eviction strategies operate within a streaming Entity Resolution framework. The authors clearly define Entity Eviction, Block Eviction, and Global Entity Eviction, and the accompanying algorithms help explain their implementation. I found the experimental setup reasonably well designed, with three datasets of different sizes and characteristics used to evaluate processing time, number of comparisons, Recall, and Precision. The comparison with the baseline Approximate Blocking approach also provides a useful reference point for interpreting the results. The reported improvements, particularly for Block Eviction and Global Eviction, are generally supported by the experimental findings. However, some parameter choices, such as block capacity, eviction window, and offset values, could have been justified in greater depth. Testing the proposed techniques in distributed or real-time production environments would also strengthen the technical validation. Overall, the methodology and conclusions are adequately supported.
+
+3) Is the subject matter presented in a comprehensive manner?: Yes, the subject matter is presented in a fairly comprehensive manner. The paper provides adequate background on Entity Resolution, blocking techniques, streaming data, and Approximate Blocking before introducing the proposed eviction strategies. I found this progression useful because it gives sufficient context for understanding why memory management becomes important in continuously evolving data streams. The discussion of Entity Eviction, Block Eviction, and Global Entity Eviction is supported by algorithms, examples, and illustrations, which makes the proposed methods easier to follow. The experimental section is also reasonably detailed, covering different datasets, evaluation metrics, processing times, matching quality, entity lifetime, progressive offsets, and the impact of operating without eviction. The related work section places the study within existing research and highlights the gap addressed by the paper. A little more discussion on practical deployment challenges and parameter selection would improve the coverage further. Overall, the paper treats the subject with sufficient breadth and depth for its stated objectives.
+
+4) Are the references provided applicable and sufficient?: Yes, the references provided are generally applicable and sufficient for the scope of the paper. The authors have cited both foundational and recent studies covering Entity Resolution, blocking methods, streaming data processing, approximate blocking, locality-sensitive hashing, incremental record linkage, and memory-efficient approaches. I also noticed that the related work section draws on a reasonably broad range of literature, which helps position the proposed eviction strategies within the existing research landscape. The references are relevant to the technical discussion and support the motivation, methodology, and comparison with earlier approaches. Recent publications dealing with streaming Entity Resolution, explainability, fairness, and automated ER pipelines have also been included, which improves the currency of the literature review. I did not identify any major area where an additional reference is essential for understanding or validating the contribution. Therefore, I do not recommend adding references merely to increase the citation count. The current reference list appears adequate and appropriately aligned with the subject.
+
+5) Are there references that are not appropriate for the topic being discussed?: No
+
+5a) If yes, then please indicate which references should be removed.:

@@ -127,4 +127,48 @@ Réplica 5/10 (seed=20260911)... OK
 Réplica 6/10 (seed=20260912)... OK
 Réplica 7/10 (seed=20260913)... OK
 Réplica 8/10 (seed=20260914)... OK
-Réplica 9/10 (seed=20260915)...
+Réplica 9/10 (seed=20260915)... OK
+Réplica 10/10 (seed=20260916).../home/igor/repositorios/approximate-blocking/.venv/lib/python3.11/site-packages/scipy/stats/_axis_nan_policy.py:592: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+  res = hypotest_fun_out(*samples, **kwds)
+ OK
+
+======================================================================
+Resumo Estatístico: MUSICBRAINZ (n=10, IC=95%)
+======================================================================
+Métrica         Média         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      378.245833    7.252929      373.057401    383.434266   
+matching_s      1636.731589   69.900155     1586.728030   1686.735148  
+tp              20578.000000  0.000000      20578.000000  20578.000000 
+fp              22080.100000  142.983643    21977.815663  22182.384337 
+pairs_no        42658.100000  142.983643    42555.815663  42760.384337 
+recall          0.106363      0.000000      0.106363      0.106363     
+precision       0.482399      0.001620      0.481240      0.483557     
+======================================================================
+
+Resultados salvos em: resultados-exp-02-descarte-tempo-musicbrainz.csv
+✓ Baseline carregado: 10 réplicas de resultados-exp-01-base-musicbrainz.csv
+
+==========================================================================================
+Comparação com Baseline: MUSICBRAINZ
+==========================================================================================
+Métrica         Baseline      Atual         Diferença     t-Student     p-valor      
+--------------------------------------------------------------------------------------------------------------
+blocking_s      360.865733    378.245833    17.380101     7.543656      3.19651e-05   ✓
+matching_s      809.549069    1636.731589   827.182520    37.405298     3.34836e-11   ✓
+tp              20578.000000  20578.000000  0.000000      nan           nan           ✗
+fp              22166.200000  22080.100000  -86.100000    -1.371907     0.186975      ✗
+pairs_no        42744.200000  42658.100000  -86.100000    -1.371907     0.186975      ✗
+recall          0.106363      0.106363      0.000000      nan           nan           ✗
+precision       0.481427      0.482399      0.000972      1.370210      0.1875        ✗
+==========================================================================================
+
+Resultados salvos: resultados-exp-02-descarte-tempo-musicbrainz.csv (11 linhas)
+
+Experimento: 03-descarte-bloco | Dataset: dblp
+Dataset carregado: DBLP + Scholar
+
+======================================================================
+Executando 10 réplicas para dblp...
+======================================================================
+Réplica 1/10 (seed=20260907)...
