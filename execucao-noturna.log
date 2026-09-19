@@ -1,0 +1,40 @@
+nohup: ignorando entrada
+Coleta de metricas de baseline - Experimento 01
+Data/Hora: sáb 19 set 2026 00:33:57 -03
+Datasets: dblp ncvoter musicbrainz
+Repeticoes: 10, Seed inicial: 20260907
+
+Dataset: dblp
+CSV: resultados-exp-01-base-dblp.csv
+Baseline salvo: resultados-exp-01-base-dblp.csv (11 linhas)
+
+Dataset: ncvoter
+CSV: resultados-exp-01-base-ncvoter.csv
+Baseline salvo: resultados-exp-01-base-ncvoter.csv (11 linhas)
+
+Dataset: musicbrainz
+CSV: resultados-exp-01-base-musicbrainz.csv
+Baseline salvo: resultados-exp-01-base-musicbrainz.csv (11 linhas)
+
+Baseline coletado com sucesso.
+Proximo passo: bash script-comparacao.sh
+Comparacao estatistica com baseline - Experimentos 02-04
+Data/Hora: sáb 19 set 2026 04:42:32 -03
+Datasets: dblp ncvoter musicbrainz
+Experimentos: experimento-02-descarte-tempo.py experimento-03-descarte-bloco.py experimento-04-descarte-global.py
+Repeticoes: 10, Seed inicial: 20260907
+
+Verificando arquivos de baseline...
+Encontrado: resultados-exp-01-base-dblp.csv (11 linhas)
+Encontrado: resultados-exp-01-base-ncvoter.csv (11 linhas)
+Encontrado: resultados-exp-01-base-musicbrainz.csv (11 linhas)
+Todos os baselines foram encontrados.
+Iniciando 9 combinacoes.
+
+Experimento: 02-descarte-tempo | Dataset: dblp
+Resultados salvos: resultados-exp-02-descarte-tempo-dblp.csv (11 linhas)
+
+Experimento: 02-descarte-tempo | Dataset: ncvoter
+Resultados salvos: resultados-exp-02-descarte-tempo-ncvoter.csv (11 linhas)
+
+Experimento: 02-descarte-tempo | Dataset: musicbrainz

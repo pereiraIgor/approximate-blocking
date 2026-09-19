@@ -1,0 +1,119 @@
+║ Dataset: dblp
+║ CSV╔════════════════════════════════════════════════════════════════╗
+║                 ✓ BASELINE COLETADO COM SUCESSO                ║
+╚════════════════════════════════════════════════════════════════╝
+
+Arquivos de baseline criados:
+-rw-r--r--. 1 igor.pereira igor.pereira 1,1K set  8 15:07 resultados-exp-01-base-dblp.csv
+-rw-r--r--. 1 igor.pereira igor.pereira 1,1K set  8 18:48 resultados-exp-01-base-musicbrainz.csv
+-rw-r--r--. 1 igor.pereira igor.pereira 1,2K set  8 15:28 resultados-exp-01-base-ncvoter.csv
+
+Próximo passo: Execute 'bash script-comparacao.sh' para comparar experimentos
+ (seed=20260916)...Dataset carregado: DBLP + Scholar
+ OK
+
+======================================================================
+Resumo Estatístico: DBLP (n=10, IC=95%)
+======================================================================
+Métrica         Média         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      3.115172      0.035769      3.089585      3.140759     
+matching_s      115.274127    1.621714      114.114022    116.434231   
+tp              4978.200000   4.732864      4974.814313   4981.585687  
+fp              2658.900000   54.341410     2620.026497   2697.773503  
+pairs_no        75527.100000  1044.154038   74780.157198  76274.042802 
+recall          0.931027      0.000885      0.930394      0.931660     
+precision       0.651874      0.004571      0.648604      0.655144     
+======================================================================
+
+Resultados salvos em: resultados-exp-01-base-dblp.csv
+✓ Baseline salvo: resultados-exp-01-base-dblp.csv (11 linhas)
+
+║ Dataset: ncvoter
+║ CSV:     resultados-exp-01-base-ncvoter.csv
+
+======================================================================
+Executando 10 réplicas para ncvoter...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 10/10 (seed=20260916)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+
+======================================================================
+Resumo Estatístico: NCVOTER (n=10, IC=95%)
+======================================================================
+Métrica         Média         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      21.195822     0.403755      20.906993     21.484651    
+matching_s      101.167099    1.625396      100.004360    102.329837   
+tp              38662.000000  0.000000      38662.000000  38662.000000 
+fp              65464.800000  574.604753    65053.752522  65875.847478 
+pairs_no        168228.100000 1120.290979   167426.692111 169029.507889
+recall          0.945443      0.000000      0.945443      0.945443     
+precision       0.371307      0.002045      0.369844      0.372770     
+======================================================================
+
+Resultados salvos em: resultados-exp-01-base-ncvoter.csv
+✓ Baseline salvo: resultados-exp-01-base-ncvoter.csv (11 linhas)
+
+║ Dataset: musicbrainz
+║ CSV:     resultados-exp-01-base-musicbrainz.csv
+
+======================================================================
+Executando 10 réplicas para musicbrainz...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 10/10 (seed=20260916)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+
+======================================================================
+Resumo Estatístico: MUSICBRAINZ (n=10, IC=95%)
+======================================================================
+Métrica         Média         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      250.393619    26.547567     231.402633    269.384604   
+matching_s      946.212021    89.774248     881.991393    1010.432649  
+tp              20578.000000  0.000000      20578.000000  20578.000000 
+fp              11181.200000  47.788423     11147.014222  11215.385778 
+pairs_no        42744.200000  137.633814    42645.742701  42842.657299 
+recall          0.106363      0.000000      0.106363      0.106363     
+precision       0.647940      0.000974      0.647243      0.648636     
+======================================================================
+
+Resultados salvos em: resultados-exp-01-base-musicbrainz.csv
+✓ Baseline salvo: resultados-exp-01-base-musicbrainz.csv (11 linhas)
+

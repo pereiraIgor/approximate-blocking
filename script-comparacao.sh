@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -o nounset -o pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 scripts_descarte=(
     "experimento-02-descarte-tempo.py"
@@ -12,90 +16,84 @@ datasets=(
     "musicbrainz"
 )
 
-repeat=10
-seed=20260907
-output="comparacao-resultados.txt"
+repeat="${REPETICOES:-10}"
+seed="${SEED:-20260907}"
+output="${LOG_ARQUIVO:-comparacao-resultados.txt}"
+
+registrar() {
+    printf '%s\n' "$*" | tee -a "$output"
+}
+
+validar_csv() {
+    local arquivo="$1"
+    local linhas
+    linhas=$(wc -l < "$arquivo")
+    [[ "$linhas" -ge 2 ]]
+}
+
+validar_amostra_baseline() {
+    local arquivo="$1"
+    local linhas
+    linhas=$(wc -l < "$arquivo")
+    [[ "$linhas" -ge 3 ]]
+}
 
 # Limpar arquivo de log anterior
-> "$output"
+: > "$output"
 
 # Cabeçalho
-echo "╔════════════════════════════════════════════════════════════════╗" >> "$output"
-echo "║     COMPARAÇÃO ESTATÍSTICA COM BASELINE - Experimentos 02-04    ║" >> "$output"
-echo "╚════════════════════════════════════════════════════════════════╝" >> "$output"
-echo "" >> "$output"
-echo "Data/Hora: $(date)" >> "$output"
-echo "Datasets: ${datasets[@]}" >> "$output"
-echo "Experimentos: ${scripts_descarte[@]}" >> "$output"
-echo "Repetições: $repeat, Seed inicial: $seed" >> "$output"
-echo "" >> "$output"
-echo "Verificando arquivos de baseline..." >> "$output"
+registrar "Comparacao estatistica com baseline - Experimentos 02-04"
+registrar "Data/Hora: $(date)"
+registrar "Datasets: ${datasets[*]}"
+registrar "Experimentos: ${scripts_descarte[*]}"
+registrar "Repeticoes: $repeat, Seed inicial: $seed"
+registrar ""
+registrar "Verificando arquivos de baseline..."
 baseline_count=0
 for dataset in "${datasets[@]}"; do
     baseline_csv="resultados-exp-01-base-${dataset}.csv"
-    if [ -f "$baseline_csv" ]; then
+    if [[ -f "$baseline_csv" ]] && validar_amostra_baseline "$baseline_csv"; then
         linhas=$(wc -l < "$baseline_csv")
-        echo "✓ Encontrado: $baseline_csv ($linhas linhas)" >> "$output"
+        registrar "Encontrado: $baseline_csv ($linhas linhas)"
         baseline_count=$((baseline_count + 1))
     else
-        echo "✗ ERRO: Arquivo de baseline não encontrado: $baseline_csv" >> "$output"
-        echo "   Execute 'bash script-baseline.sh' primeiro!" >> "$output"
+        registrar "ERRO: Baseline ausente ou com menos de duas replicas: $baseline_csv"
+        registrar "Execute REPETICOES=10 bash script-baseline.sh primeiro."
         exit 1
     fi
 done
 
 if [ "$baseline_count" -ne 3 ]; then
-    echo "" >> "$output"
-    echo "✗ ERRO: Faltam arquivos de baseline!" >> "$output"
-    echo "   Esperado: 3 arquivos, encontrado: $baseline_count" >> "$output"
+    registrar "ERRO: Esperado: 3 baselines; encontrado: $baseline_count"
     exit 1
 fi
 
-echo "" >> "$output"
-echo "✓ Todos os baseline foram encontrados!" >> "$output"
-echo "" >> "$output"
-echo "Iniciando comparação de $((${#scripts_descarte[@]} * ${#datasets[@]})) combinações..." >> "$output"
-echo "Configuração: repeticoes=$repeat, seed=$seed" >> "$output"
-echo "" >> "$output"
+registrar "Todos os baselines foram encontrados."
+registrar "Iniciando $((${#scripts_descarte[@]} * ${#datasets[@]})) combinacoes."
+registrar ""
 
 
 for script in "${scripts_descarte[@]}"; do
     for dataset in "${datasets[@]}"; do
-        exp_name=$(echo "$script" | sed 's/experimento-//' | sed 's/\.py//')
+        exp_name="${script#experimento-}"
+        exp_name="${exp_name%.py}"
         csv_file="resultados-exp-${exp_name}-${dataset}.csv"
         baseline_csv="resultados-exp-01-base-${dataset}.csv"
         
-        echo "╔════════════════════════════════════════════════════════════════╗" >> "$output"
-        echo "║ Experimento: $exp_name" >> "$output"
-        echo "║ Dataset:     $dataset" >> "$output"
-        echo "║ Arquivo:     $csv_file" >> "$output"
-        echo "║ Baseline:    $baseline_csv" >> "$output"
-        echo "╚════════════════════════════════════════════════════════════════╝" >> "$output"
-        
-        uv run "$script" -d "$dataset" -r "$repeat" -s "$seed" -o "$csv_file" -b "$baseline_csv" >> "$output" 2>&1
-        
-        # Verificar se arquivo foi criado
-        if [ -f "$csv_file" ]; then
-            linhas=$(wc -l < "$csv_file")
-            echo "✓ Resultados salvos: $csv_file ($linhas linhas)" >> "$output"
-        else
-            echo "✗ ERRO: Arquivo não foi criado: $csv_file" >> "$output"
+        rm -f "$csv_file"
+        registrar "Experimento: $exp_name | Dataset: $dataset"
+        if ! uv run python "$script" -d "$dataset" -r "$repeat" -s "$seed" -o "$csv_file" -b "$baseline_csv" >> "$output" 2>&1; then
+            registrar "ERRO: execucao falhou para $script ($dataset)."
+            exit 1
         fi
-        
-        echo "" >> "$output"
+        if ! [[ -f "$csv_file" ]] || ! validar_csv "$csv_file"; then
+            registrar "ERRO: CSV ausente ou sem dados: $csv_file"
+            exit 1
+        fi
+        registrar "Resultados salvos: $csv_file ($(wc -l < "$csv_file") linhas)"
+        registrar ""
     done
 done
 
-echo "╔════════════════════════════════════════════════════════════════╗" >> "$output"
-echo "║              ✓ COMPARAÇÃO CONCLUÍDA COM SUCESSO                ║" >> "$output"
-echo "╚════════════════════════════════════════════════════════════════╝" >> "$output"
-echo "" >> "$output"
-echo "Arquivos de comparação criados:" >> "$output"
-ls -lh resultados-exp-0[2-4]-*.csv 2>/dev/null | wc -l | xargs echo "Total de arquivos:" >> "$output"
-echo "" >> "$output"
-echo "Resumo dos logs:" >> "$output"
-echo "  - Baseline coletado em:  baseline-coleta.txt" >> "$output"
-echo "  - Resultados em:        comparacao-resultados.txt" >> "$output"
-echo "" >> "$output"
-echo "Para visualizar os resultados:" >> "$output"
-echo "  tail -100 comparacao-resultados.txt | grep -A 10 'Comparação com Baseline'" >> "$output"
+registrar "Comparacao concluida com sucesso."
+registrar "Log salvo em: $output"

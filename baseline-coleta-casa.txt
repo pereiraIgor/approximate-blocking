@@ -1,0 +1,45 @@
+╔════════════════════════════════════════════════════════════════╗
+║         COLETA DE MÉTRICAS DE BASELINE - Experimento 01        ║
+╚════════════════════════════════════════════════════════════════╝
+
+Data/Hora: sex 18 set 2026 22:08:22 -03
+Datasets: dblp ncvoter musicbrainz
+Repetições: 1, Seed inicial: 20260907
+
+║ Dataset: dblp
+║ CSV:     resultados-exp-01-base-dblp.csv
+Dataset carregado: DBLP + Scholar
+
+blocking time (in secs) 5.7502
+matching time (in secs) 197.9406
+TP= 4983 Recall= 0.9319 Precision= 0.6515 pairsNo= 75121
+✓ Baseline salvo: resultados-exp-01-base-dblp.csv (11 linhas)
+
+║ Dataset: ncvoter
+║ CSV:     resultados-exp-01-base-ncvoter.csv
+Dataset carregado: NCVoter1 + NCVoter2
+
+blocking time (in secs) 36.8873
+matching time (in secs) 159.0389
+TP= 38662 Recall= 0.9454 Precision= 0.3717 pairsNo= 168571
+✓ Baseline salvo: resultados-exp-01-base-ncvoter.csv (11 linhas)
+
+║ Dataset: musicbrainz
+║ CSV:     resultados-exp-01-base-musicbrainz.csv
+Dataset carregado: Musicbrainz + Musicbrainz
+
+blocking time (in secs) 379.3696
+matching time (in secs) 1313.3089
+TP= 20578 Recall= 0.1064 Precision= 0.6479 pairsNo= 42793
+✓ Baseline salvo: resultados-exp-01-base-musicbrainz.csv (11 linhas)
+
+╔════════════════════════════════════════════════════════════════╗
+║                 ✓ BASELINE COLETADO COM SUCESSO                ║
+╚════════════════════════════════════════════════════════════════╝
+
+Arquivos de baseline criados:
+-rw-rw-r-- 1 igor igor 1,1K set 18 21:59 resultados-exp-01-base-dblp.csv
+-rw-rw-r-- 1 igor igor 1,1K set 18 21:59 resultados-exp-01-base-musicbrainz.csv
+-rw-rw-r-- 1 igor igor 1,2K set 18 21:59 resultados-exp-01-base-ncvoter.csv
+
+Próximo passo: Execute 'bash script-comparacao.sh' para comparar experimentos

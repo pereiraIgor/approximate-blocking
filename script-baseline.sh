@@ -1,54 +1,50 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-datasets=(
-    "dblp"
-    "ncvoter"
-    "musicbrainz"
-)
+set -o nounset -o pipefail
 
-repeat=10
-seed=20260907
-output="baseline-coleta.txt"
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
-# Limpar arquivo de log anterior
-> "$output"
+datasets=(dblp ncvoter musicbrainz)
+repeticoes="${REPETICOES:-10}"
+seed="${SEED:-20260907}"
+output="${LOG_ARQUIVO:-baseline-coleta.txt}"
+script="experimento-01-base.py"
 
-# Cabeçalho
-echo "╔════════════════════════════════════════════════════════════════╗" >> "$output"
-echo "║         COLETA DE MÉTRICAS DE BASELINE - Experimento 01        ║" >> "$output"
-echo "╚════════════════════════════════════════════════════════════════╝" >> "$output"
-echo "" >> "$output"
-echo "Data/Hora: $(date)" >> "$output"
-echo "Datasets: ${datasets[@]}" >> "$output"
-echo "Repetições: $repeat, Seed inicial: $seed" >> "$output"
-echo "" >> "$output"
+registrar() {
+    printf '%s\n' "$*" | tee -a "$output"
+}
+
+validar_csv() {
+    local arquivo="$1"
+    local linhas
+    linhas=$(wc -l < "$arquivo")
+    [[ "$linhas" -ge 2 ]]
+}
+
+: > "$output"
+registrar "Coleta de metricas de baseline - Experimento 01"
+registrar "Data/Hora: $(date)"
+registrar "Datasets: ${datasets[*]}"
+registrar "Repeticoes: $repeticoes, Seed inicial: $seed"
+registrar ""
 
 for dataset in "${datasets[@]}"; do
-    script="experimento-01-base.py"
     csv_file="resultados-exp-01-base-${dataset}.csv"
-    
-    echo "║ Dataset: $dataset" >> "$output"
-    echo "║ CSV:     $csv_file" >> "$output"
-    
-    uv run "$script" -d "$dataset" -r "$repeat" -s "$seed" -o "$csv_file" >> "$output" 2>&1
-    
-    # Verificar se arquivo foi criado
-    if [ -f "$csv_file" ]; then
-        linhas=$(wc -l < "$csv_file")
-        echo "✓ Baseline salvo: $csv_file ($linhas linhas)" >> "$output"
-    else
-        echo "✗ ERRO: Arquivo não foi criado: $csv_file" >> "$output"
+    rm -f "$csv_file"
+
+    registrar "Dataset: $dataset"
+    registrar "CSV: $csv_file"
+    if ! uv run python "$script" -d "$dataset" -r "$repeticoes" -s "$seed" -o "$csv_file" >> "$output" 2>&1; then
+        registrar "ERRO: execucao falhou para $dataset."
         exit 1
     fi
-    
-    echo "" >> "$output"
+    if ! [[ -f "$csv_file" ]] || ! validar_csv "$csv_file"; then
+        registrar "ERRO: CSV ausente ou sem dados: $csv_file"
+        exit 1
+    fi
+    registrar "Baseline salvo: $csv_file ($(wc -l < "$csv_file") linhas)"
+    registrar ""
 done
 
-echo "╔════════════════════════════════════════════════════════════════╗" >> "$output"
-echo "║                 ✓ BASELINE COLETADO COM SUCESSO                ║" >> "$output"
-echo "╚════════════════════════════════════════════════════════════════╝" >> "$output"
-echo "" >> "$output"
-echo "Arquivos de baseline criados:" >> "$output"
-ls -lh resultados-exp-01-base-*.csv 2>/dev/null >> "$output" || echo "Nenhum arquivo encontrado" >> "$output"
-echo "" >> "$output"
-echo "Próximo passo: Execute 'bash script-comparacao.sh' para comparar experimentos" >> "$output"
+registrar "Baseline coletado com sucesso."
+registrar "Proximo passo: bash script-comparacao.sh"

@@ -5,56 +5,60 @@ import math
 import mmh3
 import argparse
 import csv
-import re
 import statistics
-import sys
+from collections import defaultdict, deque
 from scipy import stats
 
-def str_to_MinHash(str1, q, seed=0):
-    return min([mmh3.hash(str1[i:i + q], seed) for i in range(len(str1) - q + 1)])
+def str_to_MinHash(texto, q, seed=0):
+    return min(mmh3.hash(texto[i:i + q], seed) for i in range(len(texto) - q + 1))
 
-def frequent2(temp, L, t):
-    return {k: v for (k, v) in temp.items() if v/L >= t}
+def preparar_registros(dataframe, coluna_id, colunas_atributos):
+    colunas = [coluna_id, *colunas_atributos]
+    return [
+        (registro[0], (" " + " ".join(map(str, registro[1:]))).lower())
+        for registro in dataframe[colunas].itertuples(index=False, name=None)
+    ]
 
-def matching(columns):
-    global tp, fp, pairsNo, L1, q
-    for index2 in range(nbS, nbS + offsetB):  # DBLP
-        if index2 > len(df2) - 1:
-            return True
+def preparar_experimento(dataset_type):
+    df1, df2, truth, idA, idB, tp_total, columns = load_dataset(dataset_type)
+    colunas_atributos = columns[2:]
+    registros_bloqueio = preparar_registros(df1, columns[0], colunas_atributos)
+    registros_matching = preparar_registros(df2, columns[1], colunas_atributos)
+    truthD = defaultdict(set)
 
-        rr = df2.iloc[index2]
-        idScholar = rr[columns[1]]
-        srec = ""
-        for col in columns[2:]:
-            srec += " " + str(rr[col])
-        key = ""
-        temp = dict()
-        indices = [random.randrange(0, L) for i in range(L1)]
-        matchingPairs = {}
-        for l in indices:
-            key = str(str_to_MinHash(srec.lower(), q, l))
-            d = dictB[l]
-            if key in d:
-                ids = d[key]
-                for id in ids:
-                    if id in temp:
-                        temp[id] += 1
-                        if temp[id] / L1 >= t:
-                            matchingPairs[id] = 1
-                    else:
-                        temp[id] = 1
-        for id in matchingPairs.keys():
-            idDBLP = id
-            pairsNo += 1
-            if idDBLP in truthD:
-                ids = truthD[idDBLP]
-                for id in ids:
-                    if id == idScholar:
-                        tp += 1
-                        break
+    for idA_value, idB_value in truth[[idA, idB]].itertuples(index=False, name=None):
+        truthD[idA_value].add(idB_value)
+
+    return registros_bloqueio, registros_matching, truthD, tp_total
+
+
+def matching(registros_matching, inicio, tamanho_lote, dictB, truthD, L, L1, q, limite):
+    tp = fp = pairs_no = 0
+    fim = min(inicio + tamanho_lote, len(registros_matching))
+    randrange = random.randrange
+
+    for index2 in range(inicio, fim):
+        id_scholar, srec = registros_matching[index2]
+        contagens = {}
+        matching_pairs = set()
+
+        for _ in range(L1):
+            indice_hash = randrange(L)
+            key = str_to_MinHash(srec, q, indice_hash)
+            for id_dblp in dictB[indice_hash].get(key, ()):
+                contagem = contagens.get(id_dblp, 0) + 1
+                contagens[id_dblp] = contagem
+                if contagem == limite:
+                    matching_pairs.add(id_dblp)
+
+        for id_dblp in matching_pairs:
+            pairs_no += 1
+            if id_scholar in truthD.get(id_dblp, ()):
+                tp += 1
             else:
                 fp += 1
-    return False
+
+    return tp, fp, pairs_no, fim < inicio + tamanho_lote
 
 def load_dataset(dataset_type="dblp"):
     if dataset_type.lower() == "dblp":
@@ -94,28 +98,15 @@ def load_dataset(dataset_type="dblp"):
     return df1, df2, truth, idA, idB, tp, columns
 
 
-def executar_uma_replica(dataset_type, seed_valor):
+def executar_uma_replica(dataset_type, seed_valor, experimento=None):
     """Executa uma única réplica do experimento e retorna os resultados."""
-    global df1, df2, truthD, dictB, tp, fp, pairsNo, nbS, naS, TP, blockingTime, matchingTime, offsetB, L1, L,q, t
-    
     random.seed(seed_valor)
-    
-    df1, df2, truth, idA, idB, tp_total, columns = load_dataset(dataset_type)
-    truthD = dict()
-    
-    for i, r in truth.iterrows():
-        idA_value = r[idA]
-        idB_value = r[idB]
-        if idA_value in truthD:
-            ids = truthD[idA_value]
-            ids.append(idB_value)
-        else:
-            truthD[idA_value] = [idB_value]
-    
+
+    if experimento is None:
+        experimento = preparar_experimento(dataset_type)
+    registros_bloqueio, registros_matching, truthD, tp_total = experimento
+
     t = 0.5
-    p1 = (t) ** 8
-    L = math.ceil(math.log(0.1) / math.log(1 - p1))
-    TP = tp_total
     eps = 0.1
     w = 1000
     delta = 0.1
@@ -123,69 +114,64 @@ def executar_uma_replica(dataset_type, seed_valor):
     eps = 0.01
     L1 = int(1 / (2 * eps))
     q = 2
-    dictB = [dict() for l in range(L)]
+    limite = math.ceil(t * L1)
+    dictB = [{} for _ in range(L)]
     tp = 0
     fp = 0
-    pairsNo = 0
+    pairs_no = 0
     nbS = 1
     naS = 1
     offsetA = 50
     offsetB = 50
     blockingTime = 0
     matchingTime = 0
-    
+
     while True:
-        st = time.time()
-        for index1 in range(naS, naS + offsetA):
-            if index1 >= len(df1):
-                break
-            
-            rr = df1.iloc[index1]
-            id_value = rr[columns[0]]
-            srec = ""
-            for col in columns[2:]:
-                srec += " " + str(rr[col])
-            key = ""
-            
+        st = time.perf_counter()
+        fim_bloqueio = min(naS + offsetA, len(registros_bloqueio))
+        for index1 in range(naS, fim_bloqueio):
+            id_value, srec = registros_bloqueio[index1]
             for l in range(L):
-                key = str(str_to_MinHash(srec.lower(), 2, l))
+                key = str_to_MinHash(srec, q, l)
                 d = dictB[l]
-                if key in d:
-                    ids = d[key]
-                    if len(ids) < w:
-                        ids.append(id_value)
-                    else:
-                        ids.pop(0)
-                        ids.append(id_value)
+                ids = d.get(key)
+                if ids is None:
+                    d[key] = deque((id_value,), maxlen=w)
                 else:
-                    d[key] = [id_value]
-        end = time.time()
+                    ids.append(id_value)
+        end = time.perf_counter()
         blockingTime += (end - st)
-        st = time.time()
-        termination = matching(columns)
-        end = time.time()
+        st = time.perf_counter()
+        novos_tp, novos_fp, novos_pares, termination = matching(
+            registros_matching, nbS, offsetB, dictB, truthD, L, L1, q, limite
+        )
+        end = time.perf_counter()
         matchingTime += (end - st)
+        tp += novos_tp
+        fp += novos_fp
+        pairs_no += novos_pares
         if termination:
             break
-        
+
         nbS += offsetB
         naS += offsetA
-    
+
     return {
         "blocking_s": blockingTime,
         "matching_s": matchingTime,
         "tp": tp,
         "fp": fp,
-        "pairs_no": pairsNo,
-        "recall": tp / TP if TP > 0 else 0.0,
+        "pairs_no": pairs_no,
+        "recall": tp / tp_total if tp_total > 0 else 0.0,
         "precision": tp / (tp + fp) if (tp + fp) > 0 else 0.0,
     }
 
 
-def executar_repeticoes(dataset_type, num_repeticoes, seed_inicial, valor_nulo):
+def executar_repeticoes(dataset_type, num_repeticoes, seed_inicial):
     """Executa múltiplas réplicas e calcula estatísticas."""
     resultados = []
-    
+    experimento = preparar_experimento(dataset_type)
+
     print(f"\n{'='*70}")
     print(f"Executando {num_repeticoes} réplicas para {dataset_type}...")
     print(f"{'='*70}")
@@ -193,7 +179,7 @@ def executar_repeticoes(dataset_type, num_repeticoes, seed_inicial, valor_nulo):
     for replica in range(num_repeticoes):
         seed = seed_inicial + replica
         print(f"Réplica {replica + 1}/{num_repeticoes} (seed={seed})...", end="", flush=True)
-        resultado = executar_uma_replica(dataset_type, seed)
+        resultado = executar_uma_replica(dataset_type, seed, experimento)
         resultado["replica"] = replica + 1
         resultado["seed"] = seed
         resultados.append(resultado)
@@ -235,7 +221,7 @@ def salvar_csv(resultados, caminho):
     
     with open(caminho, "w", newline="", encoding="utf-8") as arquivo:
         campos = list(resultados[0].keys())
-        escritor = csv.DictWriter(arquivo, fieldnames=campos)
+        escritor = csv.DictWriter(arquivo, fieldnames=campos, lineterminator="\n")
         escritor.writeheader()
         escritor.writerows(resultados)
     
@@ -275,17 +261,18 @@ if __name__ == '__main__':
     DATASET_TYPE = args.dataset_type
     NUM_REPETICOES = args.repeticoes
     SEED_INICIAL = args.seed
-    VALOR_NULO = 0.0
     SAIDA_CSV = args.saida_csv
 
     # Executar réplicas
     if NUM_REPETICOES > 1:
-        resultados = executar_repeticoes(DATASET_TYPE, NUM_REPETICOES, SEED_INICIAL, VALOR_NULO)
+        resultados = executar_repeticoes(DATASET_TYPE, NUM_REPETICOES, SEED_INICIAL)
         if SAIDA_CSV:
             salvar_csv(resultados, SAIDA_CSV)
     else:
         # Execução única (modo compatível com o original)
         resultado = executar_uma_replica(DATASET_TYPE, SEED_INICIAL)
+        if SAIDA_CSV:
+            salvar_csv([resultado], SAIDA_CSV)
         print(f"\nblocking time (in secs) {resultado['blocking_s']:.4f}")
         print(f"matching time (in secs) {resultado['matching_s']:.4f}")
         print(f"TP= {resultado['tp']} Recall= {resultado['recall']:.4f} Precision= {resultado['precision']:.4f} pairsNo= {resultado['pairs_no']}")

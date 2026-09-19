@@ -1,0 +1,620 @@
+╔════════════════════════════════════════════════════════════════╗
+║     COMPARAÇÃO ESTATÍSTICA COM BASELINE - Experimentos 02-04    ║
+╚════════════════════════════════════════════════════════════════╝
+
+Data/Hora: qua 09 set 2026 09:24:47 -03
+Datasets: dblp ncvoter musicbrainz
+Experimentos: experimento-02-descarte-tempo.py experimento-03-descarte-bloco.py experimento-04-descarte-global.py
+Repetições: 10, Seed inicial: 20260907
+
+Verificando arquivos de baseline...
+✓ Encontrado: resultados-exp-01-base-dblp.csv (11 linhas)
+✓ Encontrado: resultados-exp-01-base-ncvoter.csv (11 linhas)
+✓ Encontrado: resultados-exp-01-base-musicbrainz.csv (11 linhas)
+
+✓ Todos os baseline foram encontrados!
+
+Iniciando comparação de 9 combinações...
+Configuração: repeticoes=10, seed=20260907
+
+╔════════════════════════════════════════════════════════════════╗
+║ Experimento: 02-descarte-tempo
+║ Dataset:     dblp
+║ Arquivo:     resultados-exp-02-descarte-tempo-dblp.csv
+║ Baseline:    resultados-exp-01-base-dblp.csv
+╚════════════════════════════════════════════════════════════════╝
+
+======================================================================
+Executando 10 réplicas para dblp...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 10/10 (seed=20260916)...Dataset carregado: DBLP + Scholar
+ OK
+
+======================================================================
+Resumo Estatístico: DBLP (n=10, IC=95%)
+======================================================================
+Métrica         Média         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      3.933102      0.359327      3.676055      4.190149     
+matching_s      135.707734    5.405135      131.841133    139.574335   
+tp              4972.900000   4.794673      4969.470098   4976.329902  
+fp              2655.200000   55.411190     2615.561222   2694.838778  
+pairs_no        74596.400000  1032.986845   73857.445727  75335.354273 
+recall          0.930036      0.000897      0.929394      0.930677     
+precision       0.651950      0.004644      0.648628      0.655272     
+======================================================================
+
+Resultados salvos em: resultados-exp-02-descarte-tempo-dblp.csv
+✓ Baseline carregado: 10 réplicas de resultados-exp-01-base-dblp.csv
+
+==========================================================================================
+Comparação com Baseline: DBLP
+==========================================================================================
+Métrica         Baseline      Atual         Diferença     t-Student     p-valor      
+--------------------------------------------------------------------------------------------------------------
+blocking_s      3.115172      3.933102      0.817930      7.162843      4.78376e-05   ✓
+matching_s      115.274127    135.707734    20.433607     11.450419     2.64285e-07   ✓
+tp              4978.200000   4972.900000   -5.300000     -2.487718     0.0228863     ✓
+fp              2658.900000   2655.200000   -3.700000     -0.150758     0.881844      ✗
+pairs_no        75527.100000  74596.400000  -930.700000   -2.003791     0.0603813     ✗
+recall          0.931027      0.930036      -0.000991     -2.487718     0.0228863     ✓
+precision       0.651874      0.651950      0.000076      0.036720      0.971113      ✗
+==========================================================================================
+
+✓ Resultados salvos: resultados-exp-02-descarte-tempo-dblp.csv (11 linhas)
+
+╔════════════════════════════════════════════════════════════════╗
+║ Experimento: 02-descarte-tempo
+║ Dataset:     ncvoter
+║ Arquivo:     resultados-exp-02-descarte-tempo-ncvoter.csv
+║ Baseline:    resultados-exp-01-base-ncvoter.csv
+╚════════════════════════════════════════════════════════════════╝
+
+======================================================================
+Executando 10 réplicas para ncvoter...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 10/10 (seed=20260916).../home/igor.pereira/approximate-blocking/.venv/lib/python3.10/site-packages/scipy/stats/_axis_nan_policy.py:586: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+  res = hypotest_fun_out(*samples, **kwds)
+Dataset carregado: NCVoter1 + NCVoter2
+ OK
+
+======================================================================
+Resumo Estatístico: NCVOTER (n=10, IC=95%)
+======================================================================
+Métrica         Média         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      23.995331     0.325523      23.762466     24.228197    
+matching_s      110.241820    0.688504      109.749294    110.734347   
+tp              38662.000000  0.000000      38662.000000  38662.000000 
+fp              65369.300000  568.529497    64962.598498  65776.001502 
+pairs_no        168033.800000 1114.560980   167236.491106 168831.108894
+recall          0.945443      0.000000      0.945443      0.945443     
+precision       0.371648      0.002028      0.370198      0.373099     
+======================================================================
+
+Resultados salvos em: resultados-exp-02-descarte-tempo-ncvoter.csv
+✓ Baseline carregado: 10 réplicas de resultados-exp-01-base-ncvoter.csv
+
+==========================================================================================
+Comparação com Baseline: NCVOTER
+==========================================================================================
+Métrica         Baseline      Atual         Diferença     t-Student     p-valor      
+--------------------------------------------------------------------------------------------------------------
+blocking_s      21.195822     23.995331     2.799509      17.069435     3.12814e-12   ✓
+matching_s      101.167099    110.241820    9.074722      16.256908     1.33483e-09   ✓
+tp              38662.000000  38662.000000  0.000000      nan           nan           ✗
+fp              65464.800000  65369.300000  -95.500000    -0.373607     0.713061      ✗
+pairs_no        168228.100000 168033.800000 -194.300000   -0.388810     0.701978      ✗
+recall          0.945443      0.945443      0.000000      nan           nan           ✗
+precision       0.371307      0.371648      0.000341      0.374069      0.712724      ✗
+==========================================================================================
+
+✓ Resultados salvos: resultados-exp-02-descarte-tempo-ncvoter.csv (11 linhas)
+
+╔════════════════════════════════════════════════════════════════╗
+║ Experimento: 02-descarte-tempo
+║ Dataset:     musicbrainz
+║ Arquivo:     resultados-exp-02-descarte-tempo-musicbrainz.csv
+║ Baseline:    resultados-exp-01-base-musicbrainz.csv
+╚════════════════════════════════════════════════════════════════╝
+
+======================================================================
+Executando 10 réplicas para musicbrainz...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 10/10 (seed=20260916).../home/igor.pereira/approximate-blocking/.venv/lib/python3.10/site-packages/scipy/stats/_axis_nan_policy.py:586: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+  res = hypotest_fun_out(*samples, **kwds)
+Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+
+======================================================================
+Resumo Estatístico: MUSICBRAINZ (n=10, IC=95%)
+======================================================================
+Métrica         Média         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      222.018697    18.859268     208.527589    235.509805   
+matching_s      870.938051    90.004580     806.552653    935.323449   
+tp              20578.000000  0.000000      20578.000000  20578.000000 
+fp              11137.100000  49.943190     11101.372794  11172.827206 
+pairs_no        42658.100000  142.983643    42555.815663  42760.384337 
+recall          0.106363      0.000000      0.106363      0.106363     
+precision       0.648841      0.001020      0.648111      0.649571     
+======================================================================
+
+Resultados salvos em: resultados-exp-02-descarte-tempo-musicbrainz.csv
+✓ Baseline carregado: 10 réplicas de resultados-exp-01-base-musicbrainz.csv
+
+==========================================================================================
+Comparação com Baseline: MUSICBRAINZ
+==========================================================================================
+Métrica         Baseline      Atual         Diferença     t-Student     p-valor      
+--------------------------------------------------------------------------------------------------------------
+blocking_s      250.393619    222.018697    -28.374922    -2.755437     0.0139336     ✓
+matching_s      946.212021    870.938051    -75.273970    -1.872496     0.0774753     ✗
+tp              20578.000000  20578.000000  0.000000      nan           nan           ✗
+fp              11181.200000  11137.100000  -44.100000    -2.017497     0.0588359     ✗
+pairs_no        42744.200000  42658.100000  -86.100000    -1.371907     0.186975      ✗
+recall          0.106363      0.106363      0.000000      nan           nan           ✗
+precision       0.647940      0.648841      0.000901      2.020359      0.0585157     ✗
+==========================================================================================
+
+✓ Resultados salvos: resultados-exp-02-descarte-tempo-musicbrainz.csv (11 linhas)
+
+╔════════════════════════════════════════════════════════════════╗
+║ Experimento: 03-descarte-bloco
+║ Dataset:     dblp
+║ Arquivo:     resultados-exp-03-descarte-bloco-dblp.csv
+║ Baseline:    resultados-exp-01-base-dblp.csv
+╚════════════════════════════════════════════════════════════════╝
+
+======================================================================
+Executando 10 réplicas para dblp...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 10/10 (seed=20260916)...Dataset carregado: DBLP + Scholar
+ OK
+
+======================================================================
+Resumo Estatístico: DBLP (n=10, IC=95%)
+======================================================================
+Métrica         Média         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      3.130636      0.014467      3.120287      3.140985     
+matching_s      93.636784     1.241079      92.748970     94.524599    
+tp              4715.300000   14.613920     4704.845831   4725.754169  
+fp              746.900000    28.807599     726.292285    767.507715   
+pairs_no        20256.700000  255.963995    20073.594389  20439.805611 
+recall          0.881859      0.002733      0.879904      0.883814     
+precision       0.863277      0.004717      0.859903      0.866652     
+======================================================================
+
+Resultados salvos em: resultados-exp-03-descarte-bloco-dblp.csv
+✓ Baseline carregado: 10 réplicas de resultados-exp-01-base-dblp.csv
+
+==========================================================================================
+Comparação com Baseline: DBLP
+==========================================================================================
+Métrica         Baseline      Atual         Diferença     t-Student     p-valor      
+--------------------------------------------------------------------------------------------------------------
+blocking_s      3.115172      3.130636      0.015464      1.267429      0.229307      ✗
+matching_s      115.274127    93.636784     -21.637342    -33.506088    7.3564e-17    ✓
+tp              4978.200000   4715.300000   -262.900000   -54.120931    1.44102e-14   ✓
+fp              2658.900000   746.900000    -1912.000000  -98.305399    6.67254e-21   ✓
+pairs_no        75527.100000  20256.700000  -55270.400000 -162.575807   1.4522e-18    ✓
+recall          0.931027      0.881859      -0.049168     -54.120931    1.44102e-14   ✓
+precision       0.651874      0.863277      0.211403      101.771025    2.77281e-26   ✓
+==========================================================================================
+
+✓ Resultados salvos: resultados-exp-03-descarte-bloco-dblp.csv (11 linhas)
+
+╔════════════════════════════════════════════════════════════════╗
+║ Experimento: 03-descarte-bloco
+║ Dataset:     ncvoter
+║ Arquivo:     resultados-exp-03-descarte-bloco-ncvoter.csv
+║ Baseline:    resultados-exp-01-base-ncvoter.csv
+╚════════════════════════════════════════════════════════════════╝
+
+======================================================================
+Executando 10 réplicas para ncvoter...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 10/10 (seed=20260916).../home/igor.pereira/approximate-blocking/.venv/lib/python3.10/site-packages/scipy/stats/_axis_nan_policy.py:586: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+  res = hypotest_fun_out(*samples, **kwds)
+Dataset carregado: NCVoter1 + NCVoter2
+ OK
+
+======================================================================
+Resumo Estatístico: NCVOTER (n=10, IC=95%)
+======================================================================
+Métrica         Média         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      20.213232     0.057760      20.171913     20.254551    
+matching_s      62.087798     0.566398      61.682621     62.492975    
+tp              38662.000000  0.000000      38662.000000  38662.000000 
+fp              34574.800000  322.058587    34344.413166  34805.186834 
+pairs_no        107462.300000 586.453190    107042.776660 107881.823340
+recall          0.945443      0.000000      0.945443      0.945443     
+precision       0.527913      0.002314      0.526258      0.529568     
+======================================================================
+
+Resultados salvos em: resultados-exp-03-descarte-bloco-ncvoter.csv
+✓ Baseline carregado: 10 réplicas de resultados-exp-01-base-ncvoter.csv
+
+==========================================================================================
+Comparação com Baseline: NCVOTER
+==========================================================================================
+Métrica         Baseline      Atual         Diferença     t-Student     p-valor      
+--------------------------------------------------------------------------------------------------------------
+blocking_s      21.195822     20.213232     -0.982590     -7.618252     2.60955e-05   ✓
+matching_s      101.167099    62.087798     -39.079300    -71.796196    3.17876e-16   ✓
+tp              38662.000000  38662.000000  0.000000      nan           nan           ✗
+fp              65464.800000  34574.800000  -30890.000000 -148.295137   5.51803e-24   ✓
+pairs_no        168228.100000 107462.300000 -60765.800000 -151.962983   2.39249e-23   ✓
+recall          0.945443      0.945443      0.000000      nan           nan           ✗
+precision       0.371307      0.527913      0.156606      160.366050    1.73191e-29   ✓
+==========================================================================================
+
+✓ Resultados salvos: resultados-exp-03-descarte-bloco-ncvoter.csv (11 linhas)
+
+╔════════════════════════════════════════════════════════════════╗
+║ Experimento: 03-descarte-bloco
+║ Dataset:     musicbrainz
+║ Arquivo:     resultados-exp-03-descarte-bloco-musicbrainz.csv
+║ Baseline:    resultados-exp-01-base-musicbrainz.csv
+╚════════════════════════════════════════════════════════════════╝
+
+======================================================================
+Executando 10 réplicas para musicbrainz...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 10/10 (seed=20260916).../home/igor.pereira/approximate-blocking/.venv/lib/python3.10/site-packages/scipy/stats/_axis_nan_policy.py:586: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+  res = hypotest_fun_out(*samples, **kwds)
+Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+
+======================================================================
+Resumo Estatístico: MUSICBRAINZ (n=10, IC=95%)
+======================================================================
+Métrica         Média         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      200.916047    0.408670      200.623702    201.208393   
+matching_s      466.000203    0.873066      465.375649    466.624757   
+tp              20578.000000  0.000000      20578.000000  20578.000000 
+fp              4273.900000   33.732444     4249.769263   4298.030737  
+pairs_no        29042.600000  65.691535     28995.607107  29089.592893 
+recall          0.106363      0.000000      0.106363      0.106363     
+precision       0.828027      0.001122      0.827224      0.828829     
+======================================================================
+
+Resultados salvos em: resultados-exp-03-descarte-bloco-musicbrainz.csv
+✓ Baseline carregado: 10 réplicas de resultados-exp-01-base-musicbrainz.csv
+
+==========================================================================================
+Comparação com Baseline: MUSICBRAINZ
+==========================================================================================
+Métrica         Baseline      Atual         Diferença     t-Student     p-valor      
+--------------------------------------------------------------------------------------------------------------
+blocking_s      250.393619    200.916047    -49.477571    -5.892942     0.000230657   ✓
+matching_s      946.212021    466.000203    -480.211818   -16.914553    3.94927e-08   ✓
+tp              20578.000000  20578.000000  0.000000      nan           nan           ✗
+fp              11181.200000  4273.900000   -6907.300000  -373.416062   2.78179e-33   ✓
+pairs_no        42744.200000  29042.600000  -13701.600000 -284.106358   7.14848e-26   ✓
+recall          0.106363      0.106363      0.000000      nan           nan           ✗
+precision       0.647940      0.828027      0.180087      383.359518    4.71257e-36   ✓
+==========================================================================================
+
+✓ Resultados salvos: resultados-exp-03-descarte-bloco-musicbrainz.csv (11 linhas)
+
+╔════════════════════════════════════════════════════════════════╗
+║ Experimento: 04-descarte-global
+║ Dataset:     dblp
+║ Arquivo:     resultados-exp-04-descarte-global-dblp.csv
+║ Baseline:    resultados-exp-01-base-dblp.csv
+╚════════════════════════════════════════════════════════════════╝
+
+======================================================================
+Executando 10 réplicas para dblp...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: DBLP + Scholar
+ OK
+Réplica 10/10 (seed=20260916)...Dataset carregado: DBLP + Scholar
+ OK
+
+======================================================================
+Resumo Estatístico: DBLP (n=10, IC=95%)
+======================================================================
+Métrica         Média         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      3.213288      0.013801      3.203416      3.223161     
+matching_s      96.275832     1.040459      95.531533     97.020131    
+tp              5286.500000   6.948221      5281.529542   5291.470458  
+fp              839.500000    41.628649     809.720658    869.279342   
+pairs_no        24625.600000  175.422791    24500.110095  24751.089905 
+recall          0.988685      0.001299      0.987756      0.989615     
+precision       0.862997      0.005870      0.858798      0.867196     
+======================================================================
+
+Resultados salvos em: resultados-exp-04-descarte-global-dblp.csv
+✓ Baseline carregado: 10 réplicas de resultados-exp-01-base-dblp.csv
+
+==========================================================================================
+Comparação com Baseline: DBLP
+==========================================================================================
+Métrica         Baseline      Atual         Diferença     t-Student     p-valor      
+--------------------------------------------------------------------------------------------------------------
+blocking_s      3.115172      3.213288      0.098116      8.092910      4.11292e-06   ✓
+matching_s      115.274127    96.275832     -18.998295    -31.180336    2.72243e-15   ✓
+tp              4978.200000   5286.500000   308.300000    115.966375    1.13188e-24   ✓
+fp              2658.900000   839.500000    -1819.400000  -84.048533    1.48482e-23   ✓
+pairs_no        75527.100000  24625.600000  -50901.500000 -152.027378   2.02004e-17   ✓
+recall          0.931027      0.988685      0.057659      115.966375    1.13188e-24   ✓
+precision       0.651874      0.862997      0.211123      89.732406     3.57821e-24   ✓
+==========================================================================================
+
+✓ Resultados salvos: resultados-exp-04-descarte-global-dblp.csv (11 linhas)
+
+╔════════════════════════════════════════════════════════════════╗
+║ Experimento: 04-descarte-global
+║ Dataset:     ncvoter
+║ Arquivo:     resultados-exp-04-descarte-global-ncvoter.csv
+║ Baseline:    resultados-exp-01-base-ncvoter.csv
+╚════════════════════════════════════════════════════════════════╝
+
+======================================================================
+Executando 10 réplicas para ncvoter...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: NCVoter1 + NCVoter2
+ OK
+Réplica 10/10 (seed=20260916).../home/igor.pereira/approximate-blocking/.venv/lib/python3.10/site-packages/scipy/stats/_axis_nan_policy.py:586: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+  res = hypotest_fun_out(*samples, **kwds)
+Dataset carregado: NCVoter1 + NCVoter2
+ OK
+
+======================================================================
+Resumo Estatístico: NCVOTER (n=10, IC=95%)
+======================================================================
+Métrica         Média         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      22.608766     0.185978      22.475725     22.741806    
+matching_s      41.489027     0.630581      41.037936     41.940118    
+tp              40892.000000  0.000000      40892.000000  40892.000000 
+fp              43857.300000  450.075068    43535.335692  44179.264308 
+pairs_no        128081.400000 837.930148    127481.980882 128680.819118
+recall          0.999976      0.000000      0.999976      0.999976     
+precision       0.482518      0.002574      0.480676      0.484359     
+======================================================================
+
+Resultados salvos em: resultados-exp-04-descarte-global-ncvoter.csv
+✓ Baseline carregado: 10 réplicas de resultados-exp-01-base-ncvoter.csv
+
+==========================================================================================
+Comparação com Baseline: NCVOTER
+==========================================================================================
+Métrica         Baseline      Atual         Diferença     t-Student     p-valor      
+--------------------------------------------------------------------------------------------------------------
+blocking_s      21.195822     22.608766     1.412944      10.051367     2.14511e-07   ✓
+matching_s      101.167099    41.489027     -59.678071    -108.245641   7.39101e-19   ✓
+tp              38662.000000  40892.000000  2230.000000   inf           0             ✓
+fp              65464.800000  43857.300000  -21607.500000 -93.615467    1.55798e-24   ✓
+pairs_no        168228.100000 128081.400000 -40146.700000 -90.747485    6.69529e-24   ✓
+recall          0.945443      0.999976      0.054533      1473556917179399.750000 1.55442e-133  ✓
+precision       0.371307      0.482518      0.111210      106.965722    1.21932e-25   ✓
+==========================================================================================
+
+✓ Resultados salvos: resultados-exp-04-descarte-global-ncvoter.csv (11 linhas)
+
+╔════════════════════════════════════════════════════════════════╗
+║ Experimento: 04-descarte-global
+║ Dataset:     musicbrainz
+║ Arquivo:     resultados-exp-04-descarte-global-musicbrainz.csv
+║ Baseline:    resultados-exp-01-base-musicbrainz.csv
+╚════════════════════════════════════════════════════════════════╝
+
+======================================================================
+Executando 10 réplicas para musicbrainz...
+======================================================================
+Réplica 1/10 (seed=20260907)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 2/10 (seed=20260908)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 3/10 (seed=20260909)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 4/10 (seed=20260910)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 5/10 (seed=20260911)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 6/10 (seed=20260912)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 7/10 (seed=20260913)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 8/10 (seed=20260914)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 9/10 (seed=20260915)...Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+Réplica 10/10 (seed=20260916).../home/igor.pereira/approximate-blocking/.venv/lib/python3.10/site-packages/scipy/stats/_axis_nan_policy.py:586: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+  res = hypotest_fun_out(*samples, **kwds)
+Dataset carregado: Musicbrainz + Musicbrainz
+ OK
+
+======================================================================
+Resumo Estatístico: MUSICBRAINZ (n=10, IC=95%)
+======================================================================
+Métrica         Média         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      216.343055    1.398710      215.342478    217.343632   
+matching_s      300.695373    1.914556      299.325782    302.064963   
+tp              193464.200000 1.398412      193463.199636 193465.200364
+fp              4420.600000   36.065373     4394.800387   4446.399613  
+pairs_no        202118.100000 80.738880     202060.342885 202175.857115
+recall          0.999970      0.000007      0.999965      0.999975     
+precision       0.977661      0.000178      0.977533      0.977788     
+======================================================================
+
+Resultados salvos em: resultados-exp-04-descarte-global-musicbrainz.csv
+✓ Baseline carregado: 10 réplicas de resultados-exp-01-base-musicbrainz.csv
+
+==========================================================================================
+Comparação com Baseline: MUSICBRAINZ
+==========================================================================================
+Métrica         Baseline      Atual         Diferença     t-Student     p-valor      
+--------------------------------------------------------------------------------------------------------------
+blocking_s      250.393619    216.343055    -34.050564    -4.050397     0.00285042    ✓
+matching_s      946.212021    300.695373    -645.516648   -22.733010    2.88811e-09   ✓
+tp              20578.000000  193464.200000 172886.200000 390953.629657 2.3864e-47    ✓
+fp              11181.200000  4420.600000   -6760.600000  -357.087226   6.17965e-34   ✓
+pairs_no        42744.200000  202118.100000 159373.900000 3158.438063   7.71128e-44   ✓
+recall          0.106363      0.999970      0.893607      390953.629657 2.3864e-47    ✓
+precision       0.647940      0.977661      0.329721      1053.341245   1.23601e-25   ✓
+==========================================================================================
+
+✓ Resultados salvos: resultados-exp-04-descarte-global-musicbrainz.csv (11 linhas)
+
+╔════════════════════════════════════════════════════════════════╗
+║              ✓ COMPARAÇÃO CONCLUÍDA COM SUCESSO                ║
+╚════════════════════════════════════════════════════════════════╝
+
+Arquivos de comparação criados:
+Total de arquivos: 9
+
+Resumo dos logs:
+  - Baseline coletado em:  baseline-coleta.txt
+  - Resultados em:        comparacao-resultados.txt
+
+Para visualizar os resultados:
+  tail -100 comparacao-resultados.txt | grep -A 10 'Comparação com Baseline'
