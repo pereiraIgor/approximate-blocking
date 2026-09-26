@@ -47,9 +47,9 @@ We updated the manuscript by adding a highlighted Threats to Validity subsection
 Reviewer#1, Concern #3:
 Compare the proposal with previously reported state-of-the-art techniques and provide statistical tests to establish scientific significance.
 Author response:
-The manuscript compares the proposed policies with the Approximate Blocking baseline. The revised protocol now records replica-level outputs and 95% confidence intervals, which provides the basis for later inferential analysis. We agree that statistical hypothesis tests against other implementations require validated metrics and a defined comparison protocol.
+The manuscript compares the proposed policies with the Approximate Blocking baseline. Using the V2 replica-level outputs with matched seeds, we added exploratory two-sided paired Student-$t$ tests for Experiments 2 and 3 versus the baseline. These tests are reported without multiple-comparison correction and do not replace comparisons with additional state-of-the-art implementations.
 Author action:
-No claim of statistical significance was added to the manuscript. This concern remains pending until the relevant experiments and validated metric calculations are available.
+We updated the Experiments section with a transposed-results comparison and a paired-$t$-test table reporting $p$-values for blocking time, matching time, candidate pairs, $TP$, $FP$, Recall, and Precision. Constant metrics are marked as n/a. Comparisons with additional state-of-the-art implementations and multiplicity-corrected inference remain future work.
 
 
 Reviewer#2, Concern #1:
@@ -63,9 +63,9 @@ We updated the manuscript by revising the abstract, research question, contribut
 Reviewer#2, Concern #2:
 Elaborate metric definitions and calculations, including precision, recall, and a full confusion matrix by dataset and method.
 Author response:
-We corrected the metric specification. Precision is now defined as $TP/(TP+FP)$, and Recall as $TP/(TP+FN)$. Since the implementation does not enumerate the full Cartesian product of the datasets, a meaningful true-negative count is unavailable; the reported confusion-matrix components are therefore $TP$, $FP$, and $FN$.
+We corrected the metric specification and recalculated the summary tables from the ten replica-level CSV outputs in the second results collection (V2). Precision is now defined as $TP/(TP+FP)$, and Recall as $TP/(TP+FN)$. Since the implementation does not enumerate the full Cartesian product of the datasets, a meaningful true-negative count is unavailable; the reported confusion-matrix components are therefore $TP$, $FP$, and $FN$.
 Author action:
-We updated the Experiments section with highlighted formulas for Recall and Precision, the definition $FN=|MP|-TP$, and an explanation that the candidate-pair count is $TP+FP$. New numerical confusion matrices remain pending regenerated and validated outputs.
+We updated the Experiments section with highlighted formulas for Recall and Precision, the definition $FN=|MP|-TP$, and an explanation that the candidate-pair count is $TP+FP$. We replaced the previous consolidated table with three transposed tables containing means and two-sided 95% Student-$t$ confidence intervals for blocking time, matching time, candidate pairs, $TP$, $FP$, Recall, and Precision. A full numerical confusion matrix including $TN$ is not reported because true negatives are not enumerated.
 
 
 Reviewer#2, Concern #3:
@@ -87,9 +87,9 @@ No repository link or additional artifact claim was added in the current revisio
 Reviewer#2, Concern #5:
 Explain how the table calculations were performed, including the definitions of Recall and Precision.
 Author response:
-We made the calculation pipeline explicit and aligned the metric formulas with the implementation. The reported table values remain subject to validation and regeneration where required.
+We made the calculation pipeline explicit and aligned the metric formulas with the implementation. The new tables summarize ten replica-level CSV outputs for each method and dataset.
 Author action:
-We updated the Experiments section with a highlighted explanation of how candidate pairs are produced after blocking, how the ground truth is used to count true positives and false positives, and how Recall and Precision are calculated.
+We updated the Experiments section with a highlighted explanation of how candidate pairs are produced after blocking, how the ground truth is used to count true positives and false positives, and how Recall and Precision are calculated. We replaced the previous values with the V2 results, transposed the tables to improve readability, and added uncertainty intervals.
 
 
 Reviewer#2, Concern #6:

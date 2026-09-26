@@ -5,9 +5,7 @@ set -o nounset -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 scripts_descarte=(
-    "experimento-02-descarte-tempo.py"
-    "experimento-03-descarte-bloco.py"
-    "experimento-04-descarte-global.py"
+    "experimento-descarte-velho.py"
 )
 
 datasets=(
