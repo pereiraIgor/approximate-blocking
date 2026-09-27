@@ -33,7 +33,7 @@
 \corresp{Corresponding author: Igor de Sousa Pereira (e-mail: igor.pereira@copin.ufcg.edu.br).}
 
 \begin{abstract}
-With the growth of online services on the Internet, a large volume of data has been generated, making it difficult to identify records that refer to the same real-world entity, especially in continuous data stream contexts. As a result, Entity Resolution (ER) techniques have had to adapt to the streaming scenario by using entity blocks in order to eliminate unnecessary comparisons, facilitate the identification of duplicate entities across multiple data sources, and produce sets of potentially similar records. This paper proposes three techniques to improve the performance of the ER task, focusing on the management of in-memory entity blocks through an approach adapted to handle streaming data. The techniques assume that some blocks are requested more frequently than others during the ER task and that each block exhibits distinct properties and resource allocation requirements. In addition, the proposed techniques are evaluated in noisy ER scenarios, where spelling and typographical variations may affect blocking quality. \hl{The evaluation reports blocking time, matching time, candidate-pair counts, Recall, and Precision relative to the Approximate Blocking baseline; conclusions about matching quality are restricted to validated metric calculations.}
+With the growth of online services on the Internet, a large volume of data has been generated, making it difficult to identify records that refer to the same real-world entity, especially in continuous data stream contexts. As a result, Entity Resolution (ER) techniques have had to adapt to the streaming scenario by using entity blocks in order to eliminate unnecessary comparisons, facilitate the identification of duplicate entities across multiple data sources, and produce sets of potentially similar records. \hl{This paper evaluates three eviction policies for managing in-memory entity blocks in streaming ER: per-block time-aware entity removal, full block clearing at a capacity trigger, and a hybrid policy combining global age-based removal with local block clearing.} In addition, the proposed techniques are evaluated in noisy ER scenarios, where spelling and typographical variations may affect blocking quality. \hl{The evaluation reports blocking time, matching time, candidate-pair counts, Recall, and Precision relative to the Approximate Blocking baseline; conclusions about matching quality are restricted to validated metric calculations.}
 \end{abstract}
 
 \begin{keywords}
@@ -75,7 +75,7 @@ To address this issue, approaches such as those proposed in \cite{Gazzarri2021,1
 
 An alternative to this problem is the use of an in-memory block structure, such as the one presented in \cite{10.1109/TKDE.2024.3361022}, called AB, which stores information such as the maximum number of entities per block. However, existing techniques exhibit several limitations: the entity eviction process is based on simple removals and does not take into account the lifetime of entities within blocks, nor does it adequately address the problem of saturated blocks, i.e., blocks that accumulate a large number of irrelevant entities and may compromise the efficiency of the ER task. This simplistic approach can lead to memory waste and increased computational cost during entity comparisons.
 
-In this paper, we propose eviction and block management strategies for streaming ER settings aimed at addressing the inefficiencies caused by simplistic eviction policies, saturated blocks, and excessive comparison costs. The proposed strategies aim to eliminate entities and blocks that are not essential to the ER task by considering factors such as entity lifetime and relevance, thereby reducing memory usage and improving processing efficiency. In this context, the research question addressed by this paper is: “\hl{How do the evaluated eviction strategies affect blocking and matching execution time, candidate-pair counts, Recall, and Precision in the examined streaming ER settings?}”
+In this paper, we propose eviction and block management strategies for streaming ER settings aimed at addressing the inefficiencies caused by simplistic eviction policies, saturated blocks, and excessive comparison costs. \hl{The evaluated policies use entity age and block capacity as eviction criteria; they do not estimate semantic relevance or guarantee lower memory use or better matching quality.} In this context, the research question addressed by this paper is: “\hl{How do the evaluated eviction strategies affect blocking and matching execution time, candidate-pair counts, Recall, and Precision in the examined streaming ER settings?}”
 
 The main contributions of this work focus on the development and evaluation of three complementary eviction strategies aimed at the efficient maintenance of blocking structures for streaming ER. \hl{The strategies are evaluated using processing time, candidate-pair counts, Recall, and Precision; they are not claimed to preserve matching quality beyond what is supported by validated measurements.} In summary, this work presents:
  
@@ -84,7 +84,7 @@ The main contributions of this work focus on the development and evaluation of t
     
     \item \textbf{Block Eviction:} a strategy that removes entire blocks when they exceed a predefined size threshold, preventing the formation of poorly discriminative structures with low matching potential (Section~\ref{subsec:descarte-blocos});
     
-    \item \textbf{Global Entity Eviction:} \hl{a hybrid strategy that combines global time-based removal of obsolete entities with local block clearing when a block reaches its capacity limit} (Section~\ref{subsec:descarte-entidades-global}).
+    \item \textbf{Global Entity Eviction:} \hl{a hybrid strategy that combines global time-based removal of entities outside the retention window with local block clearing when a block reaches its capacity limit} (Section~\ref{subsec:descarte-entidades-global}).
     
 \end{itemize}
 
@@ -268,7 +268,7 @@ The work of \cite{dev2022DeepLI} proposes a \textit{DistilBERT}-based approach c
 
 Finally, \cite{10.1145/3786768} introduces the CRL (\textit{Consistent Record Linkage}) metric, which enables the evaluation of ER classifiers based on user-defined error thresholds. The approach demonstrates strong performance in Big Data scenarios by balancing precision, \textit{recall}, and computational efficiency without requiring fully labeled datasets.
 
-In contrast, the present work proposes eviction strategies for managing in-memory blocks in streaming ER, aiming to reduce computational cost while preserving matching quality. It defines an entity and entity-block eviction process aimed at optimizing both memory consumption and the accuracy of the \textit{matching} stage. Table~\ref{tab:trabalhos} presents a comparative overview of existing techniques across four dimensions: Heterogeneity, Noisy Data, Streaming, and Incremental Processing. Each row corresponds to a group of related works, while each column indicates whether a given technique addresses a specific research aspect. An “X” denotes support for the corresponding characteristic. The table highlights that only a few approaches comprehensively cover all dimensions, revealing a gap in the literature that motivates the contributions of the proposed work.
+\hl{In contrast, the present work proposes eviction strategies for managing in-memory blocks in streaming ER and evaluates their measured effects on processing cost and matching quality without assuming that quality is preserved. The evaluated criteria are entity age and block capacity.} Table~\ref{tab:trabalhos} presents a comparative overview of existing techniques across four dimensions: Heterogeneity, Noisy Data, Streaming, and Incremental Processing. Each row corresponds to a group of related works, while each column indicates whether a given technique addresses a specific research aspect. An “X” denotes support for the corresponding characteristic. The table highlights that only a few approaches comprehensively cover all dimensions, revealing a gap in the literature that motivates the contributions of the proposed work.
 
 Among existing approaches, this work focuses on traditional ER techniques in \textit{streaming} environments, which follow the classical ER pipeline based on blocking and explicit attribute comparisons. These techniques are favored due to their lower computational requirements and more predictable performance. Moreover, they are well established in the literature, featuring mature and extensively evaluated techniques with structured blocking and indexing mechanisms for entities and candidate blocks, which enhances reproducibility and experimental extensibility. By adopting a traditional approach, this study seeks to balance efficiency and accuracy, ensuring the scalability required for large-scale continuous data processing while maintaining low computational cost and reduced architectural complexity.
 
@@ -306,7 +306,7 @@ In the first technique, the lifetime of entities within a block is used as the E
 
 In the second technique, Eviction occurs at the block level, meaning that when a stored entity block reaches a predefined capacity limit (expressed as the maximum number of entities allowed in that block) the entire block is removed from memory. This approach is based on the hypothesis that excessively large blocks are typically formed from very generic block keys, such as “gender” or “country of origin,” which may not adequately describe the entities. As a result, such blocks tend to exhibit low quality and high memory consumption.
 
-Finally, the third technique performs global Eviction, independently of the block structure. In this case, the ER process monitors the lifetime of entities and removes those that remain in memory for long periods without contributing to the generation of new candidate entity pairs. This technique is particularly useful for eliminating entities allocated in rarely accessed blocks, which consume computational resources without improving the accuracy of the ER task. Next, we detail the operation of each proposed Eviction technique.
+\hl{Finally, the third evaluated technique is a hybrid Global Eviction policy: it combines age-based removal across an insertion-order queue with local block clearing at a capacity trigger. The implementation does not use access frequency or matching contribution as eviction criteria.} Next, we detail the operation of each proposed Eviction technique.
 
 \subsection{Entity Eviction} \label{subsec:descarte-entidades}
 
@@ -441,27 +441,17 @@ Figure~\ref{fig:descarte_blocos} illustrates the operation of the Block Eviction
 
 \subsection{Global Entity Eviction} \label{subsec:descarte-entidades-global}
 
-The third technique proposed in this work consists of a global entity eviction technique. \hl{The evaluated implementation is a hybrid policy: it performs global removal according to entity lifetime and also clears a block locally when that block reaches its capacity limit. The global temporal rule is therefore not independent of block size in the current implementation.} The central motivation of this approach is to control the retention of entities in memory over a continuous stream.
+The third technique proposed in this work consists of a global entity eviction technique. \hl{The evaluated implementation is a hybrid policy: before insertion, it clears an existing block when that block contains 1,000 entities, and it also globally expires entities outside a 2,500-entity retention window. Thus, its global temporal rule is combined with a local capacity rule.}
 
-Unlike the techniques presented earlier, which perform eviction only within specific blocks, this proposal adopts a global view of the set of stored entities, identifying and removing those that, due to their lifetime, no longer contribute to the ER task. In many cases, such entities remain allocated in blocks with low access frequency and are rarely consulted during the matching process.
+\hl{For each inserted Dataset 1 entity, the implementation records its identifier, insertion increment, and associated block keys in a FIFO queue. Once the insertion increment exceeds the retention window, queue entries older than the current cutoff are removed, along with their identifiers from the associated blocks when still present at the front of those blocks.}
 
-The persistence of obsolete entities may represent a significant cost, as they consume memory without adding semantic value and, in some cases, may even distort the matching process by representing specific or non-recurring characteristics in the data stream, such as rare typographical errors (e.g., ``Jhon'' instead of ``John'') or idiosyncratic nicknames or identifiers (e.g., ``Magalu'' for the brazilian company Magazine Luiza). Thus, the proposed technique aims to improve memory management in a holistic manner, completely evicting old and low-relevance entities from the storage space. In this work, obsolete entities are those whose entity lifetime exceeds a predefined temporal window.
+\hl{The temporal criterion is an age-based heuristic and does not determine whether a record is semantically irrelevant or has already contributed to a match. A record outside the configured window may still be relevant to a later match.}
 
-As discussed earlier, the impact of such entities on the ER task in continuous streams is minimal, since the temporal context and the dynamic nature of the data make the probability of an old entity participating in a new match extremely low. Therefore, global eviction acts as an intelligent and adaptive cleanup mechanism that not only reduces resource consumption but also keeps the ER task more fast, accurate, and aligned with the dynamic conditions of ER applications in a streaming context.
+\hl{The experiment evaluates global expiration and local block clearing together; it does not include an ablation that isolates either component. Consequently, the separate contribution of each rule cannot be inferred from these results.}
 
-The core idea of this technique is to exploit the moment at which each entity is processed by the ER task, globally recording its arrival time in the data stream. This temporal information can later be used to manage memory more efficiently by evicting old entities that are less likely to contribute to the Matching stage.
+\hl{The global rule uses each entity's insertion increment as its expiration criterion. It does not estimate the entity's probability of contributing to the Matching stage.}
 
-To enable this temporal control, a global mapping structure is maintained that associates each entity with its arrival instant in the data stream. This mapping makes it possible to track the entities’ lifetime in memory throughout continuous processing. Based on this mapping, an auxiliary structure called \( \mathcal{F} \) is defined, responsible for storing tracking information of entities over time. Formally, it is defined as:
-\[
-\mathcal{F} = \{ (e_i, t_i, k_i) \mid e_i \in \mathcal{E} \},
-\]
-where \( e_i \) represents the entity, \( i \) is the instant (or increment) at which the entity was received, and \( k \) corresponds to the set of block keys to which \( e_i \) was allocated. This structure enables temporal control over the entities, facilitating the application of eviction policies based on lifetime.
-
-A global structure denoted as \( \mathcal{W} \) is further defined, which aggregates all instances of \( \mathcal{F} \) associated with the different processed entities:
-\[
-\mathcal{W} = \{ \mathcal{F}_1, \mathcal{F}_2, \dots, \mathcal{F}_n \},
-\]
-where each element \( \mathcal{F}_i \) contains the information corresponding to entity \( e_i \). Thus, \( \mathcal{W} \) functions as a global repository that consolidates the temporal history of all entities, enabling efficient management of insertions, updates, and evictions at a global level.
+\hl{The FIFO queue $\mathcal{Q}$ stores one entry $(id_i,t_i,K_i)$ per inserted Dataset 1 entity, where $t_i$ is its insertion increment and $K_i$ is the set of block keys receiving that entity. Entries are appended in stream order and examined from the oldest end when the retention cutoff advances.}
 
 \begin{figure}[h]
   \centering
@@ -470,40 +460,42 @@ where each element \( \mathcal{F}_i \) contains the information corresponding to
   \label{fig:fluxo_heap}
 \end{figure}
 
-Figure~\ref{fig:fluxo_heap} illustrates how the technique operates. During the execution flow, a new entity $e_{11}$ is processed. In this scenario, an increment-based eviction policy is adopted, according to which all entities whose increment is at least 10 positions prior to the current increment must be removed from the blocking structure. In other words, entities with significantly older increments relative to the current entity are considered obsolete and, therefore, eligible for eviction. As a result of applying this policy, entity $e_{11}$ is normally inserted into blocks $b_1$, $b_3$, $b_8$, and $b_9$, according to the associated blocking keys. In contrast, entities $e_1$, $e_2$, and $e_3$, whose increments fall outside the defined window, are evicted from blocks $b_1$ through $b_7$ in which they were previously stored.
+\hl{Figure~\ref{fig:fluxo_heap} illustrates the policy with a toy retention window of 10 increments: when $e_{11}$ arrives, entities outside that window are removed from their associated blocks. The evaluated ``descarte velho'' run uses a 2,500-entity window, not the illustrative value of 10.}
 
-\hl{Algorithm~\ref{alg:blocking_heap} formalizes this hybrid Global Eviction implementation. Its local-clearing component is retained to prevent individual blocks from exceeding the configured capacity; a separate ablation without local clearing is required to quantify the contribution of each component.}
+\hl{Algorithm~\ref{alg:blocking_heap} formalizes the evaluated hybrid policy. Global expiration and local block clearing are evaluated together; no ablation is available to attribute their effects separately.}
 
 \begin{algorithm}[H]
 \caption{Entity Eviction with Global Control}
 \label{alg:blocking_heap}
 \begin{algorithmic}[1]
-\Require Set of entities $\mathcal{E}$; set of hash functions $\mathcal{H}$; block capacity limit $w$; eviction window size $\Delta$
-\Ensure Block structure $\mathcal{B} = {\mathcal{B}_1, \dots, \mathcal{B}_L}$
-           
+\Require Set of entities $\mathcal{E}$; set of hash functions $\mathcal{H}$; \hl{capacity trigger $L=1000$; retention window $\Delta=2500$}
+\Ensure \hl{Block structure $\mathcal{B}$}
+\State \hl{Initialize empty block structure $\mathcal{B}$ and FIFO queue $\mathcal{Q}$; set $t\gets0$}
 \For{each $e_i \in \mathcal{E}$}
+    \State \hl{$K_i\gets\emptyset$}
     \For{each $h_l \in \mathcal{H}$}
-          \State Compute the blocking key $k \gets h_l(e_i)$   
-           \If{block $b_{l,k}$ exists}
+        \State Compute the blocking key $k \gets h_l(e_i)$
+        \If{block $b_{l,k}$ exists}
             \If{$|b_{l,k}| \geq L$}
-                \State Clear $b_{l,k}$ (local eviction)
-                 \State $b_{l,k} \gets b_{l,k} \cup \{(e_i, t_i)\}$
-            \Else
-                 \State $b_{l,k} \gets b_{l,k} \cup \{(e_i, t_i)\}$
+                \State \hl{Clear $b_{l,k}$ (local capacity clearing)}
             \EndIf
         \Else
-            \State $\mathcal{B} \gets \mathcal{B} \cup \{b_{l,k}\}$
-            \State $b_{l,k} \gets b_{l,k} \cup \{(e_i,t_i)\}$
+            \State \hl{Create an empty block $b_{l,k}$}
         \EndIf
-        \State Register pair $(id_i, t, (k, l))$ em $\mathcal{H}_g$ \Comment{To retrieve information about the entity}
+        \State \hl{Insert $e_i$ into $b_{l,k}$}
+        \State \hl{$K_i\gets K_i\cup\{(k,l)\}$}
     \EndFor
-
-    \State \Comment{Global Eviction based on time}
-    \If{$t > \Delta$}
-        \State Remove from $\mathcal{H}_g$ all entries with timestamp $< t - \Delta$
-        \State For each removed entry $(id_j, t_j, (k, l))$, remove $id_j$ from $b_{l,k}$
+    \State \hl{Append $(id_i,t,K_i)$ to $\mathcal{Q}$}
+    \If{$t>\Delta$}
+        \State \hl{Set $t_{min}\gets t-\Delta$}
+        \While{$\mathcal{Q}$ is not empty and the oldest entry has timestamp $<t_{min}$}
+            \State \hl{Remove the oldest entry $(id_j,t_j,K_j)$ from $\mathcal{Q}$}
+            \For{each $(k,l)\in K_j$}
+                \State \hl{Remove $id_j$ from the front of $b_{l,k}$ if it is still there}
+            \EndFor
+        \EndWhile
     \EndIf
-    \State $t \gets t + 1$
+    \State \hl{$t\gets t+1$}
 \EndFor
 \end{algorithmic}
 \end{algorithm}
@@ -514,20 +506,21 @@ This section presents the experimental evaluation and discusses the results. The
 
 Although the primary focus of this work is the blocking stage, we also account for the matching stage in AB, which compares entities within each block to identify matching pairs. Thus, the Recall and Precision metrics are computed based on the pairs identified as matches in this stage.
 
-\hl{In the implemented matcher, each record from Dataset 2 is represented using the same selected attributes and $q$-gram MinHash procedure used for blocking. For that record, the matcher draws $R'$ hash-function indices independently and uniformly from the $R$ available indices. For each sampled index, it retrieves the identifiers stored under the corresponding block key and increments a collision counter for every retrieved identifier. An identifier becomes a matching candidate when its counter reaches $\lceil \theta R' \rceil$; with the evaluated configuration, $R'=50$ and $\theta=0.5$, so the required count is 25 collisions. The implementation records each emitted candidate pair and compares its identifiers with the ground-truth mapping solely to count true positives and false positives. Thus, the matcher does not apply an additional attribute-level similarity function after blocking; the collision-frequency rule is the operational matching criterion used in the reported experiments.}
+\hl{In the baseline and Experiments 2 and 3 (Block Eviction), each Dataset 2 record is processed in row order using the same selected attributes and $q$-gram MinHash procedure used for blocking. For each record, the matcher draws $R'$ hash-function indices independently and uniformly from the $R$ available indices. For each sampled index, it retrieves identifiers stored under the corresponding block key and increments a collision counter. An identifier becomes a candidate when its counter reaches $\lceil \theta R' \rceil$; with $R'=50$ and $\theta=0.5$, this requires 25 collisions. The emitted pairs are compared with the ground-truth mapping to classify $TP$ and $FP$; no additional attribute-level similarity function is applied. The ``descarte velho'' run differs: it uses ground truth to select Dataset 2 query records, as detailed in Experiment 3, so its quality outputs are not directly comparable.}
 
-\hl{Let $TP$ denote emitted candidate pairs present in the ground truth, $FP$ emitted candidate pairs absent from the ground truth, and $FN$ ground-truth pairs that were not emitted. Recall and Precision are calculated as $\mathrm{Recall}=TP/(TP+FN)$ and $\mathrm{Precision}=TP/(TP+FP)$, respectively. In the implementation, $FN=|MP|-TP$, where $|MP|$ is the number of ground-truth matching pairs. The reported candidate-pair count is $TP+FP$. True negatives are not materialized because the experiment does not enumerate the full Cartesian product of the two datasets; consequently, the confusion matrix is reported through $TP$, $FP$, and $FN$, rather than through a meaningful $TN$ count.}
+\hl{Let $TP$ denote emitted candidate pairs present in the ground truth, $FP$ emitted pairs absent from the ground truth, and $FN$ ground-truth pairs not emitted. Recall and Precision are $TP/(TP+FN)$ and $TP/(TP+FP)$, respectively; for the baseline and Experiments 2 and 3, $FN=|MP|-TP$ and the candidate-pair count equals $TP+FP$. The full Cartesian product is not enumerated, so $TN$ is not measured and a meaningful true-negative count is unavailable. Table~\ref{tab:resultados_consolidados_rotacionada} reports $TP$, $FP$, and $FN$ by dataset and method. The raw ``descarte velho'' counters do not satisfy this accounting and are presented separately as diagnostics, not as a confusion matrix.}
 
 An additional experiment was conducted to evaluate the impact of the volume of data processed simultaneously in the ER task. For this purpose, the \textit{offset} parameter was used, which indicates the size of the data blocks analyzed at each stage. This parameter was applied to both the Blocking and Matching stages and varied according to a geometric progression, in order to cover different processing scales. This variation made it possible to measure how different volumes of processed entities affect the performance of the evaluated technique, both in execution time and in the quality of the identified entity pairs, providing evidence to assess its scalability. The choice to employ a single technique aimed to isolate the impact of the \textit{offset} parameter, avoiding interference arising from structural or heuristic differences among multiple approaches.
 
-The entity eviction parameters defined for the experiments considered a progressive eviction strategy over time, with the block size limited to 1,000 entities. In this process, five eviction cycles were carried out, with the number of removed entities gradually increasing by a factor of 100. The eviction process was evaluated progressively by removing 100 entities per cycle initially, followed by 200, 300, 400, and up to 500 entities from a block during each eviction iteration. This choice of values was motivated by the definition of a maximum limit of 1,000 entities per block, already established as the initial configuration in \cite{10.1109/TKDE.2024.3361022}. Based on this limit, evictioning up to 50\% of the entities was considered sufficient to evaluate, in a controlled manner, the impact of the eviction process on the quality of ER. \hl{The same capacity was used across the policies to make their block-management rules directly comparable. The offset experiment used geometric progressions to cover small and large processing batches; these parameter settings constitute a sensitivity study rather than a claim of universal optimality.}
+\hl{Experiments 2 and 3 use a block-capacity trigger of 1,000 entities and process 50 records per batch in Blocking and Matching. In Experiment 2, each block starts with an insertion-time cutoff of 50; whenever that block reaches capacity, entries older than its cutoff are removed from its front and the cutoff advances by 50. This cutoff advances on capacity-triggered checks, even if no entries are removed, so 1,000 is not a guaranteed hard bound for this policy. Experiment 2's Block Eviction clears the whole block at the 1,000-entity trigger. The Global Eviction run named ``descarte velho'' combines local clearing at 1,000 entities with a global retention window of 2,500 processed entities. The 1,000-entity trigger follows the initial capacity used by the cited AB configuration; the 50-entity cutoff increment matches the batch size. The 2,500-entity global window is a fixed implementation setting, not a tuned or validated optimum.}
 
 \subsection{Environment and Configuration}
-The experimental environment consisted of a physical machine with 32 GB of RAM operating at 3{,}000 MHz, and an Intel Core i5-10400 processor @ 2.90 GHz with 6 cores. The operating system used was Ubuntu 22.04.4 LTS, 64-bit. The development environment was configured with Conda version 23.11.0 and Python 3.11.5. Each experiment was executed 10 times, and the reported results correspond to the average of the obtained values\footnote{The link to the project repository will be made available after the blind-review stage.}.
+\hl{The declared runtime dependencies are mmh3 4.0.1, NumPy 1.24.4, pandas 2.0.3, and SciPy (version 1.9.0 or later), as listed in the project requirements file.}
+The experimental environment consisted of a physical machine with 32 GB of RAM operating at 3{,}000 MHz, and an Intel Core i5-10400 processor @ 2.90 GHz with 6 cores. The operating system used was Ubuntu 22.04.4 LTS, 64-bit. The development environment was configured with Conda version 23.11.0 and Python 3.11.5. \hl{The V2 comparisons reported here use 10 replicas with consecutive seeds from 20260907 through 20260916; reported summary values are replica means.}\footnote{The link to the project repository will be made available after the blind-review stage.}
 
-\hl{The stream order is the row order of Dataset 1 for blocking and the row order of Dataset 2 for matching; records are processed sequentially in batches defined by offsetA and offsetB, without stream shuffling. For each replica, the pseudo-random generator is reinitialized with a fixed seed, and consecutive replicas use consecutive seed values. The implementation uses $q=2$, $R=116$, $R'=50$, and $\theta=0.5$, with a block-capacity limit of 1,000 entities.}
+\hl{For the baseline and Experiments 2 and 3, the stream order is the row order of Dataset 1 for blocking and Dataset 2 for matching, processed in batches of 50 without shuffling. Each replica reinitializes the pseudo-random generator with its stated seed. The implementation uses $q=2$, $R=116$, $R'=50$, and $\theta=0.5$. The ``descarte velho'' run is an exception: it does not process Dataset 2 independently in row order, because its queries are selected through the ground-truth mapping, as described in Experiment 3.}
 
-\hl{For each configuration, the scripts persist replica-level values for blocking time, matching time, $TP$, $FP$, candidate-pair count, Recall, and Precision. They report the sample mean, sample standard deviation, and a two-sided 95\% confidence interval based on the Student $t$ distribution. Statistical significance claims and pairwise tests are not reported until the metric calculations and replicate-level outputs are validated.}
+\hl{For each configuration, the scripts persist replica-level values for blocking time, matching time, $TP$, $FP$, candidate-pair count, Recall, and Precision. They report the sample mean, sample standard deviation, and a two-sided 95\% confidence interval based on the Student $t$ distribution. In the result tables, each cell is shown as the replica mean $\bar{x}$ plus or minus the confidence-interval half-width $h=t_{0.975,n-1}s/\sqrt{n}$; the corresponding interval is $[\bar{x}-h,\bar{x}+h]$. For these runs, $n=10$ and the interval uses 9 degrees of freedom. Values are rounded for display, with intervals calculated from unrounded replica values. The V2 comparisons of Experiments 2 and 3 with the baseline use two-sided Welch independent-samples $t$-tests with unequal variances; although the replicas use the same seed values, the scripts do not perform paired tests. The tests are exploratory and are not adjusted for multiple comparisons. Constant metric samples produce zero-width intervals and undefined test statistics, reported as n/a in the test table. The ``descarte velho'' Global Eviction quality metrics are excluded from these tests because its matching input is selected using ground truth, as detailed in Experiment 3.}
 
 \subsection{Threats to Validity}
 \hl{Internal validity is limited by the fixed stream order, the synthetic perturbation procedure used to create the second NCVR and MusicBrainz sources, and the randomized sampling of hash indices. Fixed seeds and repeated runs reduce run-to-run variation but do not eliminate dependence on the selected ordering or perturbation settings. Construct validity depends on the correctness of the ground-truth mappings and the implementation of $TP$, $FP$, and $FN$; therefore, all quality-related interpretations remain conditional on validation of these calculations.}
@@ -538,6 +531,8 @@ The experimental environment consisted of a physical machine with 32 GB of RAM o
 Three distinct datasets were used in the experiments: Scholar-DBLP (SCD)\footnote{https://dbs.uni-leipzig.de/research/projects/benchmark-datasets-for-entity-resolution}, which contains bibliographic records in the Computer Science domain; NCVR\footnote{https://www.ncsbe.gov/results-data/voter-registration-data}, which comprises voter registration records from the U.S. state of North Carolina; and MusicBrainz\footnote{https://dbs.uni-leipzig.de/research/projects/benchmark-datasets-for-entity-resolution}, which contains records derived from the MusicBrainz dataset\footnote{https://musicbrainz.org/}.
 
 The SCD dataset consists of two distinct files, denoted as A and B, representing two different data sources. In this case, file A is used in the blocking stage, while file B is employed in the entity matching stage.
+
+\hl{The ground-truth pairs are loaded from 	exttt{truth.csv} (ID columns 	exttt{idDBLP}/	exttt{idScholar}), 	exttt{ground	extunderscore truthNC	extunderscore voter.csv} (	exttt{antigoId}/	exttt{novoId}), and 	exttt{ground	extunderscore truth	extunderscore music	extunderscore brainz.csv} (	exttt{antigoidmusic2}/	exttt{novoidmusic1}), respectively. The evaluation denominators $|MP|$ are 5,347 for SCD, 40,893 for NCVR, and 193,471 for MusicBrainz; the scripts set the first two values explicitly and use the MusicBrainz ground-truth file row count.}
 
 In contrast, the NCVR and MusicBrainz datasets consist of a single file, characterizing a single-source scenario. To enable the matching stage for these datasets, a second file (B) was artificially generated from the original dataset. This process was carried out using a Python script, which allowed splitting the records into two distinct files while maintaining consistency with the adopted experimental protocol. The second file was constructed according to the rules described in \cite{karapiperis2023}, in which each entity has a probability of being perturbed, generating duplicate entities with slight variations in their attribute values. These variations consisted of, for NCVR, adding 1 year to the birth year of the selected entity and converting the entity's last name to lowercase. For MusicBrainz, an analogous procedure was applied: 1 was added to the song's year, while the artist's name was fully converted to lowercase.
 
@@ -553,7 +548,7 @@ Table \ref{tab:tab1} presents the characteristics of the datasets used. The rows
 & \textbf{SCD} & \textbf{NCVR} & \textbf{MusicBrainz} \\ \hline
     \textbf{$|A|$} & 64k  & 40k  & 190k \\ \hline
     \textbf{$|B|$} & 2.6k & 40k  & 190k \\ \hline
-    \textbf{$|MP|$} & 5k   & 40k & 190k \\ \hline
+    \textbf{$|MP|$} & \hl{5,347}   & \hl{40,893} & \hl{193,471} \\ \hline
     \textbf{$|AT|$ }  & 5    & 58 & 12   \\ \hline
 \end{tabular}
 \label{tab:tab1}
@@ -575,118 +570,111 @@ In order to analyze the influence of the number of entities removed during the e
 As can be observed, there was no significant improvement in the Recall and Precision metrics when the number of entities removed in each eviction process was increased. This can be explained by the fact that blocks reaching their maximum capacity tend to store information that does not contribute to the quality of the results, potentially containing data that are irrelevant to the ER task. The results obtained in this experiment provided a solid basis for proposing a more efficient eviction process, which does not rely solely on the removal of individual entities, but rather on the elimination of entire blocks of entities.
 
 \subsection{Experiment 2: Evaluating the Entity Eviction and Block Eviction Techniques}
-This section presents an integrated analysis of the impact of the proposed eviction techniques (Entity Eviction and Block Eviction) in comparison with the baseline AB (i.e., \cite{10.1109/TKDE.2024.3361022}), considering the SCD, NCVR, and MusicBrainz datasets. The experiments evaluate both computational efficiency and the quality of the generated matches under representative streaming scenarios.
+\hl{This section compares the AB baseline with Entity Eviction and Block Eviction on the three datasets using the V2 replica outputs. Blocking time, matching time, candidate-pair count, and the confusion-matrix components are summarized in Table~\ref{tab:resultados_consolidados_rotacionada}. The reported candidate-pair count satisfies $TP+FP$ in these runs. False negatives are calculated as the number of ground-truth pairs minus $TP$; true negatives are not enumerated because the full Cartesian product of each dataset pair is not evaluated.}
 
-Efficiency is analyzed based on blocking and matching times, as well as the number of generated pairs. Quality is assessed using the Recall and Precision metrics. Table \ref{tab:resultados_consolidados_rotacionada} summarizes the results obtained for the evaluated datasets.
+\hl{On SCD, Entity Eviction has a higher mean matching time than the baseline (216.571~s versus 155.856~s) and nearly unchanged candidate-pair count (74,596.4 versus 75,527.1). Block Eviction reduces matching time to 136.583~s and candidate pairs to 20,256.7, but its Recall is lower (0.8819 versus 0.9310); Precision rises from 0.0659 to 0.2328.}
 
-Considering the SCD dataset, the blocking time was reduced by approximately 5.4 seconds, corresponding to about 50\%, for both evaluated eviction techniques. This performance gain is directly related to the fact that the eviction mechanism operates on the block structure itself, making the Blocking stage more efficient. In particular, the Entity Eviction technique enables the simultaneous removal of multiple outdated entities, reducing the volume of active data and significantly improving computational efficiency.
+\hl{On NCVR, Entity Eviction increases mean matching time (224.307~s versus 127.758~s) while candidate-pair count, $TP$, and Recall remain close to the baseline. Block Eviction reduces matching time to 87.459~s and candidate pairs to 107,462.3; observed $TP$ and Recall are unchanged at 38,662 and 0.9454, while Precision increases from 0.2298 to 0.3598.}
 
-Regarding the Matching stage, the Block Eviction technique achieved a reduction of 27.96 seconds (16.26\%) in processing time, whereas the time remained nearly unchanged when applying the Entity Eviction technique. This difference can be attributed to the more efficient management of blocks that reach the maximum capacity \(L\), reducing the processing cost associated with saturated blocks.
+\hl{On MusicBrainz, Entity Eviction increases mean matching time to 1,636.732~s, with candidate-pair count and quality metrics close to the baseline. Block Eviction reduces matching time to 521.717~s and candidate pairs to 29,042.6. The observed $TP$ and Recall remain 20,578 and 0.1064, while Precision increases from 0.4814 to 0.7085. These results describe the evaluated datasets and settings; they do not show that the removed blocks were semantically irrelevant or that the same trade-offs generalize to other workloads.}
 
-The Recall and Precision metrics showed minor variations compared to the baseline when using the Entity Eviction technique. However, when applying Block Eviction, a 22\% increase in Precision was observed, accompanied by an approximate 5\% decrease in Recall. These results indicate that, although there is a slight loss in recall capability, the precision of the matches is substantially improved, suggesting that the proposed techniques preserve result quality when compared to the baseline.
+\hl{Table~\ref{tab:welch-t-tests-exp23} reports the exploratory two-sided Welch tests against the baseline. Since several metric samples are constant, the corresponding test statistics are undefined and shown as n/a. The p-values are not adjusted for multiple comparisons.}
 
-The introduction of the Block Eviction technique significantly reduced the number of pairs generated during the Matching stage. While the baseline produced approximately 70 thousand entity pairs, the Block Eviction technique reduced about 55 thousand of these comparisons, resulting in approximately 16 thousand effectively evaluated pairs. This corresponds to a 77.07\% reduction in the total number of comparisons, highlighting the ability of the proposed approach to eliminate unnecessary comparisons by removing irrelevant pairs that negatively impacted both performance and the Precision metric.
-
-For the NCVR dataset, the results exhibit a different behavior. Blocking times remained stable across approaches, ranging between 33 and 34 seconds. Regarding matching time, the baseline and Entity Eviction techniques showed similar performance, while Block Eviction achieved a reduction of 50.64 seconds (36.95\%) compared to the baseline.
-
-In terms of quality metrics, Recall values remained stable at around 85\%, regardless of the technique used. On the other hand, Precision showed notable differences. Entity Eviction resulted in a slight decrease of 1.97\% compared to the baseline, whereas Block Eviction led to an increase of 16\%. These results demonstrate that removing entire blocks substantially reduces the number of redundant comparisons, contributing to a more efficient and selective processing workflow.
-
-Similar results were observed for the MusicBrainz dataset. Blocking times remained close across techniques, indicating a low impact of eviction strategies on this stage. In contrast, the Matching stage exhibited significant gains with Block Eviction, reducing processing time from approximately 1,229 seconds in the baseline to about 755 seconds, an improvement of over 38\%.
-
-In terms of quality, all techniques maintained the same number of True Positives and the same Recall value. However, the Precision metric showed a significant variation. The baseline achieved a value of 0.657, Entity Eviction yielded 0.655, while Block Eviction reached 0.831, corresponding to an increase of approximately 26\%. This behavior reinforces that the Block Eviction technique is capable of eliminating noisy or low-informative blocks, reducing false positives without compromising the recovery of true matches.
-
-Overall, the integrated analysis across the three datasets demonstrates that the Block Eviction technique provides the best balance between computational efficiency and result quality. It significantly reduces matching time and the number of comparisons performed, preserves Recall, and consistently improves Precision. In contrast, the Entity Eviction technique exhibits behavior closer to the baseline, especially in scenarios with large data volumes and blocks with limited maximum size.
-
-From the perspective of the ER domain, these results highlight that structural techniques for dynamic management, particularly those based on the complete removal of blocks, represent a promising direction for optimizing ER systems in streaming environments. Such techniques enable low latency, reduced computational costs, and preservation of matching quality, which are essential aspects for real-world applications requiring continuous data integration.
-
-The observed improvements in blocking time, matching time, and quality metrics have direct implications for ER in streaming scenarios. The reduction in processing time, combined with the decrease in the number of compared pairs, demonstrates that eviction techniques make the process more scalable and suitable for applications requiring low latency and continuous updates, such as web systems, social networks, and multimedia streams. Furthermore, the increase in Precision indicates a reduction in false positives, enhancing the reliability of the results.
-
-\begin{table}[!t]
+\begin{table*}[!t]
 \centering
-\caption{Results of Entity and Block Eviction techniques for evaluated datasets.}
+\caption{\hl{V2 results for Experiments 1--3 (mean $\pm$ 95\% confidence-interval half-width across 10 replicas).}}
 \label{tab:resultados_consolidados_rotacionada}
-
 \scriptsize
-\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{0.95}
-\resizebox{0.48\textwidth}{!}{%
-\begin{tabular}{llcccccc}
+\begin{tabular}{llrrrrrrrr}
 \hline
-\textbf{Dataset} & \textbf{Technique} & \textbf{Block (s)} & \textbf{Match (s)} & \textbf{\#Pairs} & \textbf{TP} & \textbf{Recall} & \textbf{Precision} \\
+\hl{Dataset} & \hl{Method} & \hl{Blocking (s)} & \hl{Matching (s)} & \hl{Candidate pairs} & \hl{$TP$} & \hl{$FP$} & \hl{$FN$} & \hl{Recall} & \hl{Precision} \\
 \hline
-
-\multirow{3}{*}{SCD}
-& Baseline        & 10.56 & 171.96 & 71883.5 & 5977  & 0.930 & 0.667 \\
-& Entity Eviction  & 5.04  & 170.40 & 70080.8 & 4970  & 0.930 & 0.672 \\
-& Block Eviction   & 5.22  & 144.00 & 16480.1 & 4693  & 0.878 & 0.885 \\
+\hl{SCD} & \hl{Baseline} & \hl{$5.743\pm0.098$} & \hl{$155.856\pm1.014$} & \hl{$75{,}527.1\pm746.9$} & \hl{$4{,}978.2\pm3.4$} & \hl{$70{,}548.9\pm747.4$} & \hl{$368.8\pm3.4$} & \hl{$0.9310\pm0.0006$} & \hl{$0.0659\pm0.0007$} \\
+\hl{SCD} & \hl{Entity Eviction} & \hl{$5.786\pm0.009$} & \hl{$216.571\pm1.417$} & \hl{$74{,}596.4\pm739.0$} & \hl{$4{,}972.9\pm3.4$} & \hl{$69{,}623.5\pm739.8$} & \hl{$374.1\pm3.4$} & \hl{$0.9300\pm0.0006$} & \hl{$0.0667\pm0.0007$} \\
+\hl{SCD} & \hl{Block Eviction} & \hl{$5.933\pm0.057$} & \hl{$136.583\pm0.977$} & \hl{$20{,}256.7\pm183.1$} & \hl{$4{,}715.3\pm10.5$} & \hl{$15{,}541.4\pm186.4$} & \hl{$631.7\pm10.5$} & \hl{$0.8819\pm0.0020$} & \hl{$0.2328\pm0.0023$} \\
 \hline
-
-\multirow{3}{*}{NCVR}
-& Baseline        & 33.36 & 137.04 & 191632.1 & 34981 & 0.855 & 0.305 \\
-& Entity Eviction  & 34.02 & 133.44 & 195167.8 & 34942 & 0.854 & 0.299 \\
-& Block Eviction   & 33.24 & 86.40  & 114636.1 & 34942 & 0.854 & 0.463 \\
+\hl{NCVR} & \hl{Baseline} & \hl{$31.064\pm0.079$} & \hl{$127.758\pm0.754$} & \hl{$168{,}228.1\pm801.4$} & \hl{$38{,}662.0\pm0.0$} & \hl{$129{,}566.1\pm801.4$} & \hl{$2{,}231.0\pm0.0$} & \hl{$0.9454\pm0.0000$} & \hl{$0.2298\pm0.0011$} \\
+\hl{NCVR} & \hl{Entity Eviction} & \hl{$33.076\pm0.023$} & \hl{$224.307\pm1.166$} & \hl{$168{,}033.8\pm797.3$} & \hl{$38{,}662.0\pm0.0$} & \hl{$129{,}371.8\pm797.3$} & \hl{$2{,}231.0\pm0.0$} & \hl{$0.9454\pm0.0000$} & \hl{$0.2301\pm0.0011$} \\
+\hl{NCVR} & \hl{Block Eviction} & \hl{$33.397\pm0.478$} & \hl{$87.459\pm1.869$} & \hl{$107{,}462.3\pm419.5$} & \hl{$38{,}662.0\pm0.0$} & \hl{$68{,}800.3\pm419.5$} & \hl{$2{,}231.0\pm0.0$} & \hl{$0.9454\pm0.0000$} & \hl{$0.3598\pm0.0014$} \\
 \hline
-
-\multirow{3}{*}{MusicBrainz}
-& Baseline        & 346.06 & 1229.53 & 41781.2 & 20578 & 0.106 & 0.657 \\
-& Entity Eviction  & 361.82 & 1340.52 & 41713.1 & 20578 & 0.106 & 0.655 \\
-& Block Eviction   & 349.23 & 755.41  & 28771.1 & 20578 & 0.106 & 0.831 \\
+\hl{MusicBrainz} & \hl{Baseline} & \hl{$360.866\pm0.494$} & \hl{$809.549\pm1.480$} & \hl{$42{,}744.2\pm98.5$} & \hl{$20{,}578.0\pm0.0$} & \hl{$22{,}166.2\pm98.5$} & \hl{$172{,}893.0\pm0.0$} & \hl{$0.1064\pm0.0000$} & \hl{$0.4814\pm0.0011$} \\
+\hl{MusicBrainz} & \hl{Entity Eviction} & \hl{$378.246\pm5.188$} & \hl{$1{,}636.732\pm50.004$} & \hl{$42{,}658.1\pm102.3$} & \hl{$20{,}578.0\pm0.0$} & \hl{$22{,}080.1\pm102.3$} & \hl{$172{,}893.0\pm0.0$} & \hl{$0.1064\pm0.0000$} & \hl{$0.4824\pm0.0012$} \\
+\hl{MusicBrainz} & \hl{Block Eviction} & \hl{$362.071\pm1.277$} & \hl{$521.717\pm2.928$} & \hl{$29{,}042.6\pm47.0$} & \hl{$20{,}578.0\pm0.0$} & \hl{$8{,}464.6\pm47.0$} & \hl{$172{,}893.0\pm0.0$} & \hl{$0.1064\pm0.0000$} & \hl{$0.7085\pm0.0011$} \\
 \hline
-
 \end{tabular}%
-}
-\end{table}
+\end{table*}
+
+\begin{table*}[!t]
+\centering
+\caption{\hl{Welch $t$-test $p$-values for Experiments 2 and 3 versus the V2 baseline.}}
+\label{tab:welch-t-tests-exp23}
+\scriptsize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{llcc}
+\hline
+\hl{Dataset} & \hl{Metric} & \hl{Entity Eviction} & \hl{Block Eviction} \\
+\hline
+\hl{SCD} & \hl{Blocking time} & \hl{0.3515} & \hl{0.0019} \\
+\hl{SCD} & \hl{Matching time} & \hl{$1.77\times10^{-22}$} & \hl{$4.75\times10^{-17}$} \\
+\hl{SCD} & \hl{Candidate pairs} & \hl{0.0604} & \hl{$1.45\times10^{-18}$} \\
+\hl{SCD} & \hl{$TP$} & \hl{0.0229} & \hl{$1.44\times10^{-14}$} \\
+\hl{SCD} & \hl{$FP$} & \hl{0.0619} & \hl{$1.36\times10^{-18}$} \\
+\hl{SCD} & \hl{Recall} & \hl{0.0229} & \hl{$1.44\times10^{-14}$} \\
+\hl{SCD} & \hl{Precision} & \hl{0.0897} & \hl{$5.22\times10^{-19}$} \\
+\hline
+\hl{NCVR} & \hl{Blocking time} & \hl{$2.58\times10^{-14}$} & \hl{$1.12\times10^{-6}$} \\
+\hl{NCVR} & \hl{Matching time} & \hl{$4.02\times10^{-26}$} & \hl{$1.22\times10^{-14}$} \\
+\hl{NCVR} & \hl{Candidate pairs} & \hl{0.7020} & \hl{$2.39\times10^{-23}$} \\
+\hl{NCVR} & \hl{$TP$} & \hl{n/a} & \hl{n/a} \\
+\hl{NCVR} & \hl{$FP$} & \hl{0.7020} & \hl{$2.39\times10^{-23}$} \\
+\hl{NCVR} & \hl{Recall} & \hl{n/a} & \hl{n/a} \\
+\hl{NCVR} & \hl{Precision} & \hl{0.7016} & \hl{$1.00\times10^{-28}$} \\
+\hline
+\hl{MusicBrainz} & \hl{Blocking time} & \hl{$3.20\times10^{-5}$} & \hl{0.0705} \\
+\hl{MusicBrainz} & \hl{Matching time} & \hl{$3.35\times10^{-11}$} & \hl{$1.67\times10^{-24}$} \\
+\hl{MusicBrainz} & \hl{Candidate pairs} & \hl{0.1870} & \hl{$7.71\times10^{-44}$} \\
+\hl{MusicBrainz} & \hl{$TP$} & \hl{n/a} & \hl{n/a} \\
+\hl{MusicBrainz} & \hl{$FP$} & \hl{0.1870} & \hl{$7.15\times10^{-26}$} \\
+\hl{MusicBrainz} & \hl{Recall} & \hl{n/a} & \hl{n/a} \\
+\hl{MusicBrainz} & \hl{Precision} & \hl{0.1875} & \hl{$2.89\times10^{-35}$} \\
+\hline
+\end{tabular}
+
+\hl{The tests use $\alpha=0.05$ and are not corrected for multiple comparisons. n/a indicates constant sample values for which the test statistic is undefined.}
+\end{table*}
 
 
 
 
 \subsection{Experiment 3: Evaluating the Global Eviction Technique}
-The Global Eviction technique was evaluated separately on each dataset, revealing distinct behaviors driven by their intrinsic characteristics. The evaluation results are presented in Table~\ref{tab:resultados_consolidados_global_rotacionada}.
+\hl{The V2 files named ``descarte velho'' are the new outputs designated for the Global Eviction run. Their raw means are listed in Table~\ref{tab:resultados_consolidados_global_rotacionada}; however, the implementation does not provide an unbiased comparison of matching quality. During blocking, it uses the ground-truth mapping to select the Dataset 2 indices passed to the matcher for each Dataset 1 record. Because the list of correspondence lists is nonempty, the matcher's fallback scan over Dataset 2 is not used. Thus, the queries evaluated by this run are conditioned on known matches, rather than being processed as an independent stream in row order.}
 
-For the SCD dataset, which presents lower temporal variability and more homogeneous records, Global Eviction produced simultaneous gains in efficiency and matching quality. The blocking time decreased from 10.56\,s to 5.72\,s due to the reduction in the number of active entities maintained in memory. Similarly, the matching time was reduced as a consequence of the smaller and more focused candidate space. In addition, the substantial reduction in the total number of generated pairs, combined with the increase in both Recall and Precision, indicates that the technique adapts effectively to stable streaming environments, where obsolete entities can be safely removed without compromising relevant matches.
+\hl{The code also increments the reported $FP$ only when a predicted Dataset 1 identifier has no ground-truth entry at all. If that identifier has a ground-truth match to a different Dataset 2 identifier, the emitted incorrect pair is not counted as an $FP$. Accordingly, the raw candidate-pair, $TP$, and reported $FP$ counts do not form a valid full-dataset confusion matrix, and the reported Recall and Precision cannot be interpreted as unbiased matching-quality estimates. No inferential comparison of these quality metrics is reported here.}
 
-For the NCVR dataset, characterized by larger volume, higher attribute diversity, and increased noise levels, the impact of Global Eviction was particularly evident in terms of matching effectiveness. Although the blocking time increased from 33.36\,s to 38.59\,s due to the additional maintenance cost of the global eviction structure, the matching time decreased from 137.04\,s to 119.09\,s. More importantly, Recall increased to values close to 1.0, indicating that the technique was able to preserve almost all true matches even under noisy conditions. Precision also improved compared to the baseline, demonstrating that Global Eviction helps reduce temporal redundancies and mitigate the generation of false-positive candidate pairs.
+\hl{For MusicBrainz, the raw mean output is 202,118.1 candidate pairs and 193,464.2 $TP$, against a denominator of 193,471 ground-truth rows used by the script. It also reports 4,420.6 $FP$, but candidate pairs minus $TP$ minus reported $FP$ equals 4,233.3, exposing the false-positive undercount. The near-denominator $TP$ result is consistent with the ground-truth-conditioned query selection and is not evidence that Global Eviction recovered almost all matches from an independent stream. The same protocol issue applies to DBLP and NCVR.}
 
-For the MusicBrainz dataset, characterized by large-scale, highly heterogeneous, and temporally dispersed records, Global Eviction produced substantial improvements in matching quality. Although the blocking time increased from 346.06,s to 386.05,s due to the additional cost of maintaining the global eviction structure, the matching time decreased significantly from 1229.53\,s to 996.52\,s. More importantly, Recall increased from 0.1060 to 1.0000, while Precision improved from 0.6570 to 0.9599.
-
-These gains are strongly associated with the temporal dynamics of the dataset. Since related entities often appear separated by large time intervals, the baseline approach tends to retain obsolete entities in memory for extended periods, even after their corresponding matches have already been identified. As new entities continuously arrive, outdated records accumulate in the blocking structure and contribute to the generation of noisy and low-quality candidate pairs. Global Eviction mitigates this problem by progressively removing stale entities from all associated blocks, allowing the structure to prioritize more recent and relevant records. Consequently, the candidate space becomes cleaner and more focused, substantially improving both Recall and Precision while reducing unnecessary comparisons during the matching stage.
-
-From an ER perspective, these results demonstrate that Global Eviction is particularly advantageous in scenarios involving continuous and long-term data streams. By preventing the indefinite retention of historical entities, the technique reduces redundant comparisons, stabilizes memory usage, and improves the consistency of the matching process over time. As a consequence, the ER pipeline becomes more scalable and better suited to high-volume streaming environments.
-
-With respect to the state of the art, the proposed strategy advances a still underexplored direction in stream-oriented ER: the use of global temporal structures to dynamically control the search space. The experimental results demonstrate that temporal eviction mechanisms can simultaneously improve Recall and Precision, even in highly heterogeneous and noisy datasets. Therefore, the proposed approach reinforces the relevance of adaptive memory management strategies for real-world ER applications, particularly in systems that operate over continuous, large-scale, and temporally evolving data streams.
+\hl{The blocking and matching times and candidate counts in Table~\ref{tab:resultados_consolidados_global_rotacionada} are retained as raw execution observations, not as evidence of improved end-to-end performance: the matching workload differs from the baseline because ground truth determines which Dataset 2 records are queried. A valid quality comparison requires rerunning this policy with Dataset 2 processed independently of ground truth and counting every incorrect emitted pair as an $FP$.}
 
 
-\begin{table}[!t]
+\begin{table*}[!t]
 \centering
-\caption{Results for Global Eviction on evaluated datasets.}
+\caption{\hl{Raw V2 output for the Global Eviction run named ``descarte velho'' (mean $\pm$ 95\% confidence-interval half-width across 10 replicas).}}
 \label{tab:resultados_consolidados_global_rotacionada}
-
 \scriptsize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{0.95}
-\resizebox{0.48\textwidth}{!}{%
-\begin{tabular}{llcccccc}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.0}
+\begin{tabular}{lrrrrrr}
 \hline
-\textbf{Dataset} & \textbf{Technique} & \textbf{Block (s)} & \textbf{Match (s)} & \textbf{\#Pairs} & \textbf{TP} & \textbf{Recall} & \textbf{Precision} \\
+\hl{Dataset} & \hl{Blocking (s)} & \hl{Matching (s)} & \hl{Candidate pairs} & \hl{$TP$ (reported)} & \hl{$FP$ (reported)} & \hl{$|MP|$ denominator} \\
 \hline
-
-\multirow{2}{*}{SCD}
-& Baseline         & 10.56 & 171.96 & 71883.5 & 5977.3 & 0.9300 & 0.6672 \\
-& Global Eviction   & 5.72  & 154.78 & 23375.0 & 5262.0 & 0.9841 & 0.8741 \\
-\hline
-
-\multirow{2}{*}{NCVR}
-& Baseline         & 33.36 & 137.04 & 191632.1 & 34980.6 & 0.8550 & 0.3050 \\
-& Global Eviction   & 38.59 & 119.09 & 163328.0 & 40892.0 & 0.9999 & 0.4040 \\
-\hline
-
-\multirow{2}{*}{MusicBrainz}
-& Baseline         & 346.06 & 1229.53 & 41781.0  & 20578.0  & 0.1060 & 0.6570 \\
-& Global Eviction   & 386.05 & 996.52  & 211509.0 & 195892.0 & 1.0000 & 0.9599 \\
+\hl{SCD} & \hl{$6.313\pm0.103$} & \hl{$169.668\pm2.575$} & \hl{$24{,}625.6\pm125.5$} & \hl{$5{,}286.5\pm5.0$} & \hl{$839.5\pm29.8$} & \hl{5,347} \\
+\hl{NCVR} & \hl{$52.412\pm1.305$} & \hl{$80.363\pm1.642$} & \hl{$128{,}081.4\pm599.4$} & \hl{$40{,}892.0\pm0.0$} & \hl{$43{,}857.3\pm322.0$} & \hl{40,893} \\
+\hl{MusicBrainz} & \hl{$404.297\pm4.768$} & \hl{$541.225\pm4.598$} & \hl{$202{,}118.1\pm57.8$} & \hl{$193{,}464.2\pm1.0$} & \hl{$4{,}420.6\pm25.8$} & \hl{193,471} \\
 \hline
 \end{tabular}%
-}
-\end{table}
+\end{table*}
 
 
 \subsection{Experiment 4: Entity Lifetime in Blocks}
@@ -834,21 +822,21 @@ Overall, the comparison between the baseline and the no-eviction scenario demons
 
 \section{Conclusions and Future Work} \label{sec:conclusao}
 
-In light of the presented results, this work demonstrates that eviction techniques represent an effective alternative for balancing computational efficiency and quality in the ER task under \textit{streaming} scenarios. Based on the research question: ``\textit{To what extent can time-aware entity eviction and block-level eviction improve the efficiency of in-memory blocking structures for streaming ER while preserving matching quality?}'', the experiments show that the evaluated techniques provide distinct yet complementary approaches to improving the efficiency of the AB method \cite{10.1109/TKDE.2024.3361022} in continuous data stream settings.
+\hl{The V2 evaluation compares the AB baseline with time-aware Entity Eviction and Block Eviction on SCD, NCVR, and MusicBrainz. The results answer the research question in a dataset-dependent manner: the policies change processing time, candidate counts, Recall, and Precision differently, and the measurements do not support a general claim that matching quality is preserved.}
 
-Entity Eviction demonstrated moderate improvements in processing efficiency, particularly in scenarios where the removal of outdated entities helped control the internal growth of blocks. By selectively evicting obsolete entities, the technique reduces the accumulation of stale records and contributes to a more stable blocking structure over time. However, its impact on matching performance was generally limited when compared to Block Eviction, especially in large-scale and highly heterogeneous datasets such as MusicBrainz.
+\hl{In the V2 comparisons, Entity Eviction increased mean matching time relative to the baseline on all three datasets. Candidate-pair counts and Precision changed only slightly, while SCD showed a small reduction in $TP$ and Recall and NCVR and MusicBrainz retained their observed $TP$ and Recall. These results do not demonstrate a general runtime or memory-stability benefit.}
 
-The experimental results indicate that Entity Eviction preserves matching quality while introducing only minor variations in Recall and Precision relative to the baseline. Therefore, the technique partially addresses the research question by improving structural maintenance and reducing memory saturation effects without significantly compromising the effectiveness of the ER process. Its main advantage lies in scenarios that require lightweight temporal management with low structural disruption, making it suitable for applications that prioritize stability and incremental maintenance of the blocking structure.
+\hl{The small quality-metric changes for Entity Eviction should be interpreted as observations for the tested datasets and configuration, not as evidence that the policy preserves quality in other settings. The reported experiment does not directly measure memory use or establish operational stability.}
 
-On the other hand, Block Eviction stood out as the most effective strategy for reducing the computational cost of the matching stage while substantially improving candidate quality. By removing entire overloaded blocks, the technique drastically reduces the search space and eliminates highly saturated or low-informative blocks that tend to generate large numbers of redundant comparisons and false-positive candidate pairs. As a consequence, the number of generated comparisons was significantly reduced across all evaluated datasets, leading to expressive reductions in matching time.
+\hl{Block Eviction reduced mean matching time and candidate-pair counts relative to the baseline on all three datasets, and increased Precision. On SCD, Recall decreased from 0.9310 to 0.8819; on NCVR and MusicBrainz, the observed $TP$ and Recall were unchanged. The SCD result is a measured quality trade-off, not evidence that block removal preserves all relevant matches.}
 
-The experimental results also demonstrate that Block Eviction consistently improves Precision, particularly in heterogeneous and noisy datasets, indicating that the remaining candidate pairs become substantially more selective and reliable. Although small reductions in Recall were observed in some scenarios, the technique preserves most true matches while greatly improving the overall efficiency of the ER process. Therefore, Block Eviction directly addresses the research question by demonstrating that structural block removal can optimize the AB framework without compromising matching effectiveness, especially in large-scale streaming environments where reducing redundant comparisons is essential for scalability.
+\hl{The increased Precision is consistent with a more selective set of emitted candidate pairs under the implemented matcher. The experiments do not establish why particular blocks contain false positives, nor do they establish performance in large-scale or distributed deployments beyond the tested single-machine settings.}
 
-The Global Eviction technique achieved even more expressive results, particularly in scenarios with higher temporal variability or greater structural heterogeneity. The experiments showed that it is capable of achieving high-quality metrics, with Recall close to or equal to 1 and significantly higher Precision than the baseline, while also reducing the number of comparisons performed during the matching stage. This technique demonstrates that incorporating global temporal management mechanisms can lead to high-performance matching without significant degradation in total processing time, especially in noisy or complex data environments.
+\hl{The new V2 run named ``descarte velho'' cannot support a matching-quality conclusion: its script uses ground truth to select Dataset 2 queries and undercounts false-positive pairs. Its reported Recall and Precision, including the near-one MusicBrainz Recall, are therefore excluded from claims about Global Eviction. A quality comparison requires a rerun with query selection independent of ground truth and pair-wise $FP$ counting.}
 
-Finally, the analysis of the average entity retention time showed that faster renewal processes, particularly in larger datasets such as NCVR, directly contribute to the operational efficiency of AB. Overall, the results indicate that the proposal of new entity and block eviction processes can improve the efficiency of the structure, provided that the choice of technique is guided by the application context: latency-oriented applications tend to benefit more from Entity Eviction, whereas scenarios requiring higher matching quality and greater selectivity benefit more from Block Eviction or Global Eviction, assuming adequate computational resources are available.
+\hl{The separate entity-lifetime measurements report shorter average lifetimes under Entity Eviction and Block Eviction than under the baseline; they do not demonstrate that shorter lifetime caused the observed runtime or quality differences. For the evaluated workloads, Block Eviction reduced matching time and candidate counts, while its Recall effect depended on dataset. The current evidence does not establish a universally preferred policy.}
 
-The results obtained in this study demonstrate the potential of dynamic eviction strategies to improve both computational efficiency and ER quality in streaming scenarios. Nevertheless, the findings also expose limitations and open challenges that motivate further investigation. Next, we present several promising directions for future work:
+\hl{These findings are limited to the evaluated datasets, parameter settings, and single-machine environment. The Global Eviction run named ``descarte velho'' requires a corrected, ground-truth-independent evaluation before its quality can be compared with the baseline. Further work should also evaluate parameter sensitivity and distributed or production streaming settings.}
 
 \begin{enumerate}
     \item \textbf{Adaptive hybrid techniques.}  
