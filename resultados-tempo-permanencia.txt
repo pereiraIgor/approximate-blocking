@@ -1,0 +1,68 @@
+Analise de tempo de permanencia
+Data/Hora: dom 27 set 2026 18:00:37 -03
+Datasets: dblp ncvoter musicbrainz
+Estrategias: base tempo bloco global sem-descarte
+Tamanho do bloco: 1000
+
+Dataset: dblp | Estrategia: base
+Entidades descartadas: 10215
+Tempo medio de permanencia (insercoes): 1865.1967694566813
+
+Dataset: dblp | Estrategia: tempo
+Entidades descartadas: 10724
+Tempo medio de permanencia (insercoes): 1849.30091383812
+
+Dataset: dblp | Estrategia: bloco
+Entidades descartadas: 38000
+Tempo medio de permanencia (insercoes): 1036.7163684210527
+
+Dataset: dblp | Estrategia: global
+Entidades descartadas: 46482
+Tempo medio de permanencia (insercoes): 1384.1488533195645
+
+Dataset: dblp | Estrategia: sem-descarte
+Entidades descartadas: 0
+Tempo medio de permanencia: nao aplicavel
+
+Dataset: ncvoter | Estrategia: base
+Entidades descartadas: 2223897
+Tempo medio de permanencia (insercoes): 9605.208803285404
+
+Dataset: ncvoter | Estrategia: tempo
+Entidades descartadas: 2224553
+Tempo medio de permanencia (insercoes): 9557.27870857651
+
+Dataset: ncvoter | Estrategia: bloco
+Entidades descartadas: 2878000
+Tempo medio de permanencia (insercoes): 6188.846299166087
+
+Dataset: ncvoter | Estrategia: global
+Entidades descartadas: 4469420
+Tempo medio de permanencia (insercoes): 2354.697983854728
+
+Dataset: ncvoter | Estrategia: sem-descarte
+Entidades descartadas: 0
+Tempo medio de permanencia: nao aplicavel
+
+Dataset: musicbrainz | Estrategia: base
+Entidades descartadas: 16936283
+Tempo medio de permanencia (insercoes): 20620.177235760646
+
+Dataset: musicbrainz | Estrategia: tempo
+Entidades descartadas: 16372015
+Tempo medio de permanencia (insercoes): 19027.90979375477
+
+Dataset: musicbrainz | Estrategia: bloco
+Entidades descartadas: 18571000
+Tempo medio de permanencia (insercoes): 13160.34045711055
+
+Dataset: musicbrainz | Estrategia: global
+Entidades descartadas: 22190794
+Tempo medio de permanencia (insercoes): 2458.0225106411244
+
+Dataset: musicbrainz | Estrategia: sem-descarte
+Entidades descartadas: 0
+Tempo medio de permanencia: nao aplicavel
+
+Analise concluida.
+Log salvo em: resultados-tempo-permanencia.txt
