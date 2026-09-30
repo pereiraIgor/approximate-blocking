@@ -1,0 +1,92 @@
+Experimento 05 - Sem descarte
+Data/hora: seg 28 set 2026 15:55:13 -03
+Datasets: dblp ncvoter musicbrainz
+Repetições por dataset: 3
+Seed inicial: 20260907
+
+Dataset: dblp
+CSV: resultados_v2/resultados-exp-05-sem-descarte-dblp-20260928-155513.csv
+Dataset carregado: DBLP + Scholar
+
+======================================================================
+Executando 3 replicas sem descarte para dblp...
+======================================================================
+Replica 1/3 (seed=20260907)... OK
+Replica 2/3 (seed=20260908)... OK
+Replica 3/3 (seed=20260909)... OK
+
+======================================================================
+Resumo Estatistico: DBLP (n=3, IC=95%)
+======================================================================
+Metrica         Media         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      6.337751      0.020856      6.285943      6.389560     
+matching_s      180.107391    0.909063      177.849153    182.365629   
+tp              5049.000000   2.645751      5042.427589   5055.572411  
+fp              101940.000000 2046.387304   96856.492124  107023.507876
+pairs_no        106989.000000 2047.961914   101901.580578 112076.419422
+recall          0.944268      0.000495      0.943039      0.945497     
+precision       0.047203      0.000883      0.045010      0.049396     
+======================================================================
+
+Resultados salvos em: resultados_v2/resultados-exp-05-sem-descarte-dblp-20260928-155513.csv
+Concluído: dblp (resultados_v2/resultados-exp-05-sem-descarte-dblp-20260928-155513.csv)
+
+Dataset: ncvoter
+CSV: resultados_v2/resultados-exp-05-sem-descarte-ncvoter-20260928-155513.csv
+Dataset carregado: NCVoter1 + NCVoter2
+
+======================================================================
+Executando 3 replicas sem descarte para ncvoter...
+======================================================================
+Replica 1/3 (seed=20260907)... OK
+Replica 2/3 (seed=20260908)... OK
+Replica 3/3 (seed=20260909)... OK
+
+======================================================================
+Resumo Estatistico: NCVOTER (n=3, IC=95%)
+======================================================================
+Metrica         Media         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      32.322934     0.068843      32.151918     32.493949    
+matching_s      399.135560    1.309110      395.883552    402.387568   
+tp              38662.000000  0.000000      38662.000000  38662.000000 
+fp              225991.000000 3322.370238   217737.774799 234244.225201
+pairs_no        264653.000000 3322.370238   256399.774799 272906.225201
+recall          0.945443      0.000000      0.945443      0.945443     
+precision       0.146101      0.001844      0.141520      0.150682     
+======================================================================
+
+Resultados salvos em: resultados_v2/resultados-exp-05-sem-descarte-ncvoter-20260928-155513.csv
+Concluído: ncvoter (resultados_v2/resultados-exp-05-sem-descarte-ncvoter-20260928-155513.csv)
+
+Dataset: musicbrainz
+CSV: resultados_v2/resultados-exp-05-sem-descarte-musicbrainz-20260928-155513.csv
+Dataset carregado: Musicbrainz + Musicbrainz
+
+======================================================================
+Executando 3 replicas sem descarte para musicbrainz...
+======================================================================
+Replica 1/3 (seed=20260907)... OK
+Replica 2/3 (seed=20260908)... OK
+Replica 3/3 (seed=20260909)... OK
+
+======================================================================
+Resumo Estatistico: MUSICBRAINZ (n=3, IC=95%)
+======================================================================
+Metrica         Media         Desvio Pad    IC Inferior   IC Superior  
+---------------------------------------------------------------------------
+blocking_s      367.691531    0.765647      365.789559    369.593502   
+matching_s      7254.706848   45.176296     7142.482709   7366.930988  
+tp              20578.000000  0.000000      20578.000000  20578.000000 
+fp              449809.333333 5667.624047   435730.174703 463888.491963
+pairs_no        470387.333333 5667.624047   456308.174703 484466.491963
+recall          0.106363      0.000000      0.106363      0.106363     
+precision       0.043751      0.000527      0.042442      0.045060     
+======================================================================
+
+Resultados salvos em: resultados_v2/resultados-exp-05-sem-descarte-musicbrainz-20260928-155513.csv
+Concluído: musicbrainz (resultados_v2/resultados-exp-05-sem-descarte-musicbrainz-20260928-155513.csv)
+
+Experimento concluído.
+Log: resultados_v2/execucao-exp-05-sem-descarte-20260928-155513.log

@@ -505,14 +505,16 @@ This section presents the experimental evaluation and discusses the results. The
 
 Although the primary focus of this work is the blocking stage, we also account for the matching stage in AB, which compares entities within each block to identify matching pairs. Thus, the Recall and Precision metrics are computed based on the pairs identified as matches in this stage.
 
-Recall is defined as the ratio between the number of matching entity pairs that were correctly identified and the total number of existing matching entity pairs. In other words, it measures the ability to correctly identify all matching entity pairs. On the other hand, the Precision metric corresponds to the ratio between the number of correctly identified matching entity pairs and the total number of comparisons performed. Therefore, it evaluates how many of the performed comparisons actually resulted in correct matching entity pairs.
+\hl{Let $TP$ denote the number of correctly identified matching pairs, $FP$ the number of incorrectly identified pairs, and $FN=|MP|-TP$ the number of ground-truth matching pairs that were not identified. Recall is calculated as $TP/(TP+FN)$, and Precision as $TP/(TP+FP)$. The candidate-pair count is $TP+FP$; it is not the denominator of Precision unless all candidate pairs are classified as matches.}
 
 An additional experiment was conducted to evaluate the impact of the volume of data processed simultaneously in the ER task. For this purpose, the \textit{offset} parameter was used, which indicates the size of the data blocks analyzed at each stage. This parameter was applied to both the Blocking and Matching stages and varied according to a geometric progression, in order to cover different processing scales. This variation made it possible to measure how different volumes of processed entities affect the performance of the evaluated technique, both in execution time and in the quality of the identified entity pairs, providing evidence to assess its scalability. The choice to employ a single technique aimed to isolate the impact of the \textit{offset} parameter, avoiding interference arising from structural or heuristic differences among multiple approaches.
 
 The entity eviction parameters defined for the experiments considered a progressive eviction strategy over time, with the block size limited to 1,000 entities. In this process, five eviction cycles were carried out, with the number of removed entities gradually increasing by a factor of 100. The eviction process was evaluated progressively by removing 100 entities per cycle initially, followed by 200, 300, 400, and up to 500 entities from a block during each eviction iteration. This choice of values was motivated by the definition of a maximum limit of 1,000 entities per block, already established as the initial configuration in \cite{10.1109/TKDE.2024.3361022}. Based on this limit, evictioning up to 50\% of the entities was considered sufficient to evaluate, in a controlled manner, the impact of the eviction process on the quality of ER.
 
 \subsection{Environment and Configuration}
-The experimental environment consisted of a physical machine with 32 GB of RAM operating at 3{,}000 MHz, and an Intel Core i5-10400 processor @ 2.90 GHz with 6 cores. The operating system used was Ubuntu 22.04.4 LTS, 64-bit. The development environment was configured with Conda version 23.11.0 and Python 3.11.5. Each experiment was executed 10 times, and the reported results correspond to the average of the obtained values\footnote{The link to the project repository will be made available after the blind-review stage.}.
+The experimental environment consisted of a physical machine with 32 GB of RAM operating at 3{,}000 MHz, and an Intel Core i5-10400 processor @ 2.90 GHz with 6 cores. The operating system used was \hl{Linux Mint 22.3 Cinnamon}, 64-bit. The development environment was configured with \hl{uv 0.12.7} and Python 3.11.5. \hl{The number of repetitions varied by experiment and is stated with the corresponding results. Experiments 5 and 6 used three runs with consecutive seeds starting at 20260907; for Experiment 6, the same seeds were used for the baseline and no-eviction configurations. Replica-level outputs were retained, and the reported summaries were calculated from these outputs.}\footnote{The link to the project repository will be made available after the blind-review stage.}
+
+\hl{The input records were processed in their file order. Random choices were initialized with the specified seed for each replica. The scripts accumulated $TP$, $FP$, and candidate-pair counts as integer values; Recall and Precision were calculated from these counts, and stage runtimes were measured using Python's high-resolution performance counter. For repeated runs, the scripts calculated sample means and standard deviations and, where reported, two-sided 95\% Student-$t$ confidence intervals.}
 
 \subsection{Datasets and Characteristics}
 Three distinct datasets were used in the experiments: Scholar-DBLP (SCD)\footnote{https://dbs.uni-leipzig.de/research/projects/benchmark-datasets-for-entity-resolution}, which contains bibliographic records in the Computer Science domain; NCVR\footnote{https://www.ncsbe.gov/results-data/voter-registration-data}, which comprises voter registration records from the U.S. state of North Carolina; and MusicBrainz\footnote{https://dbs.uni-leipzig.de/research/projects/benchmark-datasets-for-entity-resolution}, which contains records derived from the MusicBrainz dataset\footnote{https://musicbrainz.org/}.
@@ -741,87 +743,96 @@ The introduction of the Block Eviction technique significantly reduced the numbe
 
 \subsection{Experiment 5: Evaluation with Progressive Offsets}
 
-In order to evaluate the impact of using different offset values on the performance of the proposed techniques, experiments were conducted on the SCD, NCVR, and MusicBrainz datasets using a progressive exponential partitioning approach. The offsets were defined based on a geometric progression, varying across all datasets. The experiments were carried out using the Block Eviction technique, as it yielded the best overall results. This experiment analyzes how variations in the size of processed data increments affect both the quality of the ER task and computational efficiency. The use of geometrically increasing offsets allows the evaluation of different scenarios typical of web and streaming applications, where data volume and heterogeneity evolve over time \cite{ren2021online,hassani2019overview}.
+\hl{Experiment 5 evaluates how progressive, geometrically increasing offsets affect the computational efficiency and ER quality of Block Eviction, which yielded the best overall results in the preceding experiments. For each dataset, Offset A and Offset B were varied together in four aligned configurations, as reported in Tables~\ref{tab:scd-results-transposed}, \ref{tab:ncvr-results-transposed}, and \ref{tab:music-brainz-results-transposed}; therefore, these results describe their combined variation and do not isolate the effect of either offset. Each configuration was run three times using consecutive seeds, and the tables report the mean and two-sided 95\% Student-$t$ confidence interval for each metric. The dataset-specific progressions provide a sensitivity analysis across batch sizes and data-volume conditions relevant to web and streaming applications, where data volume and heterogeneity may evolve over time \cite{ren2021online,hassani2019overview}; they are not intended to identify a universally optimal offset.}
 
 An example of the application of such a technique can be found in \cite{webmedia}, which analyzed the impact of the pandemic on the usage of communication platforms, focusing on Discord\footnote{https://discord.com/}. During this period, a significant increase in interaction volume was observed, particularly during late-night hours (between 3 a.m. and 9 a.m.), leading to overload in data processing systems. In this context, applying different offsets could mitigate this issue by dynamically adjusting the volume of processed data per batch according to workload variations over time.
 
-For the SCD dataset, a positive evolution in both Recall and Precision metrics was observed as the offset values increased. With offsetA = 50 and offsetB = 1,000, the obtained values were approximately 0.55 for Recall and 0.80 for Precision. When the offsets were increased (offsetA = 1,350 and offsetB = 27,000), Recall rose to 0.72 (a gain of 30.9\%), while Precision reached 0.82 (a gain of 2.5\%). These results indicate a significant improvement in coverage for the ER task, albeit with a more modest gain in Precision.
+\hl{For SCD (Scholar-DBLP), blocking time remained close to 5.9~s across the tested configurations, while matching time increased from 114.114~s at Offset A = 50 and Offset B = 1,000 to 128.856~s at Offset A = 1,350 and Offset B = 27,000. Recall increased across the four configurations, from 0.5533 to 0.7278. In contrast, Precision changed only slightly, from 0.1182 to 0.1219. Thus, the current results show higher Recall at the largest tested offsets, accompanied by longer matching time and only a small change in Precision.}
 
-For the NCVR dataset, the experiments revealed a different behavior. Despite the substantial increase in the number of compared pairs (over 110 thousand pairs), the Recall value approached 1.0 for larger offsets, such as 9,000 and 27,000, indicating that the approach is capable of identifying nearly all true matches. However, Precision remained more modest, ranging between 0.41 and 0.59, suggesting that many incorrect entity pairs were included in the comparisons, a direct consequence of the expanded search space.
+\hl{For NCVR, blocking time varied from 31.928 to 32.319~s, while matching time increased from 86.199~s at offsets of 1,000 to 94.076~s at offsets of 27,000. Recall was high for the first two configurations (0.9970 and 0.9909), but decreased to 0.8223 and 0.4008 for the larger offsets. Precision followed a different pattern, increasing from 0.4665 to 0.8315 at offsets of 9,000 before reaching 0.8129 at 27,000. The mean candidate-pair count decreased from 87,404 to 20,162 between the first and last configurations. These results do not support the previous description of Recall approaching 1.0 at the larger offsets.}
 
-For the MusicBrainz dataset, the results obtained with different offset values reveal a stable behavior in terms of both quality and processing time. It can be observed that, even with progressively increasing offsets, both blocking and matching times remained nearly constant, varying only by a few seconds across experiments. Regarding the quality of generated pairs, both Recall and Precision exhibited consistent values across all scenarios, with Recall around 0.106 and Precision close to 0.83. These results indicate that, for this dataset, increasing offsets does not improve coverage (i.e., it does not increase the number of true positives), nor does it negatively impact Precision.
+\hl{For MusicBrainz, blocking time remained between 363.967 and 370.358~s, and matching time between 542.324 and 547.733~s across the four configurations. However, the quality metrics were not stable: Recall decreased from 0.9200 at offsets of 5,000 to 0.1107 at offsets of 135,000, while Precision decreased from 0.9560 to 0.6902. The mean candidate-pair count also declined from 186,176 to 31,026. Thus, in these runs, larger paired offsets coincided with lower Recall, Precision, and candidate-pair counts, while the measured processing times remained within similar ranges.}
 
-Tables \ref{tab:scd-results-transposed}, \ref{tab:ncvr-results-transposed}, and \ref{tab:music-brainz-results-transposed} present the relationship between offset values and the performance metrics obtained for the SCD, NCVR, and MusicBrainz datasets, respectively. For the SCD dataset, there is a tendency toward a balance between Recall and Precision, whereas for NCVR, Recall reaches values close to 1 for larger offsets, while Precision remains considerably lower, despite a slight increase. These results indicate that the choice of an appropriate offset should consider the trade-off between Recall and Precision, being strongly influenced by the structural characteristics of each dataset. For MusicBrainz, the results remain stable. In contexts with high heterogeneity or greater ambiguity among entities, such as NCVR, increasing the offset may benefit Recall, albeit with a potential decrease in Precision.
+\hl{Tables~\ref{tab:scd-results-transposed}, \ref{tab:ncvr-results-transposed}, and \ref{tab:music-brainz-results-transposed} summarize the results for the three datasets. Across these runs, the effects of increasing the paired offsets differed by dataset: Recall increased for SCD, decreased at the larger settings for NCVR, and declined across the tested settings for MusicBrainz. Precision changed only slightly for SCD, increased through the third NCVR configuration, and decreased for MusicBrainz. Since Offset A and Offset B were varied together and each configuration was run three times, these results are descriptive of the tested paired settings and do not establish the independent effect of either offset or statistical significance.}
 
 \begin{table}[h]
 \centering
-\caption{Experimental results for the SCD dataset with different offsets.}
+\caption{\hl{Mean $\pm$ 95\% confidence-interval margin over three runs for SCD (Scholar-DBLP) with different offsets.}}
 \label{tab:scd-results-transposed}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{c|cccc}
 \hline
 \textbf{Metric} & \textbf{Exp. 1} & \textbf{Exp. 2} & \textbf{Exp. 3} & \textbf{Exp. 4} \\
 \hline
 Offset A & 50 & 150 & 450 & 1350 \\
 Offset B & 1000 & 3000 & 9000 & 27000 \\
-Blocking (s) & 4.992 & 4.986 & 4.986 & 4.992 \\
-Matching (s) & 112.374 & 113.958 & 117.984 & 128.790 \\
-Recall & 0.5504 & 0.5633 & 0.6053 & 0.7226 \\
-Precision & 0.8008 & 0.8037 & 0.7952 & 0.8249 \\
+\hl{Blocking (s)} & \hl{$5.932 \pm 0.026$} & \hl{$5.942 \pm 0.055$} & \hl{$5.942 \pm 0.083$} & \hl{$5.918 \pm 0.032$} \\
+\hl{Matching (s)} & \hl{$114.114 \pm 0.253$} & \hl{$115.149 \pm 0.770$} & \hl{$119.104 \pm 0.327$} & \hl{$128.856 \pm 0.389$} \\
+\hl{Candidate pairs} & \hl{$25024.3 \pm 576.7$} & \hl{$25515.3 \pm 800.5$} & \hl{$26879.0 \pm 1040.5$} & \hl{$31943.3 \pm 1806.9$} \\
+\hl{Recall} & \hl{$0.55327 \pm 0.00134$} & \hl{$0.56630 \pm 0.00246$} & \hl{$0.60900 \pm 0.00188$} & \hl{$0.72776 \pm 0.00429$} \\
+\hl{Precision} & \hl{$0.11823 \pm 0.00295$} & \hl{$0.11869 \pm 0.00416$} & \hl{$0.12117 \pm 0.00507$} & \hl{$0.12186 \pm 0.00738$} \\
 \hline
 \end{tabular}
+}%
 \end{table}
 
 \begin{table}[h]
 \centering
-\caption{Experimental results for the NCVR dataset with different offsets.}
+\caption{\hl{Mean $\pm$ 95\% confidence-interval margin over three runs for NCVR with different offsets.}}
 \label{tab:ncvr-results-transposed}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{c|cccc}
 \hline
 \textbf{Metric} & \textbf{Exp. 1} & \textbf{Exp. 2} & \textbf{Exp. 3} & \textbf{Exp. 4} \\
 \hline
 Offset A & 1000 & 3000 & 9000 & 27000 \\
 Offset B & 1000 & 3000 & 9000 & 27000 \\
-Blocking (s) & 32.610 & 32.214 & 32.082 & 32.028 \\
-Matching (s) & 86.124 & 85.938 & 85.896 & 88.044 \\
-Recall & 0.8288 & 0.8533 & 1.0000 & 1.0000 \\
-Precision & 0.4122 & 0.3670 & 0.5550 & 0.5973 \\
+\hl{Blocking (s)} & \hl{$32.319 \pm 1.624$} & \hl{$32.046 \pm 0.359$} & \hl{$32.053 \pm 0.445$} & \hl{$31.928 \pm 0.250$} \\
+\hl{Matching (s)} & \hl{$86.199 \pm 0.910$} & \hl{$87.845 \pm 1.207$} & \hl{$90.563 \pm 0.491$} & \hl{$94.076 \pm 1.118$} \\
+\hl{Candidate pairs} & \hl{$87404.3 \pm 623.4$} & \hl{$59275.7 \pm 1033.5$} & \hl{$40438.7 \pm 322.0$} & \hl{$20162.3 \pm 214.6$} \\
+\hl{Recall} & \hl{$0.99704 \pm 0.00006$} & \hl{$0.99087 \pm 0.00150$} & \hl{$0.82227 \pm 0.00208$} & \hl{$0.40080 \pm 0.00208$} \\
+\hl{Precision} & \hl{$0.46648 \pm 0.00330$} & \hl{$0.68360 \pm 0.01292$} & \hl{$0.83151 \pm 0.00540$} & \hl{$0.81291 \pm 0.00856$} \\
 \hline
 \end{tabular}
+}%
 \end{table}
 
 \begin{table}[h]
 \centering
-\caption{Experimental results for the MusicBrainz dataset with different offsets.}
+\caption{\hl{Mean $\pm$ 95\% confidence-interval margin over three runs for MusicBrainz with different offsets.}}
 \label{tab:music-brainz-results-transposed}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{c|cccc}
 \hline
 \textbf{Metric} & \textbf{Exp. 1} & \textbf{Exp. 2} & \textbf{Exp. 3} & \textbf{Exp. 4} \\
 \hline
 Offset A & 5000 & 15000 & 45000 & 135000 \\
 Offset B & 5000 & 15000 & 45000 & 135000 \\
-Blocking (s) & 357.67 & 360.52 & 358.58 & 363.38 \\
-Matching (s) & 776.35 & 782.71 & 775.16 & 794.58 \\
-Recall & 0.1064 & 0.1064 & 0.1064 & 0.1064 \\
-Precision & 0.8349 & 0.8320 & 0.8325 & 0.8321 \\
+\hl{Blocking (s)} & \hl{$370.358 \pm 4.050$} & \hl{$369.754 \pm 1.190$} & \hl{$368.530 \pm 6.420$} & \hl{$363.967 \pm 1.537$} \\
+\hl{Matching (s)} & \hl{$542.324 \pm 3.096$} & \hl{$544.523 \pm 3.441$} & \hl{$547.733 \pm 8.820$} & \hl{$545.032 \pm 4.460$} \\
+\hl{Candidate pairs} & \hl{$186175.7 \pm 211.1$} & \hl{$114701.0 \pm 526.9$} & \hl{$55268.3 \pm 203.1$} & \hl{$31026.3 \pm 299.8$} \\
+\hl{Recall} & \hl{$0.91996 \pm 0.00054$} & \hl{$0.54949 \pm 0.00233$} & \hl{$0.24093 \pm 0.00134$} & \hl{$0.11069 \pm 0.00099$} \\
+\hl{Precision} & \hl{$0.95601 \pm 0.00104$} & \hl{$0.92685 \pm 0.00067$} & \hl{$0.84338 \pm 0.00165$} & \hl{$0.69023 \pm 0.00118$} \\
 \hline
 \end{tabular}
+}%
 \end{table}
 
 \subsection{Experiment 6: Impact of the Absence of Eviction Techniques} \label{exp6}
 
-This experiment aims to evaluate the impact of the absence of eviction techniques on the ER task, enabling a direct comparison with the scenario in which a single eviction of the oldest entity is applied (baseline). In the no-eviction scenario, all entities remain active throughout the entire processing, leading to continuous growth of the search space and an increase in the number of comparisons. The results of this evaluation are presented in Table \ref{tab:baseline_vs_sem_descarte}.
+\hl{Experiment 6 compares the no-eviction configuration from Experiment 5 with the baseline from Experiment 1. Both configurations use the same datasets, processing batches, and three seeds (20260907--20260909); the baseline retains at most 1,000 entities per block, whereas the no-eviction configuration does not remove entities from blocks. Table~\ref{tab:baseline_vs_sem_descarte} reports the mean and two-sided 95\% Student-$t$ confidence interval for each configuration, calculated over these matched seeds.}
 
-For the SCD dataset, as it is the smallest dataset evaluated, the absence of eviction does not produce a significant impact on computational cost. The blocking time is 8.4~s and the matching time is 156.5~s, with 71,256 generated pairs. These values are close to those observed in the baseline (10.56~s for blocking, 171.96~s for matching, and 71,883.5 pairs). Similarly, the quality metrics remain virtually unchanged, with Recall of 92\% and Precision of 66\% in the no-eviction scenario, compared to 93\% and 66\% in the baseline. This behavior indicates that, for small datasets, eviction has a limited effect on both efficiency and quality.
+\hl{For SCD (Scholar-DBLP), matching time increased from 156.10~s in the baseline to 180.11~s without eviction, while the mean number of candidate pairs increased from 75,473 to 106,989. Recall increased from 0.9312 to 0.9443, whereas Precision decreased from 0.0660 to 0.0472. Thus, in this dataset, the no-eviction configuration produced more candidate pairs and longer matching time, with higher Recall and lower Precision.}
 
-For the NCVR dataset, characterized by a larger volume and greater diversity of records, the absence of eviction leads to a significant increase in computational cost. The matching time increases from 137.04~s in the baseline to 529.1~s in the no-eviction scenario, while the number of pairs rises from 191,632.1 to 289,125. Although Recall increases from 85.5\% to 94.5\%, a reduction in Precision is observed, decreasing from 30.5\% to 23.6\%. This result indicates that the gain in Recall comes at the expense of a large number of incorrect comparisons, making the process less selective and more computationally expensive.
+\hl{For NCVR, matching time increased from 127.74~s to 399.14~s, and the mean number of candidate pairs increased from 167,728 to 264,653. Recall remained at 0.9454 in both configurations, while Precision decreased from 0.2305 to 0.1461. In these runs, removing the block-capacity limit was therefore associated with a larger matching workload and lower Precision, without a change in Recall.}
 
-The most critical behavior is observed for the MusicBrainz dataset. Without eviction, the matching time reaches approximately 30,031.2~s, with 442,586 generated pairs, whereas in the baseline these values are 1,229.53~s and 41,781 pairs, respectively. Moreover, Precision drops sharply, from 65.7\% in the baseline to only 8\% in the no-eviction scenario, while Recall remains virtually unchanged (10.6\% vs. 10.6\%). These results demonstrate that, for larger and more heterogeneous datasets, the absence of eviction makes the process impractical, both in terms of computational cost and the quality of the produced matches.
+\hl{For MusicBrainz, matching time increased from 809.87~s in the baseline to 7,254.71~s without eviction. The mean number of candidate pairs rose from 42,758 to 470,387, while Recall remained at 0.1064 and Precision decreased from 0.4813 to 0.0438. Among the evaluated datasets, this configuration showed the largest increase in matching time and candidate pairs.}
 
-Overall, the comparison between the baseline and the no-eviction scenario demonstrates that eviction techniques are essential for controlling the growth of the search space, reducing unnecessary comparisons, and preserving result quality. For small datasets, their impact is limited; however, as data volume and complexity increase, eviction becomes a critical component to ensure scalability, stability, and adequate performance of the ER task.
+\hl{Across the three datasets, the no-eviction configuration produced more candidate pairs and longer matching times than the baseline. Recall increased for SCD and remained unchanged for NCVR and MusicBrainz, whereas Precision decreased in all three datasets. These results show a trade-off between the measured matching workload and quality metrics under the tested configurations. Because the comparison uses three matched seeds, the reported confidence intervals are descriptive and do not establish statistical significance.}
 
 \begin{table}[!t]
 \centering
-\caption{Comparison between the baseline and the no-eviction scenario.}
+\caption{\hl{Mean $\pm$ two-sided 95\% Student-$t$ confidence-interval margin for the baseline and no-eviction configurations over three matched seeds.}}
 \label{tab:baseline_vs_sem_descarte}
 
 \scriptsize
@@ -830,27 +841,39 @@ Overall, the comparison between the baseline and the no-eviction scenario demons
 \resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{llcccccc}
 \hline
-\textbf{Dataset} & \textbf{Scenario} & \textbf{Block (s)} & \textbf{Match (s)} & \textbf{\#Pairs} & \textbf{TP} & \textbf{Recall} & \textbf{Precision} \\
+\hl{\textbf{Dataset}} & \hl{\textbf{Scenario}} & \hl{\textbf{Block (s)}} & \hl{\textbf{Match (s)}} & \hl{\textbf{\#Pairs}} & \hl{\textbf{TP}} & \hl{\textbf{Recall}} & \hl{\textbf{Precision}} \\
 \hline
 
-\multirow{2}{*}{SCD}
-& Baseline      & 10.56 & 171.96  & 71883.5 & 5977.3 & 0.9300 & 0.6672 \\
-& No Eviction    & 8.40  & 156.50  & 71256.0 & 4971.0 & 0.9297 & 0.6661 \\
+\multirow{2}{*}{\hl{SCD}}
+& \hl{Baseline} & \hl{$5.834 \pm 0.630$} & \hl{$156.099 \pm 0.258$} & \hl{$75472.7 \pm 3296.3$} & \hl{$4979.0 \pm 8.6$} & \hl{$0.93118 \pm 0.00161$} & \hl{$0.06599 \pm 0.00289$} \\
+& \hl{No Eviction} & \hl{$6.338 \pm 0.052$} & \hl{$180.107 \pm 2.258$} & \hl{$106989.0 \pm 5087.4$} & \hl{$5049.0 \pm 6.6$} & \hl{$0.94427 \pm 0.00123$} & \hl{$0.04720 \pm 0.00219$} \\
 \hline
 
-\multirow{2}{*}{NCVR}
-& Baseline      & 33.36 & 137.04  & 191632.1 & 34980.6 & 0.8550 & 0.3050 \\
-& No Eviction    & 29.10 & 529.10  & 289125.0 & 38662.0 & 0.9454 & 0.2361 \\
+\multirow{2}{*}{\hl{NCVR}}
+& \hl{Baseline} & \hl{$31.076 \pm 0.477$} & \hl{$127.741 \pm 3.573$} & \hl{$167728.0 \pm 2629.6$} & \hl{$38662.0 \pm 0.0$} & \hl{$0.94544 \pm 0.00000$} & \hl{$0.23051 \pm 0.00362$} \\
+& \hl{No Eviction} & \hl{$32.323 \pm 0.171$} & \hl{$399.136 \pm 3.252$} & \hl{$264653.0 \pm 8253.2$} & \hl{$38662.0 \pm 0.0$} & \hl{$0.94544 \pm 0.00000$} & \hl{$0.14610 \pm 0.00458$} \\
 \hline
 
-\multirow{2}{*}{MusicBrainz}
-& Baseline      & 346.06 & 1229.53 & 41781.0  & 20578.0 & 0.1060 & 0.6570 \\
-& No Eviction    & 577.80 & 30031.20 & 442586.0 & 20578.0 & 0.1064 & 0.0885 \\
+\multirow{2}{*}{\hl{MusicBrainz}}
+& \hl{Baseline} & \hl{$361.036 \pm 3.032$} & \hl{$809.866 \pm 2.454$} & \hl{$42758.3 \pm 76.6$} & \hl{$20578.0 \pm 0.0$} & \hl{$0.10636 \pm 0.00000$} & \hl{$0.48126 \pm 0.00086$} \\
+& \hl{No Eviction} & \hl{$367.692 \pm 1.902$} & \hl{$7254.707 \pm 112.224$} & \hl{$470387.3 \pm 14079.2$} & \hl{$20578.0 \pm 0.0$} & \hl{$0.10636 \pm 0.00000$} & \hl{$0.04375 \pm 0.00131$} \\
 \hline
 
 \end{tabular}%
 }
 \end{table}
+
+\subsection{Threats to Validity}
+
+\hl{Several factors may affect the interpretation and generalization of the experimental results.}
+
+\hl{Internal validity is affected by the order in which records are processed: the experiments use the order in the input files, and alternative stream orders were not evaluated. The randomized selection of hash indices may also contribute to run-to-run variation. Consecutive seeds and repeated runs were used to describe this variation, although Experiments 5 and 6 used three runs per configuration. In Experiment 6, the baseline and no-eviction configurations used matched seeds to support a controlled comparison. The generated NCVR and MusicBrainz counterparts contain synthetic attribute perturbations; consequently, the results may depend on the specific perturbation rules used. In addition, the results rely on the supplied ground-truth files and their denominators, which were not independently audited as part of these experiments. Finally, runtime measurements were collected on a single machine without a documented control for background system load, and may therefore vary with execution conditions.}
+
+\hl{Construct validity is limited to the measures reported in the experiments: blocking and matching runtimes, candidate-pair counts, Recall, and Precision. Recall and Precision are calculated from the identified true and false positive pairs and the supplied ground truth; true negatives are not enumerated because the full Cartesian product of record pairs is not evaluated. Thus, these metrics do not provide a complete confusion matrix, and candidate-pair counts should not be interpreted as an independent measure of matching quality. The paired offset configurations in Experiment 5 also vary Offset A and Offset B together, so their individual effects cannot be separated.}
+
+\hl{External validity is limited by the use of three datasets from bibliographic, voter-registration, and music-record domains. The artificially generated records for NCVR and MusicBrainz do not represent the full range of naturally occurring errors in real data streams. The experiments were performed on one physical machine and do not evaluate distributed, production, or live-stream settings. Therefore, the results characterize the tested datasets, perturbation procedures, parameter settings, and execution environment; they should not be generalized to other domains or deployment settings without further experiments.}
+
+\hl{In a distributed streaming system, the behavior of the policies would also depend on how blocks and records are partitioned among workers. If records that share block keys are assigned consistently to the same worker, Entity Eviction and Block Eviction could be applied to local block state; however, skewed keys could concentrate work on a subset of workers, and whole-block removal could discard matches that would otherwise be found. Global Eviction would require a consistent definition of entity age across partitions and could introduce coordination or state-migration costs, particularly when records arrive late. These are design considerations rather than measured outcomes. Evaluating them requires distributed experiments that measure throughput, latency, state size, and matching quality under different partitioning and load conditions.}
 
 \section{Conclusions and Future Work} \label{sec:conclusao}
 

@@ -1,0 +1,201 @@
+Experimento de offsets
+Data/hora: seg 28 set 2026 09:23:29 -03
+Datasets: dblp ncvoter musicbrainz
+Repetições: 3
+Seed inicial: 20260907
+Tamanho máximo dos blocos: 1000
+
+Iniciando dataset: dblp
+Offset A: 50,150,450,1350
+Offset B: 1000,3000,9000,27000
+CSV: resultados_v2/resultados-exp-07-diferentes-offsets-dblp-20260928-092329.csv
+Dataset carregado: dblp
+
+Offset A=50, Offset B=1000
+Replica 1/3 concluida
+Replica 2/3 concluida
+Replica 3/3 concluida
+
+Offset A=150, Offset B=3000
+Replica 1/3 concluida
+Replica 2/3 concluida
+Replica 3/3 concluida
+
+Offset A=450, Offset B=9000
+Replica 1/3 concluida
+Replica 2/3 concluida
+Replica 3/3 concluida
+
+Offset A=1350, Offset B=27000
+Replica 1/3 concluida
+Replica 2/3 concluida
+Replica 3/3 concluida
+Resultados salvos em: resultados_v2/resultados-exp-07-diferentes-offsets-dblp-20260928-092329.csv
+
+Offset A=50, Offset B=1000, n=3
+blocking_s   media=5.932240 IC95%=[5.905823, 5.958658]
+matching_s   media=114.113747 IC95%=[113.860792, 114.366701]
+tp           media=2958.333333 IC95%=[2951.162245, 2965.504421]
+fp           media=22066.000000 IC95%=[21484.122887, 22647.877113]
+pairs_no     media=25024.333333 IC95%=[24447.658362, 25601.008305]
+recall       media=0.553270 IC95%=[0.551929, 0.554611]
+precision    media=0.118226 IC95%=[0.115279, 0.121173]
+
+Offset A=150, Offset B=3000, n=3
+blocking_s   media=5.942174 IC95%=[5.887533, 5.996816]
+matching_s   media=115.149280 IC95%=[114.379698, 115.918862]
+tp           media=3028.000000 IC95%=[3014.855179, 3041.144821]
+fp           media=22487.333333 IC95%=[21676.574057, 23298.092610]
+pairs_no     media=25515.333333 IC95%=[24714.830475, 26315.836192]
+recall       media=0.566299 IC95%=[0.563841, 0.568757]
+precision    media=0.118688 IC95%=[0.114528, 0.122848]
+
+Offset A=450, Offset B=9000, n=3
+blocking_s   media=5.942047 IC95%=[5.858619, 6.025475]
+matching_s   media=119.103934 IC95%=[118.777375, 119.430492]
+tp           media=3256.333333 IC95%=[3246.293810, 3266.372856]
+fp           media=23622.666667 IC95%=[22572.360042, 24672.973291]
+pairs_no     media=26879.000000 IC95%=[25838.484291, 27919.515709]
+recall       media=0.609002 IC95%=[0.607124, 0.610880]
+precision    media=0.121169 IC95%=[0.116104, 0.126235]
+
+Offset A=1350, Offset B=27000, n=3
+blocking_s   media=5.917518 IC95%=[5.885410, 5.949626]
+matching_s   media=128.856194 IC95%=[128.467100, 129.245288]
+tp           media=3891.333333 IC95%=[3868.385852, 3914.280815]
+fp           media=28052.000000 IC95%=[26228.444944, 29875.555056]
+pairs_no     media=31943.333333 IC95%=[30136.467915, 33750.198751]
+recall       media=0.727760 IC95%=[0.723468, 0.732052]
+precision    media=0.121865 IC95%=[0.114486, 0.129243]
+Concluído: dblp
+
+Iniciando dataset: ncvoter
+Offset A: 1000,3000,9000,27000
+Offset B: 1000,3000,9000,27000
+CSV: resultados_v2/resultados-exp-07-diferentes-offsets-ncvoter-20260928-092329.csv
+Dataset carregado: ncvoter
+
+Offset A=1000, Offset B=1000
+Replica 1/3 concluida
+Replica 2/3 concluida
+Replica 3/3 concluida
+
+Offset A=3000, Offset B=3000
+Replica 1/3 concluida
+Replica 2/3 concluida
+Replica 3/3 concluida
+
+Offset A=9000, Offset B=9000
+Replica 1/3 concluida
+Replica 2/3 concluida
+Replica 3/3 concluida
+
+Offset A=27000, Offset B=27000
+Replica 1/3 concluida
+Replica 2/3 concluida
+Replica 3/3 concluida
+Resultados salvos em: resultados_v2/resultados-exp-07-diferentes-offsets-ncvoter-20260928-092329.csv
+
+Offset A=1000, Offset B=1000, n=3
+blocking_s   media=32.319343 IC95%=[30.694968, 33.943719]
+matching_s   media=86.198719 IC95%=[85.288979, 87.108460]
+tp           media=40772.000000 IC95%=[40769.515862, 40774.484138]
+fp           media=46632.333333 IC95%=[46011.073718, 47253.592949]
+pairs_no     media=87404.333333 IC95%=[86780.956640, 88027.710026]
+recall       media=0.997041 IC95%=[0.996980, 0.997102]
+precision    media=0.466478 IC95%=[0.463181, 0.469776]
+
+Offset A=3000, Offset B=3000, n=3
+blocking_s   media=32.046381 IC95%=[31.687295, 32.405468]
+matching_s   media=87.845171 IC95%=[86.638252, 89.052091]
+tp           media=40519.666667 IC95%=[40458.396865, 40580.936468]
+fp           media=18756.000000 IC95%=[17665.237223, 19846.762777]
+pairs_no     media=59275.666667 IC95%=[58242.165859, 60309.167475]
+recall       media=0.990870 IC95%=[0.989372, 0.992369]
+precision    media=0.683604 IC95%=[0.670680, 0.696529]
+
+Offset A=9000, Offset B=9000, n=3
+blocking_s   media=32.053438 IC95%=[31.608428, 32.498449]
+matching_s   media=90.563094 IC95%=[90.071635, 91.054552]
+tp           media=33625.000000 IC95%=[33540.102072, 33709.897928]
+fp           media=6813.666667 IC95%=[6542.834889, 7084.498444]
+pairs_no     media=40438.666667 IC95%=[40116.663260, 40760.670073]
+recall       media=0.822268 IC95%=[0.820192, 0.824344]
+precision    media=0.831511 IC95%=[0.826109, 0.836912]
+
+Offset A=27000, Offset B=27000, n=3
+blocking_s   media=31.927977 IC95%=[31.678265, 32.177689]
+matching_s   media=94.075936 IC95%=[92.958030, 95.193843]
+tp           media=16390.000000 IC95%=[16304.993112, 16475.006888]
+fp           media=3772.333333 IC95%=[3563.586919, 3981.079748]
+pairs_no     media=20162.333333 IC95%=[19947.712844, 20376.953823]
+recall       media=0.400802 IC95%=[0.398723, 0.402881]
+precision    media=0.812911 IC95%=[0.804347, 0.821474]
+Concluído: ncvoter
+
+Iniciando dataset: musicbrainz
+Offset A: 5000,15000,45000,135000
+Offset B: 5000,15000,45000,135000
+CSV: resultados_v2/resultados-exp-07-diferentes-offsets-musicbrainz-20260928-092329.csv
+Dataset carregado: musicbrainz
+
+Offset A=5000, Offset B=5000
+Replica 1/3 concluida
+Replica 2/3 concluida
+Replica 3/3 concluida
+
+Offset A=15000, Offset B=15000
+Replica 1/3 concluida
+Replica 2/3 concluida
+Replica 3/3 concluida
+
+Offset A=45000, Offset B=45000
+Replica 1/3 concluida
+Replica 2/3 concluida
+Replica 3/3 concluida
+
+Offset A=135000, Offset B=135000
+Replica 1/3 concluida
+Replica 2/3 concluida
+Replica 3/3 concluida
+Resultados salvos em: resultados_v2/resultados-exp-07-diferentes-offsets-musicbrainz-20260928-092329.csv
+
+Offset A=5000, Offset B=5000, n=3
+blocking_s   media=370.357769 IC95%=[366.308024, 374.407514]
+matching_s   media=542.323959 IC95%=[539.227496, 545.420422]
+tp           media=177985.000000 IC95%=[177880.311941, 178089.688059]
+fp           media=8190.666667 IC95%=[7988.299634, 8393.033699]
+pairs_no     media=186175.666667 IC95%=[185964.583164, 186386.750169]
+recall       media=0.919962 IC95%=[0.919421, 0.920503]
+precision    media=0.956006 IC95%=[0.954962, 0.957050]
+
+Offset A=15000, Offset B=15000, n=3
+blocking_s   media=369.753580 IC95%=[368.563427, 370.943732]
+matching_s   media=544.523383 IC95%=[541.082169, 547.964597]
+tp           media=106310.666667 IC95%=[105859.521451, 106761.811882]
+fp           media=8390.333333 IC95%=[8286.910433, 8493.756234]
+pairs_no     media=114701.000000 IC95%=[114174.099224, 115227.900776]
+recall       media=0.549494 IC95%=[0.547162, 0.551826]
+precision    media=0.926851 IC95%=[0.926177, 0.927524]
+
+Offset A=45000, Offset B=45000, n=3
+blocking_s   media=368.530489 IC95%=[362.110659, 374.950319]
+matching_s   media=547.733041 IC95%=[538.913154, 556.552928]
+tp           media=46612.000000 IC95%=[46353.077050, 46870.922950]
+fp           media=8656.333333 IC95%=[8594.163682, 8718.502985]
+pairs_no     media=55268.333333 IC95%=[55065.205386, 55471.461281]
+recall       media=0.240926 IC95%=[0.239588, 0.242265]
+precision    media=0.843376 IC95%=[0.841725, 0.845026]
+
+Offset A=135000, Offset B=135000, n=3
+blocking_s   media=363.966792 IC95%=[362.430010, 365.503574]
+matching_s   media=545.031788 IC95%=[540.571892, 549.491685]
+tp           media=21415.333333 IC95%=[21224.259162, 21606.407505]
+fp           media=9611.000000 IC95%=[9495.227456, 9726.772544]
+pairs_no     media=31026.333333 IC95%=[30726.540689, 31326.125978]
+recall       media=0.110691 IC95%=[0.109703, 0.111678]
+precision    media=0.690232 IC95%=[0.689051, 0.691412]
+Concluído: musicbrainz
+
+Experimento concluído.
+Log: resultados_v2/execucao-offsets-20260928-092329.log
